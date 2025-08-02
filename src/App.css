@@ -64,3 +64,35 @@ h1, h2 {
     width: auto;
   }
 }
+
+.inventory ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem 0;
+}
+
+.inventory li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.inventory li span {
+  flex-grow: 1;
+}
+
+.inventory-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.inventory-form input {
+  flex: 1;
+}
+
+.inventory-form button,
+.inventory li button {
+  width: auto;
+}

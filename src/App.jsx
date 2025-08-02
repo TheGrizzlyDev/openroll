@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { DiceRoller as DiceParser } from '@dice-roller/rpg-dice-roller'
 import DiceRoller from './DiceRoller'
+import Inventory from './Inventory'
 import './App.css'
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
     silver: 0,
     notes: ''
   })
+  const [inventory, setInventory] = useState([])
   const [log, setLog] = useState([])
 
   const updateField = (field, value) => setSheet(prev => ({ ...prev, [field]: value }))
@@ -43,6 +45,10 @@ export default function App() {
     const notation = sheet.statDice[stat] || '1d20'
     const fullNotation = mod ? `${notation}${mod >= 0 ? `+${mod}` : mod}` : notation
     roll(fullNotation, stat.toUpperCase())
+  }
+
+  const logInventory = (message) => {
+    setLog(prev => [{ label: 'Inventory', output: message }, ...prev])
   }
 
   return (
@@ -97,6 +103,7 @@ export default function App() {
           Silver
           <input type="number" value={sheet.silver} onChange={e => updateField('silver', e.target.value)} />
         </label>
+        <Inventory items={inventory} onChange={setInventory} onLog={logInventory} />
         <label>
           Notes
           <textarea rows="4" value={sheet.notes} onChange={e => updateField('notes', e.target.value)} />
