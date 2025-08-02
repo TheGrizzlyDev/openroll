@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { DiceRoller as DiceParser } from '@dice-roller/rpg-dice-roller'
 import DiceRoller from './DiceRoller'
 import './App.css'
 
@@ -10,6 +11,12 @@ export default function App() {
     agi: 0,
     pre: 0,
     tou: 0,
+    statDice: {
+      str: '1d20',
+      agi: '1d20',
+      pre: '1d20',
+      tou: '1d20'
+    },
     hp: 0,
     armor: 0,
     omens: 0,
@@ -19,18 +26,23 @@ export default function App() {
   const [log, setLog] = useState([])
 
   const updateField = (field, value) => setSheet(prev => ({ ...prev, [field]: value }))
+  const updateStatDice = (stat, value) =>
+    setSheet(prev => ({ ...prev, statDice: { ...prev.statDice, [stat]: value } }))
 
-  const roll = (count, sides, mod = 0, label = '') => {
-    const rolls = Array.from({ length: count }, () => Math.ceil(Math.random() * sides))
-    const total = rolls.reduce((a, b) => a + b, 0) + mod
-    const entry = { label, rolls, mod, total }
+  const roller = new DiceParser()
+
+  const roll = (notation, label = '') => {
+    const result = roller.roll(notation)
+    const entry = { label, notation, output: result.output, total: result.total }
     setLog(prev => [entry, ...prev])
-    return total
+    return result.total
   }
 
   const rollStat = (stat) => {
     const mod = Number(sheet[stat]) || 0
-    roll(1, 20, mod, stat.toUpperCase())
+    const notation = sheet.statDice[stat] || '1d20'
+    const fullNotation = mod ? `${notation}${mod >= 0 ? `+${mod}` : mod}` : notation
+    roll(fullNotation, stat.toUpperCase())
   }
 
   return (
@@ -59,6 +71,11 @@ export default function App() {
                   onChange={e => updateField(stat, e.target.value)}
                 />
               </label>
+              <input
+                value={sheet.statDice[stat]}
+                onChange={e => updateStatDice(stat, e.target.value)}
+                placeholder="1d20"
+              />
               <button onClick={() => rollStat(stat)}>Roll</button>
             </div>
           ))}
@@ -92,7 +109,7 @@ export default function App() {
           {log.map((entry, idx) => (
             <li key={idx}>
               {entry.label ? `${entry.label}: ` : ''}
-              {entry.rolls.join(', ')}{entry.mod ? (entry.mod > 0 ? ` +${entry.mod}` : ` ${entry.mod}`) : ''} = {entry.total}
+              {entry.output}
             </li>
           ))}
         </ul>
