@@ -8,3 +8,48 @@ body {
 * {
   box-sizing: border-box;
 }
+
+@media (max-width: 400px) {
+  body {
+    font-size: 14px;
+  }
+
+  body h1 {
+    font-size: 1.5rem;
+  }
+
+  body h2 {
+    font-size: 1.25rem;
+  }
+
+  body .tabs button {
+    padding: 0.25rem;
+    font-size: 0.875rem;
+  }
+
+  body .dice-roller {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+  }
+
+  body .dice-roller input,
+  body .dice-roller button,
+  body .sheet input,
+  body .sheet textarea,
+  body .inventory-form input,
+  body .inventory-form button,
+  body .inventory li button {
+    font-size: 0.875rem;
+    padding: 0.25rem;
+  }
+
+  body .inventory-form {
+    flex-direction: column;
+  }
+
+  body .overlay {
+    font-size: 0.875rem;
+    padding: 0.4rem 0.6rem;
+  }
+}

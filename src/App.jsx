@@ -33,7 +33,10 @@ export default function App() {
   const [current, setCurrent] = useState(null)
   const [sheet, setSheet] = useState(() => createSheet())
   const [inventory, setInventory] = useState([])
-  const [log, setLog] = useState([])
+  const [log, setLog] = useState(() => {
+    const saved = localStorage.getItem('log')
+    return saved ? JSON.parse(saved) : []
+  })
   const [activeTab, setActiveTab] = useState('character')
   const [overlay, setOverlay] = useState({ message: '', visible: false })
   const overlayTimeout = useRef(null)
@@ -44,9 +47,17 @@ export default function App() {
     tou: ''
   })
 
+  const skipSave = useRef(false)
+
   useEffect(() => {
+    if (skipSave.current) return
     localStorage.setItem('characters', JSON.stringify(characters))
   }, [characters])
+
+  useEffect(() => {
+    if (skipSave.current) return
+    localStorage.setItem('log', JSON.stringify(log))
+  }, [log])
 
   useEffect(() => {
     if (current === null) return
