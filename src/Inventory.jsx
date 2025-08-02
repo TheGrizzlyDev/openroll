@@ -1,4 +1,31 @@
 import { useState } from 'react'
+import { DndContext } from '@dnd-kit/core'
+import { SortableContext, useSortable, arrayMove } from '@dnd-kit/sortable'
+
+function SortableItem({ item, startEdit, handleDelete }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition
+  } = useSortable({ id: item.id })
+
+  const style = {
+    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
+    transition
+  }
+
+  return (
+    <li ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      <span>
+        {item.name} ({item.qty}){item.notes ? ` - ${item.notes}` : ''}
+      </span>
+      <button onClick={() => startEdit(item.id)}>Edit</button>
+      <button onClick={() => handleDelete(item.id)}>Delete</button>
+    </li>
+  )
+}
 
 export default function Inventory({ items, onChange, onLog }) {
   const empty = { name: '', qty: 1, notes: '' }
@@ -47,20 +74,32 @@ export default function Inventory({ items, onChange, onLog }) {
     if (editingId === id) resetForm()
   }
 
+  const handleDragEnd = (event) => {
+    const { active, over } = event
+    if (over && active.id !== over.id) {
+      const oldIndex = items.findIndex(i => i.id === active.id)
+      const newIndex = items.findIndex(i => i.id === over.id)
+      onChange(arrayMove(items, oldIndex, newIndex))
+    }
+  }
+
   return (
     <div className="inventory">
       <h2>Inventory</h2>
-      <ul>
-        {items.map(item => (
-          <li key={item.id}>
-            <span>
-              {item.name} ({item.qty}){item.notes ? ` - ${item.notes}` : ''}
-            </span>
-            <button onClick={() => startEdit(item.id)}>Edit</button>
-            <button onClick={() => handleDelete(item.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      <DndContext onDragEnd={handleDragEnd}>
+        <SortableContext items={items.map(i => i.id)}>
+          <ul>
+            {items.map(item => (
+              <SortableItem
+                key={item.id}
+                item={item}
+                startEdit={startEdit}
+                handleDelete={handleDelete}
+              />
+            ))}
+          </ul>
+        </SortableContext>
+      </DndContext>
       <div className="inventory-form">
         <input
           placeholder="Name"
