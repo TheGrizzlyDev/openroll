@@ -1,11 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { DiceRoller as DiceParser } from '@dice-roller/rpg-dice-roller'
-import DiceRoller from './DiceRoller'
-import Inventory from './Inventory'
-import CharacterSelect from './components/CharacterSelect'
-import CharacterSheet from './components/CharacterSheet'
-import LogView from './components/LogView'
-import Overlay from './components/Overlay'
+import { useNavigate, useLocation } from 'react-router-dom'
+import AppRoutes from './routes'
 import './App.css'
 
 const createSheet = () => ({
@@ -67,25 +63,32 @@ export default function App() {
     })
   }, [sheet, inventory, current])
 
-  const loadCharacter = (idx) => {
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const loadCharacter = (idx, { navigate: doNavigate = true } = {}) => {
     const char = characters[idx]
     if (!char) return
     setCurrent(idx)
     setSheet(char.sheet || createSheet())
     setInventory(char.inventory || [])
+    if (doNavigate) navigate(`/sheet/${idx}`)
   }
 
   const createCharacter = () => {
     const newChar = { name: '', sheet: createSheet(), inventory: [] }
     const index = characters.length
     setCharacters(prev => [...prev, newChar])
-    setCurrent(index)
     setSheet(newChar.sheet)
     setInventory(newChar.inventory)
+    setCurrent(index)
+    navigate(`/sheet/${index}`)
   }
 
   const deleteCharacter = (idx) => {
     setCharacters(prev => prev.filter((_, i) => i !== idx))
+    setCurrent(null)
+    navigate('/characters')
   }
 
   const roller = new DiceParser()
@@ -105,62 +108,30 @@ export default function App() {
     setLog(prev => [{ label: 'Inventory', output: message }, ...prev])
   }
 
-  if (current === null) {
-    return (
-      <CharacterSelect
-        characters={characters}
-        onLoad={loadCharacter}
-        onDelete={deleteCharacter}
-        onCreate={createCharacter}
-      />
-    )
-  }
+  useEffect(() => {
+    if (location.pathname === '/characters') {
+      setCurrent(null)
+    }
+  }, [location.pathname])
 
   return (
-    <div className="container">
-      <h1>Open Roll</h1>
-      <button onClick={() => setCurrent(null)}>Characters</button>
-      <DiceRoller onRoll={roll} />
-
-      <div className="tabs">
-        <button
-          className={activeTab === 'character' ? 'active' : ''}
-          onClick={() => setActiveTab('character')}
-        >
-          Character
-        </button>
-        <button
-          className={activeTab === 'inventory' ? 'active' : ''}
-          onClick={() => setActiveTab('inventory')}
-        >
-          Inventory
-        </button>
-        <button
-          className={activeTab === 'log' ? 'active' : ''}
-          onClick={() => setActiveTab('log')}
-        >
-          Log
-        </button>
-      </div>
-
-      {activeTab === 'character' && (
-        <CharacterSheet sheet={sheet} setSheet={setSheet} onRoll={roll} />
-      )}
-
-      {activeTab === 'inventory' && (
-        <Inventory items={inventory} onChange={setInventory} onLog={logInventory} />
-      )}
-
-      {activeTab === 'log' && <LogView log={log} />}
-
-      <Overlay
-        message={overlay.message}
-        visible={overlay.visible}
-        onClose={() => {
-          clearTimeout(overlayTimeout.current)
-          setOverlay(prev => ({ ...prev, visible: false }))
-        }}
-      />
-    </div>
+    <AppRoutes
+      characters={characters}
+      loadCharacter={loadCharacter}
+      createCharacter={createCharacter}
+      deleteCharacter={deleteCharacter}
+      sheet={sheet}
+      setSheet={setSheet}
+      inventory={inventory}
+      setInventory={setInventory}
+      log={log}
+      logInventory={logInventory}
+      roll={roll}
+      activeTab={activeTab}
+      setActiveTab={setActiveTab}
+      overlay={overlay}
+      setOverlay={setOverlay}
+      overlayTimeout={overlayTimeout}
+    />
   )
 }
