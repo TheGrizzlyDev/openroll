@@ -13,15 +13,30 @@ describe('Inventory handlers', () => {
   it('adds items', () => {
     const setInventory = vi.fn()
     const logInventory = vi.fn()
-    const providerValue = { inventory: [], setInventory, logInventory }
-    const { getByPlaceholderText, getByText } = renderWithContext(
-      <Inventory />,
-      { providerValue }
-    )
-    fireEvent.change(getByPlaceholderText('Name'), { target: { value: 'Sword' } })
+    const providerValue = {
+      inventory: [],
+      setInventory,
+      logInventory,
+      scrolls: [],
+      setScrolls: vi.fn(),
+      sheet: { pre: 0 },
+      roll: vi.fn()
+    }
+    const {
+      getAllByPlaceholderText,
+      getByPlaceholderText,
+      getAllByText
+    } = renderWithContext(<Inventory />, {
+      providerValue
+    })
+    fireEvent.change(getAllByPlaceholderText('Name')[0], {
+      target: { value: 'Sword' }
+    })
     fireEvent.change(getByPlaceholderText('Qty'), { target: { value: '2' } })
-    fireEvent.change(getByPlaceholderText('Notes'), { target: { value: 'Sharp' } })
-    fireEvent.click(getByText('Add'))
+    fireEvent.change(getAllByPlaceholderText('Notes')[0], {
+      target: { value: 'Sharp' }
+    })
+    fireEvent.click(getAllByText('Add')[0])
     expect(setInventory).toHaveBeenCalledWith([
       expect.objectContaining({ name: 'Sword', qty: 2, notes: 'Sharp' })
     ])
@@ -32,7 +47,15 @@ describe('Inventory handlers', () => {
     const items = [{ id: 1, name: 'Sword', qty: 1, notes: '' }]
     const setInventory = vi.fn()
     const logInventory = vi.fn()
-    const providerValue = { inventory: items, setInventory, logInventory }
+    const providerValue = {
+      inventory: items,
+      setInventory,
+      logInventory,
+      scrolls: [],
+      setScrolls: vi.fn(),
+      sheet: { pre: 0 },
+      roll: vi.fn()
+    }
     const { getByText, getByPlaceholderText } = renderWithContext(
       <Inventory />,
       { providerValue }
@@ -50,10 +73,50 @@ describe('Inventory handlers', () => {
     const items = [{ id: 1, name: 'Sword', qty: 1, notes: '' }]
     const setInventory = vi.fn()
     const logInventory = vi.fn()
-    const providerValue = { inventory: items, setInventory, logInventory }
+    const providerValue = {
+      inventory: items,
+      setInventory,
+      logInventory,
+      scrolls: [],
+      setScrolls: vi.fn(),
+      sheet: { pre: 0 },
+      roll: vi.fn()
+    }
     const { getByText } = renderWithContext(<Inventory />, { providerValue })
     fireEvent.click(getByText('Delete'))
     expect(setInventory).toHaveBeenCalledWith([])
     expect(logInventory).toHaveBeenCalledWith('Removed Sword')
+  })
+
+  it('adds scrolls', () => {
+    const setScrolls = vi.fn()
+    const logInventory = vi.fn()
+    const providerValue = {
+      inventory: [],
+      setInventory: vi.fn(),
+      logInventory,
+      scrolls: [],
+      setScrolls,
+      sheet: { pre: 0 },
+      roll: vi.fn()
+    }
+    const {
+      getAllByPlaceholderText,
+      getByPlaceholderText,
+      getAllByText
+    } = renderWithContext(<Inventory />, { providerValue })
+
+    fireEvent.change(getAllByPlaceholderText('Name')[1], {
+      target: { value: 'Fireball' }
+    })
+    fireEvent.change(getByPlaceholderText('Casts'), { target: { value: '3' } })
+    fireEvent.click(getAllByText('Add')[1])
+
+    expect(setScrolls).toHaveBeenCalledWith([
+      expect.objectContaining({ name: 'Fireball', casts: 3 })
+    ])
+    expect(logInventory).toHaveBeenCalledWith(
+      'Added unclean scroll Fireball (3)'
+    )
   })
 })

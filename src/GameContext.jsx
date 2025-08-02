@@ -35,6 +35,7 @@ export function GameProvider({ children }) {
   const [current, setCurrent] = useState(null)
   const [sheet, setSheet] = useState(() => createSheet())
   const [inventory, setInventory] = useState([])
+  const [scrolls, setScrolls] = useState([])
   const [log, setLog] = useState(() => {
     const saved = localStorage.getItem('log')
     return saved ? JSON.parse(saved) : []
@@ -65,11 +66,11 @@ export function GameProvider({ children }) {
     if (skipSave.current) return
     setCharacters(prev => {
       const updated = [...prev]
-      const existing = updated[current] || { name: '', sheet: createSheet(), inventory: [] }
-      updated[current] = { ...existing, name: sheet.name, sheet, inventory }
+      const existing = updated[current] || { name: '', sheet: createSheet(), inventory: [], scrolls: [] }
+      updated[current] = { ...existing, name: sheet.name, sheet, inventory, scrolls }
       return updated
     })
-  }, [sheet, inventory, current])
+  }, [sheet, inventory, scrolls, current])
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -81,6 +82,7 @@ export function GameProvider({ children }) {
     setCurrent(idx)
     setSheet(char.sheet || createSheet())
     setInventory(char.inventory || [])
+    setScrolls(char.scrolls || [])
     if (doNavigate) navigate(`/sheet/${idx}`)
     setTimeout(() => {
       skipSave.current = false
@@ -88,11 +90,12 @@ export function GameProvider({ children }) {
   }, [navigate])
 
   const createCharacter = () => {
-    const newChar = { name: '', sheet: createSheet(), inventory: [] }
+    const newChar = { name: '', sheet: createSheet(), inventory: [], scrolls: [] }
     const index = characters.length
     setCharacters(prev => [...prev, newChar])
     setSheet(newChar.sheet)
     setInventory(newChar.inventory)
+    setScrolls(newChar.scrolls)
     setCurrent(index)
     navigate(`/sheet/${index}`)
   }
@@ -135,6 +138,8 @@ export function GameProvider({ children }) {
     setSheet,
     inventory,
     setInventory,
+    scrolls,
+    setScrolls,
     log,
     setLog,
     activeTab,
