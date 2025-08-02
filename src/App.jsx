@@ -19,6 +19,7 @@ export default function App() {
       tou: '1d20'
     },
     hp: 0,
+    maxHp: 0,
     armor: 0,
     omens: 0,
     silver: 0,
@@ -119,6 +120,10 @@ export default function App() {
         <label>
           HP
           <input type="number" value={sheet.hp} onChange={e => updateField('hp', e.target.value)} />
+        </label>
+        <label>
+          Max HP
+          <input type="number" value={sheet.maxHp} onChange={e => updateField('maxHp', e.target.value)} />
         </label>
         <label>
           Armor
