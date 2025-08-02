@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
+import { useGameContext } from '../GameContext'
 
-export default function CharacterSheet({ sheet, setSheet, onRoll }) {
+export default function CharacterSheet() {
+  const { sheet, setSheet, roll } = useGameContext()
   const [statDiceErrors, setStatDiceErrors] = useState({
     str: '',
     agi: '',
@@ -24,7 +26,7 @@ export default function CharacterSheet({ sheet, setSheet, onRoll }) {
     const fullNotation = mod ? `${notation}${mod >= 0 ? `+${mod}` : mod}` : notation
     try {
       Parser.parse(fullNotation)
-      onRoll(fullNotation, stat.toUpperCase())
+      roll(fullNotation, stat.toUpperCase())
       setStatDiceErrors(prev => ({ ...prev, [stat]: '' }))
     } catch {
       setStatDiceErrors(prev => ({ ...prev, [stat]: 'Invalid notation' }))

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { DndContext } from '@dnd-kit/core'
 import { SortableContext, useSortable, arrayMove } from '@dnd-kit/sortable'
+import { useGameContext } from './GameContext'
 
 function SortableItem({ item, startEdit, handleDelete }) {
   const {
@@ -27,7 +28,8 @@ function SortableItem({ item, startEdit, handleDelete }) {
   )
 }
 
-export default function Inventory({ items, onChange, onLog }) {
+export default function Inventory() {
+  const { inventory: items, setInventory: onChange, logInventory: onLog } = useGameContext()
   const empty = { name: '', qty: 1, notes: '' }
   const [form, setForm] = useState(empty)
   const [editingId, setEditingId] = useState(null)

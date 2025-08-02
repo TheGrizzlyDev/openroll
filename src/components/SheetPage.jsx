@@ -5,22 +5,17 @@ import Inventory from '../Inventory'
 import CharacterSheet from './CharacterSheet'
 import LogView from './LogView'
 import Overlay from './Overlay'
+import { useGameContext } from '../GameContext'
 
-export default function SheetPage({
-  sheet,
-  setSheet,
-  inventory,
-  setInventory,
-  log,
-  logInventory,
-  roll,
-  activeTab,
-  setActiveTab,
-  overlay,
-  setOverlay,
-  overlayTimeout,
-  loadCharacter
-}) {
+export default function SheetPage() {
+  const {
+    activeTab,
+    setActiveTab,
+    overlay,
+    setOverlay,
+    overlayTimeout,
+    loadCharacter
+  } = useGameContext()
   const { id } = useParams()
 
   useEffect(() => {
@@ -33,7 +28,7 @@ export default function SheetPage({
     <div className="container">
       <h1>Open Roll</h1>
       <Link to="/characters">Characters</Link>
-      <DiceRoller onRoll={roll} />
+      <DiceRoller />
 
       <div className="tabs">
         <button
@@ -57,14 +52,14 @@ export default function SheetPage({
       </div>
 
       {activeTab === 'character' && (
-        <CharacterSheet sheet={sheet} setSheet={setSheet} onRoll={roll} />
+        <CharacterSheet />
       )}
 
       {activeTab === 'inventory' && (
-        <Inventory items={inventory} onChange={setInventory} onLog={logInventory} />
+        <Inventory />
       )}
 
-      {activeTab === 'log' && <LogView log={log} />}
+      {activeTab === 'log' && <LogView />}
 
       <Overlay
         message={overlay.message}

@@ -1,14 +1,16 @@
 import { useState } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
+import { useGameContext } from './GameContext'
 
-export default function DiceRoller({ onRoll }) {
+export default function DiceRoller() {
+  const { roll } = useGameContext()
   const [notation, setNotation] = useState('1d20')
   const [error, setError] = useState('')
 
   const handleRoll = () => {
     try {
       Parser.parse(notation)
-      onRoll(notation)
+      roll(notation)
       setError('')
     } catch {
       setError('Invalid notation')

@@ -1,6 +1,8 @@
 import React from 'react'
+import { useGameContext } from '../GameContext'
 
-export default function LogView({ log }) {
+export default function LogView() {
+  const { log } = useGameContext()
   return (
     <div className="log">
       <h2>Rolls</h2>
