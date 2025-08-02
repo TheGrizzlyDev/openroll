@@ -1,5 +1,5 @@
 /* eslint react-refresh/only-export-components: off */
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, useContext, useCallback, useEffect, useRef, useState } from 'react'
 import { DiceRoller as DiceParser } from '@dice-roller/rpg-dice-roller'
 import { useNavigate, useLocation } from 'react-router-dom'
 
@@ -44,6 +44,11 @@ export function GameProvider({ children }) {
   const overlayTimeout = useRef(null)
 
   const skipSave = useRef(false)
+  const charactersRef = useRef(characters)
+
+  useEffect(() => {
+    charactersRef.current = characters
+  }, [characters])
 
   useEffect(() => {
     if (skipSave.current) return
@@ -57,6 +62,7 @@ export function GameProvider({ children }) {
 
   useEffect(() => {
     if (current === null) return
+    if (skipSave.current) return
     setCharacters(prev => {
       const updated = [...prev]
       const existing = updated[current] || { name: '', sheet: createSheet(), inventory: [] }
@@ -68,14 +74,18 @@ export function GameProvider({ children }) {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const loadCharacter = (idx, { navigate: doNavigate = true } = {}) => {
-    const char = characters[idx]
+  const loadCharacter = useCallback((idx, { navigate: doNavigate = true } = {}) => {
+    const char = charactersRef.current[idx]
     if (!char) return
+    skipSave.current = true
     setCurrent(idx)
     setSheet(char.sheet || createSheet())
     setInventory(char.inventory || [])
     if (doNavigate) navigate(`/sheet/${idx}`)
-  }
+    setTimeout(() => {
+      skipSave.current = false
+    })
+  }, [navigate])
 
   const createCharacter = () => {
     const newChar = { name: '', sheet: createSheet(), inventory: [] }

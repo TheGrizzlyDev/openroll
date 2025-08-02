@@ -22,7 +22,8 @@ export default function SheetPage() {
     if (id !== undefined) {
       loadCharacter(parseInt(id, 10), { navigate: false })
     }
-  }, [id, loadCharacter])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   return (
     <div className="container">
