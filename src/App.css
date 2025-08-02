@@ -1,0 +1,65 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+h1, h2 {
+  text-align: center;
+  margin: 0.5rem 0;
+}
+
+.sheet label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.sheet input,
+.sheet textarea,
+.dice-roller input,
+.dice-roller button {
+  width: 100%;
+  background: #111;
+  color: #ffff00;
+  border: 1px solid #ffff00;
+  padding: 0.4rem;
+  font-family: inherit;
+}
+
+.dice-roller {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.5rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat button {
+  margin-top: 0.25rem;
+}
+
+.log ul {
+  list-style: none;
+  padding: 0;
+}
+
+.log li {
+  margin-bottom: 0.25rem;
+}
+
+@media (min-width: 768px) {
+  .dice-roller input,
+  .dice-roller button {
+    width: auto;
+  }
+}

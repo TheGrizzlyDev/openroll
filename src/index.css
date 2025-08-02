@@ -1,0 +1,10 @@
+body {
+  margin: 0;
+  background: #000;
+  color: #ffff00;
+  font-family: 'UnifrakturCook', serif;
+}
+
+* {
+  box-sizing: border-box;
+}
