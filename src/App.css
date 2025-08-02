@@ -116,3 +116,31 @@ h1, h2 {
 .inventory li button {
   width: auto;
 }
+
+.overlay {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translate(-50%, -20px);
+  background: #111;
+  color: #ffff00;
+  border: 1px solid #ffff00;
+  padding: 0.5rem 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s, transform 0.5s;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.overlay.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+
+.overlay button {
+  width: auto;
+}

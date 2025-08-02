@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { DiceRoller as DiceParser } from '@dice-roller/rpg-dice-roller'
 import DiceRoller from './DiceRoller'
 import Inventory from './Inventory'
@@ -27,6 +27,8 @@ export default function App() {
   const [inventory, setInventory] = useState([])
   const [log, setLog] = useState([])
   const [activeTab, setActiveTab] = useState('character')
+  const [overlay, setOverlay] = useState({ message: '', visible: false })
+  const overlayTimeout = useRef(null)
 
   const updateField = (field, value) => setSheet(prev => ({ ...prev, [field]: value }))
   const updateStatDice = (stat, value) =>
@@ -38,6 +40,10 @@ export default function App() {
     const result = roller.roll(notation)
     const entry = { label, notation, output: result.output, total: result.total }
     setLog(prev => [entry, ...prev])
+    const message = `${label ? `${label}: ` : ''}${result.output}`
+    setOverlay({ message, visible: true })
+    clearTimeout(overlayTimeout.current)
+    overlayTimeout.current = setTimeout(() => setOverlay(prev => ({ ...prev, visible: false })), 10000)
     return result.total
   }
 
@@ -150,6 +156,17 @@ export default function App() {
         </ul>
       </div>
       )}
+      <div className={`overlay${overlay.visible ? ' show' : ''}`}>
+        <span>{overlay.message}</span>
+        <button
+          onClick={() => {
+            clearTimeout(overlayTimeout.current)
+            setOverlay(prev => ({ ...prev, visible: false }))
+          }}
+        >
+          ×
+        </button>
+      </div>
     </div>
   )
 }
