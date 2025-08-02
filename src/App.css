@@ -27,6 +27,15 @@ h1, h2 {
   font-family: inherit;
 }
 
+.error {
+  border-color: #ff0000;
+}
+
+.error-message {
+  color: #ff0000;
+  font-size: 0.8rem;
+}
+
 .dice-roller {
   display: flex;
   gap: 0.5rem;

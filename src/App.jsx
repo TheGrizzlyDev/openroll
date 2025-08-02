@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { DiceRoller as DiceParser } from '@dice-roller/rpg-dice-roller'
+import { DiceRoller as DiceParser, Parser } from '@dice-roller/rpg-dice-roller'
 import DiceRoller from './DiceRoller'
 import Inventory from './Inventory'
 import './App.css'
@@ -37,6 +37,12 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('character')
   const [overlay, setOverlay] = useState({ message: '', visible: false })
   const overlayTimeout = useRef(null)
+  const [statDiceErrors, setStatDiceErrors] = useState({
+    str: '',
+    agi: '',
+    pre: '',
+    tou: ''
+  })
 
   useEffect(() => {
     localStorage.setItem('characters', JSON.stringify(characters))
@@ -94,7 +100,13 @@ export default function App() {
     const mod = Number(sheet[stat]) || 0
     const notation = sheet.statDice[stat] || '1d20'
     const fullNotation = mod ? `${notation}${mod >= 0 ? `+${mod}` : mod}` : notation
-    roll(fullNotation, stat.toUpperCase())
+    try {
+      Parser.parse(fullNotation)
+      roll(fullNotation, stat.toUpperCase())
+      setStatDiceErrors(prev => ({ ...prev, [stat]: '' }))
+    } catch {
+      setStatDiceErrors(prev => ({ ...prev, [stat]: 'Invalid notation' }))
+    }
   }
 
   const logInventory = (message) => {
@@ -169,9 +181,16 @@ export default function App() {
               </label>
               <input
                 value={sheet.statDice[stat]}
-                onChange={e => updateStatDice(stat, e.target.value)}
+                onChange={e => {
+                  updateStatDice(stat, e.target.value)
+                  setStatDiceErrors(prev => ({ ...prev, [stat]: '' }))
+                }}
                 placeholder="1d20"
+                className={statDiceErrors[stat] ? 'error' : ''}
               />
+              {statDiceErrors[stat] && (
+                <span className="error-message">{statDiceErrors[stat]}</span>
+              )}
               <button onClick={() => rollStat(stat)}>Roll</button>
             </div>
           ))}
