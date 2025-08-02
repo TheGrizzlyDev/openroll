@@ -144,3 +144,19 @@ h1, h2 {
 .overlay button {
   width: auto;
 }
+
+.start-screen ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+
+.start-screen li {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.start-screen button {
+  width: auto;
+}
