@@ -1,0 +1,99 @@
+import { useState } from 'react'
+import { Parser } from '@dice-roller/rpg-dice-roller'
+
+export default function CharacterSheet({ sheet, setSheet, onRoll }) {
+  const [statDiceErrors, setStatDiceErrors] = useState({
+    str: '',
+    agi: '',
+    pre: '',
+    tou: ''
+  })
+
+  const updateField = (field, value) =>
+    setSheet(prev => ({ ...prev, [field]: value }))
+
+  const updateStatDice = (stat, value) =>
+    setSheet(prev => ({
+      ...prev,
+      statDice: { ...prev.statDice, [stat]: value }
+    }))
+
+  const rollStat = (stat) => {
+    const mod = Number(sheet[stat]) || 0
+    const notation = sheet.statDice[stat] || '1d20'
+    const fullNotation = mod ? `${notation}${mod >= 0 ? `+${mod}` : mod}` : notation
+    try {
+      Parser.parse(fullNotation)
+      onRoll(fullNotation, stat.toUpperCase())
+      setStatDiceErrors(prev => ({ ...prev, [stat]: '' }))
+    } catch {
+      setStatDiceErrors(prev => ({ ...prev, [stat]: 'Invalid notation' }))
+    }
+  }
+
+  return (
+    <div className="sheet">
+      <label>
+        Character
+        <input value={sheet.name} onChange={e => updateField('name', e.target.value)} />
+      </label>
+      <label>
+        Class
+        <input value={sheet.class} onChange={e => updateField('class', e.target.value)} />
+      </label>
+
+      <div className="stats">
+        {['str', 'agi', 'pre', 'tou'].map(stat => (
+          <div key={stat} className="stat">
+            <label>
+              {stat.toUpperCase()}
+              <input
+                type="number"
+                value={sheet[stat]}
+                onChange={e => updateField(stat, e.target.value)}
+              />
+            </label>
+            <input
+              value={sheet.statDice[stat]}
+              onChange={e => {
+                updateStatDice(stat, e.target.value)
+                setStatDiceErrors(prev => ({ ...prev, [stat]: '' }))
+              }}
+              placeholder="1d20"
+              className={statDiceErrors[stat] ? 'error' : ''}
+            />
+            {statDiceErrors[stat] && (
+              <span className="error-message">{statDiceErrors[stat]}</span>
+            )}
+            <button onClick={() => rollStat(stat)}>Roll</button>
+          </div>
+        ))}
+      </div>
+
+      <label>
+        HP
+        <input type="number" value={sheet.hp} onChange={e => updateField('hp', e.target.value)} />
+      </label>
+      <label>
+        Max HP
+        <input type="number" value={sheet.maxHp} onChange={e => updateField('maxHp', e.target.value)} />
+      </label>
+      <label>
+        Armor
+        <input type="number" value={sheet.armor} onChange={e => updateField('armor', e.target.value)} />
+      </label>
+      <label>
+        Omens
+        <input type="number" value={sheet.omens} onChange={e => updateField('omens', e.target.value)} />
+      </label>
+      <label>
+        Silver
+        <input type="number" value={sheet.silver} onChange={e => updateField('silver', e.target.value)} />
+      </label>
+      <label>
+        Notes
+        <textarea rows="4" value={sheet.notes} onChange={e => updateField('notes', e.target.value)} />
+      </label>
+    </div>
+  )
+}

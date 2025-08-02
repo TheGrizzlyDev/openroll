@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { DiceRoller as DiceParser, Parser } from '@dice-roller/rpg-dice-roller'
+import { DiceRoller as DiceParser } from '@dice-roller/rpg-dice-roller'
 import DiceRoller from './DiceRoller'
 import Inventory from './Inventory'
+import CharacterSelect from './components/CharacterSelect'
+import CharacterSheet from './components/CharacterSheet'
+import LogView from './components/LogView'
+import Overlay from './components/Overlay'
 import './App.css'
 
 const createSheet = () => ({
@@ -40,12 +44,6 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('character')
   const [overlay, setOverlay] = useState({ message: '', visible: false })
   const overlayTimeout = useRef(null)
-  const [statDiceErrors, setStatDiceErrors] = useState({
-    str: '',
-    agi: '',
-    pre: '',
-    tou: ''
-  })
 
   const skipSave = useRef(false)
 
@@ -90,10 +88,6 @@ export default function App() {
     setCharacters(prev => prev.filter((_, i) => i !== idx))
   }
 
-  const updateField = (field, value) => setSheet(prev => ({ ...prev, [field]: value }))
-  const updateStatDice = (stat, value) =>
-    setSheet(prev => ({ ...prev, statDice: { ...prev.statDice, [stat]: value } }))
-
   const roller = new DiceParser()
 
   const roll = (notation, label = '') => {
@@ -107,37 +101,18 @@ export default function App() {
     return result.total
   }
 
-  const rollStat = (stat) => {
-    const mod = Number(sheet[stat]) || 0
-    const notation = sheet.statDice[stat] || '1d20'
-    const fullNotation = mod ? `${notation}${mod >= 0 ? `+${mod}` : mod}` : notation
-    try {
-      Parser.parse(fullNotation)
-      roll(fullNotation, stat.toUpperCase())
-      setStatDiceErrors(prev => ({ ...prev, [stat]: '' }))
-    } catch {
-      setStatDiceErrors(prev => ({ ...prev, [stat]: 'Invalid notation' }))
-    }
-  }
-
   const logInventory = (message) => {
     setLog(prev => [{ label: 'Inventory', output: message }, ...prev])
   }
 
   if (current === null) {
     return (
-      <div className="container start-screen">
-        <h1>Open Roll</h1>
-        <ul className="character-list">
-          {characters.map((c, idx) => (
-            <li key={idx}>
-              <button onClick={() => loadCharacter(idx)}>{c.name || `Character ${idx + 1}`}</button>
-              <button onClick={() => deleteCharacter(idx)}>Delete</button>
-            </li>
-          ))}
-        </ul>
-        <button onClick={createCharacter}>Create New</button>
-      </div>
+      <CharacterSelect
+        characters={characters}
+        onLoad={loadCharacter}
+        onDelete={deleteCharacter}
+        onCreate={createCharacter}
+      />
     )
   }
 
@@ -169,99 +144,23 @@ export default function App() {
       </div>
 
       {activeTab === 'character' && (
-      <div className="sheet">
-        <label>
-          Character
-          <input value={sheet.name} onChange={e => updateField('name', e.target.value)} />
-        </label>
-        <label>
-          Class
-          <input value={sheet.class} onChange={e => updateField('class', e.target.value)} />
-        </label>
-
-        <div className="stats">
-          {['str', 'agi', 'pre', 'tou'].map(stat => (
-            <div key={stat} className="stat">
-              <label>
-                {stat.toUpperCase()}
-                <input
-                  type="number"
-                  value={sheet[stat]}
-                  onChange={e => updateField(stat, e.target.value)}
-                />
-              </label>
-              <input
-                value={sheet.statDice[stat]}
-                onChange={e => {
-                  updateStatDice(stat, e.target.value)
-                  setStatDiceErrors(prev => ({ ...prev, [stat]: '' }))
-                }}
-                placeholder="1d20"
-                className={statDiceErrors[stat] ? 'error' : ''}
-              />
-              {statDiceErrors[stat] && (
-                <span className="error-message">{statDiceErrors[stat]}</span>
-              )}
-              <button onClick={() => rollStat(stat)}>Roll</button>
-            </div>
-          ))}
-        </div>
-
-        <label>
-          HP
-          <input type="number" value={sheet.hp} onChange={e => updateField('hp', e.target.value)} />
-        </label>
-        <label>
-          Max HP
-          <input type="number" value={sheet.maxHp} onChange={e => updateField('maxHp', e.target.value)} />
-        </label>
-        <label>
-          Armor
-          <input type="number" value={sheet.armor} onChange={e => updateField('armor', e.target.value)} />
-        </label>
-        <label>
-          Omens
-          <input type="number" value={sheet.omens} onChange={e => updateField('omens', e.target.value)} />
-        </label>
-        <label>
-          Silver
-          <input type="number" value={sheet.silver} onChange={e => updateField('silver', e.target.value)} />
-        </label>
-        <label>
-          Notes
-          <textarea rows="4" value={sheet.notes} onChange={e => updateField('notes', e.target.value)} />
-        </label>
-      </div>
+        <CharacterSheet sheet={sheet} setSheet={setSheet} onRoll={roll} />
       )}
 
       {activeTab === 'inventory' && (
         <Inventory items={inventory} onChange={setInventory} onLog={logInventory} />
       )}
 
-      {activeTab === 'log' && (
-      <div className="log">
-        <h2>Rolls</h2>
-        <ul>
-          {log.map((entry, idx) => (
-            <li key={idx}>
-              {entry.label ? `${entry.label}: ` : ''}
-              {entry.output}
-            </li>
-          ))}
-        </ul>
-      </div>
-      )}
-      <div className={`overlay${overlay.visible ? ' show' : ''}`}>
-        <span>{overlay.message}</span>
-        <button
-          onClick={() => {
-            clearTimeout(overlayTimeout.current)
-            setOverlay(prev => ({ ...prev, visible: false }))
-          }}
-        >
-          ×
-        </button>
-      </div>
+      {activeTab === 'log' && <LogView log={log} />}
+
+      <Overlay
+        message={overlay.message}
+        visible={overlay.visible}
+        onClose={() => {
+          clearTimeout(overlayTimeout.current)
+          setOverlay(prev => ({ ...prev, visible: false }))
+        }}
+      />
     </div>
   )
 }
