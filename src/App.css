@@ -34,6 +34,26 @@ h1, h2 {
   margin-bottom: 1rem;
 }
 
+.tabs {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.tabs button {
+  flex: 1;
+  background: #111;
+  color: #ffff00;
+  border: 1px solid #ffff00;
+  padding: 0.5rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.tabs button.active {
+  background: #ffff00;
+  color: #111;
+}
+
 .stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));

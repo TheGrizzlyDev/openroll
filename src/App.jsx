@@ -26,6 +26,7 @@ export default function App() {
   })
   const [inventory, setInventory] = useState([])
   const [log, setLog] = useState([])
+  const [activeTab, setActiveTab] = useState('character')
 
   const updateField = (field, value) => setSheet(prev => ({ ...prev, [field]: value }))
   const updateStatDice = (stat, value) =>
@@ -56,6 +57,28 @@ export default function App() {
       <h1>Open Roll</h1>
       <DiceRoller onRoll={roll} />
 
+      <div className="tabs">
+        <button
+          className={activeTab === 'character' ? 'active' : ''}
+          onClick={() => setActiveTab('character')}
+        >
+          Character
+        </button>
+        <button
+          className={activeTab === 'inventory' ? 'active' : ''}
+          onClick={() => setActiveTab('inventory')}
+        >
+          Inventory
+        </button>
+        <button
+          className={activeTab === 'log' ? 'active' : ''}
+          onClick={() => setActiveTab('log')}
+        >
+          Log
+        </button>
+      </div>
+
+      {activeTab === 'character' && (
       <div className="sheet">
         <label>
           Character
@@ -103,13 +126,18 @@ export default function App() {
           Silver
           <input type="number" value={sheet.silver} onChange={e => updateField('silver', e.target.value)} />
         </label>
-        <Inventory items={inventory} onChange={setInventory} onLog={logInventory} />
         <label>
           Notes
           <textarea rows="4" value={sheet.notes} onChange={e => updateField('notes', e.target.value)} />
         </label>
       </div>
+      )}
 
+      {activeTab === 'inventory' && (
+        <Inventory items={inventory} onChange={setInventory} onLog={logInventory} />
+      )}
+
+      {activeTab === 'log' && (
       <div className="log">
         <h2>Rolls</h2>
         <ul>
@@ -121,6 +149,7 @@ export default function App() {
           ))}
         </ul>
       </div>
+      )}
     </div>
   )
 }
