@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { DndContext } from '@dnd-kit/core'
 import { SortableContext, useSortable, arrayMove } from '@dnd-kit/sortable'
 import { useGameContext } from './GameContext'
+import NumericInput from './components/NumericInput'
 
 function SortableItem({ item, startEdit, handleDelete }) {
   const {
@@ -108,11 +109,11 @@ export default function Inventory() {
           value={form.name}
           onChange={e => handleFormChange('name', e.target.value)}
         />
-        <input
-          type="number"
+        <NumericInput
           placeholder="Qty"
           value={form.qty}
           onChange={e => handleFormChange('qty', e.target.value)}
+          min={0}
         />
         <input
           placeholder="Notes"

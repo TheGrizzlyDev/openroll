@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
+import NumericInput from './NumericInput'
 
 export default function CharacterSheet() {
   const { sheet, setSheet, roll } = useGameContext()
@@ -49,8 +50,7 @@ export default function CharacterSheet() {
           <div key={stat} className="stat">
             <label>
               {stat.toUpperCase()}
-              <input
-                type="number"
+              <NumericInput
                 value={sheet[stat]}
                 onChange={e => updateField(stat, e.target.value)}
               />
@@ -74,23 +74,23 @@ export default function CharacterSheet() {
 
       <label>
         HP
-        <input type="number" value={sheet.hp} onChange={e => updateField('hp', e.target.value)} />
+        <NumericInput value={sheet.hp} onChange={e => updateField('hp', e.target.value)} min={0} />
       </label>
       <label>
         Max HP
-        <input type="number" value={sheet.maxHp} onChange={e => updateField('maxHp', e.target.value)} />
+        <NumericInput value={sheet.maxHp} onChange={e => updateField('maxHp', e.target.value)} min={0} />
       </label>
       <label>
         Armor
-        <input type="number" value={sheet.armor} onChange={e => updateField('armor', e.target.value)} />
+        <NumericInput value={sheet.armor} onChange={e => updateField('armor', e.target.value)} min={0} />
       </label>
       <label>
         Omens
-        <input type="number" value={sheet.omens} onChange={e => updateField('omens', e.target.value)} />
+        <NumericInput value={sheet.omens} onChange={e => updateField('omens', e.target.value)} min={0} />
       </label>
       <label>
         Silver
-        <input type="number" value={sheet.silver} onChange={e => updateField('silver', e.target.value)} />
+        <NumericInput value={sheet.silver} onChange={e => updateField('silver', e.target.value)} min={0} />
       </label>
       <label>
         Notes
