@@ -5,10 +5,12 @@ import NumericInput from '../components/NumericInput'
 import classes from './classes'
 import type { Sheet } from './sheet'
 
+type StatKey = keyof Sheet & keyof Sheet['statDice'];
+
 export default function CharacterSheet() {
   const { sheet, setSheet, roll } = useGameContext()
   const [statDiceErrors, setStatDiceErrors] = useState<
-    Record<keyof Sheet['statDice'], string>
+    Record<StatKey, string>
   >({
     str: '',
     agi: '',
@@ -19,22 +21,22 @@ export default function CharacterSheet() {
   const updateField = <K extends keyof Sheet>(field: K, value: Sheet[K]) =>
     setSheet(prev => ({ ...prev, [field]: value }))
 
-  const updateStatDice = (stat: keyof Sheet['statDice'], value: string) =>
+  const updateStatDice = (stat: StatKey, value: string) =>
     setSheet(prev => ({
       ...prev,
       statDice: { ...prev.statDice, [stat]: value }
     }))
 
-  const rollStat = (stat: string) => {
+  const rollStat = (stat: StatKey) => {
     const mod = Number(sheet[stat]) || 0
     const notation = sheet.statDice[stat] || '1d20'
     const fullNotation = mod ? `${notation}${mod >= 0 ? `+${mod}` : mod}` : notation
     try {
       Parser.parse(fullNotation)
       roll(fullNotation, stat.toUpperCase())
-    setStatDiceErrors((prev: Record<string, string>) => ({ ...prev, [stat]: '' }))
+      setStatDiceErrors((prev: Record<StatKey, string>) => ({ ...prev, [stat]: '' }))
     } catch {
-      setStatDiceErrors((prev: Record<string, string>) => ({ ...prev, [stat]: 'Invalid notation' }))
+      setStatDiceErrors((prev: Record<StatKey, string>) => ({ ...prev, [stat]: 'Invalid notation' }))
     }
   }
 
@@ -55,7 +57,7 @@ export default function CharacterSheet() {
       </label>
 
       <div className="stats">
-        {(['str', 'agi', 'pre', 'tou'] as Array<keyof Sheet>).map(stat => (
+        {(['str', 'agi', 'pre', 'tou'] as Array<StatKey>).map(stat => (
           <div key={stat} className="stat">
             <label>
               {stat.toUpperCase()}
