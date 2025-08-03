@@ -1,5 +1,5 @@
 /* eslint react-refresh/only-export-components: off */
-import { createContext, useContext, useCallback, useEffect, useRef, useState } from 'react'
+import { createContext, useContext, useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { DiceRoller as DiceParser } from '@dice-roller/rpg-dice-roller'
 import { useNavigate, useLocation } from 'react-router-dom'
 
@@ -24,28 +24,28 @@ const createSheet = () => ({
   notes: ''
 })
 
-export const GameContext = createContext(null)
+export const GameContext = createContext<any>(null)
 export const useGameContext = () => useContext(GameContext)
 
-export function GameProvider({ children }) {
-  const [characters, setCharacters] = useState(() => {
+export function GameProvider({ children }: { children: ReactNode }) {
+  const [characters, setCharacters] = useState<any[]>(() => {
     const saved = localStorage.getItem('characters')
     return saved ? JSON.parse(saved) : []
   })
-  const [current, setCurrent] = useState(null)
-  const [sheet, setSheet] = useState(() => createSheet())
-  const [inventory, setInventory] = useState([])
-  const [scrolls, setScrolls] = useState([])
-  const [log, setLog] = useState(() => {
+  const [current, setCurrent] = useState<number | null>(null)
+  const [sheet, setSheet] = useState<any>(() => createSheet())
+  const [inventory, setInventory] = useState<any[]>([])
+  const [scrolls, setScrolls] = useState<any[]>([])
+  const [log, setLog] = useState<any[]>(() => {
     const saved = localStorage.getItem('log')
     return saved ? JSON.parse(saved) : []
   })
-  const [activeTab, setActiveTab] = useState('character')
-  const [overlay, setOverlay] = useState({ message: '', visible: false })
-  const overlayTimeout = useRef(null)
+  const [activeTab, setActiveTab] = useState<string>('character')
+  const [overlay, setOverlay] = useState<{ message: string; visible: boolean }>({ message: '', visible: false })
+  const overlayTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const skipSave = useRef(false)
-  const charactersRef = useRef(characters)
+  const skipSave = useRef<boolean>(false)
+  const charactersRef = useRef<any[]>(characters)
 
   useEffect(() => {
     charactersRef.current = characters
@@ -75,7 +75,7 @@ export function GameProvider({ children }) {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const loadCharacter = useCallback((idx, { navigate: doNavigate = true } = {}) => {
+  const loadCharacter = useCallback((idx: number, { navigate: doNavigate = true }: { navigate?: boolean } = {}) => {
     const char = charactersRef.current[idx]
     if (!char) return
     skipSave.current = true
@@ -100,7 +100,7 @@ export function GameProvider({ children }) {
     navigate(`/sheet/${index}`)
   }
 
-  const deleteCharacter = (idx) => {
+  const deleteCharacter = (idx: number) => {
     setCharacters(prev => prev.filter((_, i) => i !== idx))
     setCurrent(null)
     navigate('/characters')
@@ -108,8 +108,8 @@ export function GameProvider({ children }) {
 
   const exportCharacters = () => JSON.stringify(characters, null, 2)
 
-  const importCharacters = (data) => {
-    let parsed
+  const importCharacters = (data: any) => {
+    let parsed: any
     try {
       parsed = typeof data === 'string' ? JSON.parse(data) : data
     } catch {
@@ -129,18 +129,18 @@ export function GameProvider({ children }) {
 
   const roller = new DiceParser()
 
-  const roll = (notation, label = '') => {
-    const result = roller.roll(notation)
+  const roll = (notation: string, label = '') => {
+    const result = roller.roll(notation) as any
     const entry = { label, notation, output: result.output, total: result.total }
     setLog(prev => [entry, ...prev])
     const message = `${label ? `${label}: ` : ''}${result.output}`
     setOverlay({ message, visible: true })
-    clearTimeout(overlayTimeout.current)
+    if (overlayTimeout.current) clearTimeout(overlayTimeout.current)
     overlayTimeout.current = setTimeout(() => setOverlay(prev => ({ ...prev, visible: false })), 10000)
-    return result.total
+    return result.total as number
   }
 
-  const logInventory = (message) => {
+  const logInventory = (message: string) => {
     setLog(prev => [{ label: 'Inventory', output: message }, ...prev])
   }
 

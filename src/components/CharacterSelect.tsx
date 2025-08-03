@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { type ChangeEvent } from 'react'
 import { useGameContext } from '../GameContext'
 
 export default function CharacterSelect() {
@@ -22,24 +22,24 @@ export default function CharacterSelect() {
     URL.revokeObjectURL(url)
   }
 
-  const handleImport = (e) => {
-    const file = e.target.files[0]
+  const handleImport = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
     if (!file) return
     const reader = new FileReader()
-    reader.onload = ({ target }) => {
-      importCharacters(target.result)
+    reader.onload = ({ target }: ProgressEvent<FileReader>) => {
+      importCharacters(target?.result as string)
     }
     reader.readAsText(file)
     e.target.value = ''
   }
 
-  const confirmDelete = (idx) =>
+  const confirmDelete = (idx: number) =>
     window.confirm('Delete this character?') && deleteCharacter(idx)
   return (
     <div className="container start-screen">
       <h1>Open Roll</h1>
       <ul className="character-list">
-        {characters.map((c, idx) => (
+        {characters.map((c: any, idx: number) => (
           <li key={idx}>
             <button onClick={() => loadCharacter(idx)}>{c.name || `Character ${idx + 1}`}</button>
             <button onClick={() => confirmDelete(idx)}>Delete</button>

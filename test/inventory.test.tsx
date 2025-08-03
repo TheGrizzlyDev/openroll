@@ -1,9 +1,10 @@
+import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import Inventory from '../src/Inventory'
 import { GameContext } from '../src/GameContext'
 
-const renderWithContext = (ui, { providerValue }) => {
+const renderWithContext = (ui: React.ReactElement, { providerValue }: { providerValue: any }) => {
   return render(
     <GameContext.Provider value={providerValue}>{ui}</GameContext.Provider>
   )

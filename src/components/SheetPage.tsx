@@ -66,8 +66,8 @@ export default function SheetPage() {
         message={overlay.message}
         visible={overlay.visible}
         onClose={() => {
-          clearTimeout(overlayTimeout.current)
-          setOverlay(prev => ({ ...prev, visible: false }))
+          if (overlayTimeout.current) clearTimeout(overlayTimeout.current)
+          setOverlay((prev: any) => ({ ...prev, visible: false }))
         }}
       />
     </div>

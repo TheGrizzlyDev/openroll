@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState, type ChangeEvent } from 'react'
 import { DndContext } from '@dnd-kit/core'
 import { SortableContext, useSortable, arrayMove } from '@dnd-kit/sortable'
 import { useGameContext } from './GameContext'
 import NumericInput from './components/NumericInput'
 
-function SortableItem({ item, startEdit, handleDelete }) {
+function SortableItem({ item, startEdit, handleDelete }: any) {
   const {
     attributes,
     listeners,
@@ -41,12 +41,12 @@ export default function Inventory() {
   } = useGameContext()
   const empty = { name: '', qty: 1, notes: '' }
   const [form, setForm] = useState(empty)
-  const [editingId, setEditingId] = useState(null)
+  const [editingId, setEditingId] = useState<number | null>(null)
   const emptyScroll = { name: '', type: 'unclean', casts: 1, notes: '' }
   const [scrollForm, setScrollForm] = useState(emptyScroll)
-  const [editingScrollId, setEditingScrollId] = useState(null)
+  const [editingScrollId, setEditingScrollId] = useState<number | null>(null)
 
-  const handleFormChange = (field, value) => {
+  const handleFormChange = (field: string, value: any) => {
     setForm(prev => ({ ...prev, [field]: value }))
   }
 
@@ -68,36 +68,36 @@ export default function Inventory() {
     resetForm()
   }
 
-  const startEdit = (id) => {
-    const item = items.find(i => i.id === id)
+  const startEdit = (id: number) => {
+    const item = items.find((i: any) => i.id === id)
     if (!item) return
     setForm({ name: item.name, qty: item.qty, notes: item.notes })
     setEditingId(id)
   }
 
   const handleSave = () => {
-    onChange(items.map(i => (i.id === editingId ? { ...i, ...form, qty: Number(form.qty) || 0 } : i)))
+    onChange(items.map((i: any) => (i.id === editingId ? { ...i, ...form, qty: Number(form.qty) || 0 } : i)))
     onLog?.(`Updated ${form.name}`)
     resetForm()
   }
 
-  const handleDelete = (id) => {
-    const item = items.find(i => i.id === id)
-    onChange(items.filter(i => i.id !== id))
+  const handleDelete = (id: number) => {
+    const item = items.find((i: any) => i.id === id)
+    onChange(items.filter((i: any) => i.id !== id))
     onLog?.(`Removed ${item?.name}`)
     if (editingId === id) resetForm()
   }
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: any) => {
     const { active, over } = event
     if (over && active.id !== over.id) {
-      const oldIndex = items.findIndex(i => i.id === active.id)
-      const newIndex = items.findIndex(i => i.id === over.id)
+      const oldIndex = items.findIndex((i: any) => i.id === active.id)
+      const newIndex = items.findIndex((i: any) => i.id === over.id)
       onChange(arrayMove(items, oldIndex, newIndex))
     }
   }
 
-  const handleScrollFormChange = (field, value) => {
+  const handleScrollFormChange = (field: string, value: any) => {
     setScrollForm(prev => ({ ...prev, [field]: value }))
   }
 
@@ -120,8 +120,8 @@ export default function Inventory() {
     resetScrollForm()
   }
 
-  const startScrollEdit = (id) => {
-    const scroll = scrolls.find(s => s.id === id)
+  const startScrollEdit = (id: number) => {
+    const scroll = scrolls.find((s: any) => s.id === id)
     if (!scroll) return
     setScrollForm({
       name: scroll.name,
@@ -134,7 +134,7 @@ export default function Inventory() {
 
   const handleSaveScroll = () => {
     setScrolls(
-      scrolls.map(s =>
+      scrolls.map((s: any) =>
         s.id === editingScrollId
           ? { ...s, ...scrollForm, casts: Number(scrollForm.casts) || 0 }
           : s
@@ -144,15 +144,15 @@ export default function Inventory() {
     resetScrollForm()
   }
 
-  const handleDeleteScroll = (id) => {
-    const scroll = scrolls.find(s => s.id === id)
-    setScrolls(scrolls.filter(s => s.id !== id))
+  const handleDeleteScroll = (id: number) => {
+    const scroll = scrolls.find((s: any) => s.id === id)
+    setScrolls(scrolls.filter((s: any) => s.id !== id))
     onLog?.(`Removed scroll ${scroll?.name}`)
     if (editingScrollId === id) resetScrollForm()
   }
 
-  const handleCastScroll = (id) => {
-    const scroll = scrolls.find(s => s.id === id)
+  const handleCastScroll = (id: number) => {
+    const scroll = scrolls.find((s: any) => s.id === id)
     if (!scroll) return
     const result = roll(`1d20+${sheet.pre}`, `Cast ${scroll.name}`)
     const success = result >= 12
@@ -161,11 +161,11 @@ export default function Inventory() {
       `${scroll.name} ${success ? 'succeeds' : 'fails'} (${remaining} left)`
     )
     if (remaining <= 0) {
-      setScrolls(scrolls.filter(s => s.id !== id))
+      setScrolls(scrolls.filter((s: any) => s.id !== id))
       onLog?.(`${scroll.name} is spent`)
     } else {
       setScrolls(
-        scrolls.map(s => (s.id === id ? { ...s, casts: remaining } : s))
+        scrolls.map((s: any) => (s.id === id ? { ...s, casts: remaining } : s))
       )
     }
   }
@@ -174,9 +174,9 @@ export default function Inventory() {
     <div className="inventory">
       <h2>Inventory</h2>
       <DndContext onDragEnd={handleDragEnd}>
-        <SortableContext items={items.map(i => i.id)}>
+        <SortableContext items={items.map((i: any) => i.id)}>
           <ul>
-            {items.map(item => (
+            {items.map((item: any) => (
               <SortableItem
                 key={item.id}
                 item={item}
@@ -191,18 +191,18 @@ export default function Inventory() {
         <input
           placeholder="Name"
           value={form.name}
-          onChange={e => handleFormChange('name', e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleFormChange('name', e.target.value)}
         />
         <NumericInput
           placeholder="Qty"
           value={form.qty}
-          onChange={e => handleFormChange('qty', e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleFormChange('qty', e.target.value)}
           min={0}
         />
         <input
           placeholder="Notes"
           value={form.notes}
-          onChange={e => handleFormChange('notes', e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleFormChange('notes', e.target.value)}
         />
         {editingId ? (
           <>
@@ -215,7 +215,7 @@ export default function Inventory() {
       </div>
       <h2>Scrolls</h2>
       <ul>
-        {scrolls.map(scroll => (
+        {scrolls.map((scroll: any) => (
           <li key={scroll.id}>
             <span>
               {scroll.name} [{scroll.type}] ({scroll.casts})
@@ -230,7 +230,7 @@ export default function Inventory() {
       <div className="inventory-form">
         <select
           value={scrollForm.type}
-          onChange={e => handleScrollFormChange('type', e.target.value)}
+          onChange={(e: ChangeEvent<HTMLSelectElement>) => handleScrollFormChange('type', e.target.value)}
         >
           <option value="unclean">Unclean</option>
           <option value="sacred">Sacred</option>
@@ -238,18 +238,18 @@ export default function Inventory() {
         <input
           placeholder="Name"
           value={scrollForm.name}
-          onChange={e => handleScrollFormChange('name', e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleScrollFormChange('name', e.target.value)}
         />
         <input
           type="number"
           placeholder="Casts"
           value={scrollForm.casts}
-          onChange={e => handleScrollFormChange('casts', e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleScrollFormChange('casts', e.target.value)}
         />
         <input
           placeholder="Notes"
           value={scrollForm.notes}
-          onChange={e => handleScrollFormChange('notes', e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => handleScrollFormChange('notes', e.target.value)}
         />
         {editingScrollId ? (
           <>

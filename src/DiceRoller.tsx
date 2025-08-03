@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ChangeEvent } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from './GameContext'
 
@@ -22,7 +22,7 @@ export default function DiceRoller() {
       <input
         type="text"
         value={notation}
-        onChange={e => {
+        onChange={(e: ChangeEvent<HTMLInputElement>) => {
           setNotation(e.target.value)
           setError('')
         }}

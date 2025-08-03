@@ -1,5 +1,15 @@
-export default function NumericInput({ value, onChange, min, max, step = 1, ...props }) {
-  const clamp = (val) => {
+import type React from 'react'
+
+interface NumericInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  value: string | number
+  onChange?: React.ChangeEventHandler<HTMLInputElement>
+  min?: number
+  max?: number
+  step?: number
+}
+
+export default function NumericInput({ value, onChange, min, max, step = 1, ...props }: NumericInputProps) {
+  const clamp = (val: unknown) => {
     let num = Number(val)
     if (!Number.isFinite(num)) num = 0
     if (min !== undefined) num = Math.max(num, min)
@@ -7,9 +17,9 @@ export default function NumericInput({ value, onChange, min, max, step = 1, ...p
     return num
   }
 
-  const handleButton = (delta) => {
+  const handleButton = (delta: number) => {
     const newVal = clamp((Number(value) || 0) + delta)
-    onChange?.({ target: { value: String(newVal) } })
+    onChange?.({ target: { value: String(newVal) } } as any)
   }
 
   return (
