@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
 import NumericInput from './NumericInput'
+import classes from '../data/classes'
 
 export default function CharacterSheet() {
   const { sheet, setSheet, roll } = useGameContext()
@@ -42,7 +43,12 @@ export default function CharacterSheet() {
       </label>
       <label>
         Class
-        <input value={sheet.class} onChange={e => updateField('class', e.target.value)} />
+        <select value={sheet.class} onChange={e => updateField('class', e.target.value)}>
+          <option value="">No class</option>
+          {classes.map(cls => (
+            <option key={cls} value={cls}>{cls}</option>
+          ))}
+        </select>
       </label>
 
       <div className="stats">
