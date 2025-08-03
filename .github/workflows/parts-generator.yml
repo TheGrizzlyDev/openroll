@@ -21,7 +21,6 @@ jobs:
 
   generate:
     needs: list
-    if: ${{ fromJson(needs.list.outputs.parts).length > 0 }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
