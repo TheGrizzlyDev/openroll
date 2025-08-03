@@ -106,6 +106,27 @@ export function GameProvider({ children }) {
     navigate('/characters')
   }
 
+  const exportCharacters = () => JSON.stringify(characters, null, 2)
+
+  const importCharacters = (data) => {
+    let parsed
+    try {
+      parsed = typeof data === 'string' ? JSON.parse(data) : data
+    } catch {
+      return false
+    }
+    if (!Array.isArray(parsed)) return false
+    const sanitized = parsed.map(c => {
+      const name = typeof c.name === 'string' ? c.name : ''
+      const sheet = typeof c.sheet === 'object' ? { ...createSheet(), ...c.sheet } : createSheet()
+      const inventory = Array.isArray(c.inventory) ? c.inventory : []
+      const scrolls = Array.isArray(c.scrolls) ? c.scrolls : []
+      return { name, sheet, inventory, scrolls }
+    })
+    setCharacters(prev => [...prev, ...sanitized])
+    return true
+  }
+
   const roller = new DiceParser()
 
   const roll = (notation, label = '') => {
@@ -150,6 +171,8 @@ export function GameProvider({ children }) {
     loadCharacter,
     createCharacter,
     deleteCharacter,
+    exportCharacters,
+    importCharacters,
     roll,
     logInventory
   }
