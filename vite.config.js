@@ -6,6 +6,11 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import sharp from 'sharp';
 import fs from 'fs/promises';
 import path from 'path';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+require('ts-node/register');
+const { default: nameBundle } = await import('./vite-plugin-name-bundle.ts');
 
 const SOURCE = 'public/full-icon.png';
 const OUT_DIR = 'public';
@@ -43,6 +48,7 @@ export default defineConfig(({ base = '/' }) => ({
   base,
   plugins: [
     react(),
+    nameBundle(),
 
     {
       name: 'generate-icons',
