@@ -246,7 +246,7 @@ export default function Inventory() {
       <div className="inventory-form">
         <select
           value={scrollForm.type}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) => handleScrollFormChange('type', e.target.value)}
+          onChange={(e: ChangeEvent<HTMLSelectElement>) => handleScrollFormChange('type', e.target.value as ScrollForm['type'])}
         >
           <option value="unclean">Unclean</option>
           <option value="sacred">Sacred</option>
