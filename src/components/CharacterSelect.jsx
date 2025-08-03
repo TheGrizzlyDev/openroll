@@ -33,6 +33,8 @@ export default function CharacterSelect() {
     e.target.value = ''
   }
 
+  const confirmDelete = (idx) =>
+    window.confirm('Delete this character?') && deleteCharacter(idx)
   return (
     <div className="container start-screen">
       <h1>Open Roll</h1>
@@ -40,7 +42,7 @@ export default function CharacterSelect() {
         {characters.map((c, idx) => (
           <li key={idx}>
             <button onClick={() => loadCharacter(idx)}>{c.name || `Character ${idx + 1}`}</button>
-            <button onClick={() => deleteCharacter(idx)}>Delete</button>
+            <button onClick={() => confirmDelete(idx)}>Delete</button>
           </li>
         ))}
       </ul>
