@@ -1,8 +1,8 @@
 import { useState, type ChangeEvent } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
-import NumericInput from './NumericInput'
-import classes from '../data/classes'
+import NumericInput from '../components/NumericInput'
+import classes from './classes'
 
 export default function CharacterSheet() {
   const { sheet, setSheet, roll } = useGameContext()

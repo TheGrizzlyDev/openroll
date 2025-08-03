@@ -1,8 +1,8 @@
 import { useState, type ChangeEvent } from 'react'
 import { DndContext } from '@dnd-kit/core'
 import { SortableContext, useSortable, arrayMove } from '@dnd-kit/sortable'
-import { useGameContext } from './GameContext'
-import NumericInput from './components/NumericInput'
+import { useGameContext } from '../GameContext'
+import NumericInput from '../components/NumericInput'
 
 function SortableItem({ item, startEdit, handleDelete }: any) {
   const {

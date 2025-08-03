@@ -1,7 +1,7 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
-import Inventory from '../src/Inventory'
+import { render, fireEvent, cleanup } from '@testing-library/react'
+import { describe, it, expect, vi, afterEach } from 'vitest'
+import Inventory from '../src/morg_borg/Inventory'
 import { GameContext } from '../src/GameContext'
 
 const renderWithContext = (ui: React.ReactElement, { providerValue }: { providerValue: any }) => {
@@ -9,6 +9,8 @@ const renderWithContext = (ui: React.ReactElement, { providerValue }: { provider
     <GameContext.Provider value={providerValue}>{ui}</GameContext.Provider>
   )
 }
+
+afterEach(() => cleanup())
 
 describe('Inventory handlers', () => {
   it('adds items', () => {
