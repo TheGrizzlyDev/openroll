@@ -1,5 +1,7 @@
 import { DiceRoller, type DiceRoll } from '@dice-roller/rpg-dice-roller'
 import { createSheet } from './sheet'
+import { rollArmor, rollWeapon, rollGear, rollSilver } from './data/gear'
+import { rollTrait, rollBackground } from './data/traits'
 
 export interface InventoryItem {
   id: number
@@ -23,41 +25,6 @@ const abilityScoreToModifier = (score: number): number => {
   return 3
 }
 
-const armorTable = [
-  { name: 'No armor', armor: 0 },
-  { name: 'Light armor', armor: 1 },
-  { name: 'Medium armor', armor: 2 },
-  { name: 'Heavy armor', armor: 3 }
-]
-
-const weaponTable = [
-  { name: 'Staff', notes: '1d4 damage' },
-  { name: 'Dagger', notes: '1d4 damage' },
-  { name: 'Club', notes: '1d4 damage' },
-  { name: 'Sword', notes: '1d6 damage' },
-  { name: 'Axe', notes: '1d6 damage' },
-  { name: 'Mace', notes: '1d6 damage' },
-  { name: 'Flail', notes: '1d8 damage' },
-  { name: 'Polearm', notes: '1d8 damage' },
-  { name: 'Bow', notes: '1d6 damage' },
-  { name: 'Crossbow', notes: '1d8 damage' }
-]
-
-const gearTable = [
-  'Backpack',
-  'Caltrops',
-  'Chain (10ft)',
-  'Crowbar',
-  'Grappling hook',
-  'Lantern & oil',
-  'Lockpicks',
-  'Mirror',
-  'Rations (d4 days)',
-  'Rope (30ft)',
-  'Shovel',
-  'Torch'
-]
-
 export function generateCharacter(): GeneratedCharacter {
   const roller = new DiceRoller()
 
@@ -75,16 +42,12 @@ export function generateCharacter(): GeneratedCharacter {
 
   const omens = rollTotal('1d2')
 
-  const armorRoll = rollTotal('1d4')
-  const armorResult = armorTable[armorRoll - 1]
-
-  const weaponRoll = rollTotal('1d10')
-  const weaponResult = weaponTable[weaponRoll - 1]
-
-  const gearRoll = rollTotal('1d12')
-  const gearResult = gearTable[gearRoll - 1]
-
-  const silver = rollTotal('2d6') * 10
+  const armorResult = rollArmor()
+  const weaponResult = rollWeapon()
+  const gearResult = rollGear()
+  const silver = rollSilver()
+  const trait = rollTrait()
+  const background = rollBackground()
 
   const sheet = {
     ...createSheet(),
@@ -93,7 +56,9 @@ export function generateCharacter(): GeneratedCharacter {
     maxHp: hp,
     armor: armorResult.armor,
     omens,
-    silver
+    silver,
+    trait,
+    background
   }
 
   const inventory = [
