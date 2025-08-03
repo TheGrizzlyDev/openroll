@@ -20,6 +20,7 @@ jobs:
           node-version: 18
       - run: npm ci
       - run: npm run build-gh-pages
+      - run: cp dist/index.html dist/404.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
