@@ -42,22 +42,4 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true
   },
-  build: {
-    rollupOptions: {
-      treeshake: true,
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('@dice-roller/rpg-dice-roller')) {
-              return 'chunk-dice-roller'
-            }
-            if (id.includes('react-dom')) {
-              return 'chunk-react-dom'
-            }
-            return 'vendor'
-          }
-        }
-      }
-    }
-  }
 })
