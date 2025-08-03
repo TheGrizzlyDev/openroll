@@ -17,7 +17,7 @@ jobs:
       - id: parts
         run: |
           parts=$(node scripts/parts-generator.js list-parts-to-update)
-          echo "parts=$parts" >> "$GITHUB_OUTPUT"
+          echo "parts=$parts" | tee "$GITHUB_OUTPUT"
 
   generate:
     needs: list
