@@ -19,6 +19,9 @@ jobs:
         with:
           node-version: 18
       - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test -- --environment jsdom
       - run: npm run build-gh-pages
       - run: cp dist/index.html dist/404.html
       - uses: actions/upload-pages-artifact@v3
