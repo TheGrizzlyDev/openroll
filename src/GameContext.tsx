@@ -3,6 +3,7 @@ import { createContext, useContext, useCallback, useEffect, useRef, useState, ty
 import { DiceRoller as DiceParser } from '@dice-roller/rpg-dice-roller'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { createSheet } from './morg_borg/sheet'
+import { generateCharacter } from './morg_borg/generateCharacter'
 
 export const GameContext = createContext<any>(null)
 export const useGameContext = () => useContext(GameContext)
@@ -70,14 +71,31 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, [navigate])
 
   const createCharacter = () => {
-    const newChar = { name: '', sheet: createSheet(), inventory: [], scrolls: [] }
+    skipSave.current = true
+    const { sheet: newSheet, inventory: newInv } = generateCharacter()
     const index = characters.length
-    setCharacters(prev => [...prev, newChar])
-    setSheet(newChar.sheet)
-    setInventory(newChar.inventory)
-    setScrolls(newChar.scrolls)
+    setSheet(newSheet)
+    setInventory(newInv)
+    setScrolls([])
     setCurrent(index)
+    navigate('/generator')
+  }
+
+  const finalizeCharacter = () => {
+    const index = current ?? characters.length
+    setCharacters(prev => {
+      const updated = [...prev]
+      updated[index] = { name: '', sheet, inventory, scrolls }
+      return updated
+    })
+    skipSave.current = false
     navigate(`/sheet/${index}`)
+  }
+
+  const cancelCreation = () => {
+    skipSave.current = false
+    setCurrent(null)
+    navigate('/characters')
   }
 
   const deleteCharacter = (idx: number) => {
@@ -150,6 +168,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
     overlayTimeout,
     loadCharacter,
     createCharacter,
+    finalizeCharacter,
+    cancelCreation,
     deleteCharacter,
     exportCharacters,
     importCharacters,
