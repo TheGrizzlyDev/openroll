@@ -7,7 +7,7 @@ export default function LogView() {
     <div className="log">
       <h2>Rolls</h2>
       <ul>
-        {log.map((entry: any, idx: number) => (
+        {log.map((entry, idx) => (
           <li key={idx}>
             {entry.label ? `${entry.label}: ` : ''}
             {entry.output}

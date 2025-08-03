@@ -1,32 +1,106 @@
 /* eslint react-refresh/only-export-components: off */
-import { createContext, useContext, useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
-import { DiceRoller as DiceParser } from '@dice-roller/rpg-dice-roller'
+import {
+  createContext,
+  useContext,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type Dispatch,
+  type SetStateAction
+} from 'react'
+import { DiceRoller as DiceParser, type DiceRoll } from '@dice-roller/rpg-dice-roller'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { createSheet } from './morg_borg/sheet'
+import { createSheet, type Sheet } from './morg_borg/sheet'
 import { generateCharacter } from './morg_borg/generateCharacter'
+import type { MutableRefObject } from 'react'
 
-export const GameContext = createContext<any>(null)
-export const useGameContext = () => useContext(GameContext)
+export interface InventoryItem {
+  id: number
+  name: string
+  qty: number
+  notes: string
+}
+
+export interface Scroll {
+  id: number
+  type: 'unclean' | 'sacred'
+  name: string
+  casts: number
+  notes: string
+}
+
+export interface LogEntry {
+  label: string
+  notation?: string
+  output: string
+  total?: number
+}
+
+export interface Character {
+  name: string
+  sheet: Sheet
+  inventory: InventoryItem[]
+  scrolls: Scroll[]
+}
+
+export interface OverlayState {
+  message: string
+  visible: boolean
+}
+
+export interface GameContextValue {
+  characters: Character[]
+  setCharacters: Dispatch<SetStateAction<Character[]>>
+  current: number | null
+  setCurrent: Dispatch<SetStateAction<number | null>>
+  sheet: Sheet
+  setSheet: Dispatch<SetStateAction<Sheet>>
+  inventory: InventoryItem[]
+  setInventory: Dispatch<SetStateAction<InventoryItem[]>>
+  scrolls: Scroll[]
+  setScrolls: Dispatch<SetStateAction<Scroll[]>>
+  log: LogEntry[]
+  setLog: Dispatch<SetStateAction<LogEntry[]>>
+  activeTab: string
+  setActiveTab: Dispatch<SetStateAction<string>>
+  overlay: OverlayState
+  setOverlay: Dispatch<SetStateAction<OverlayState>>
+  overlayTimeout: MutableRefObject<ReturnType<typeof setTimeout> | null>
+  loadCharacter: (_idx: number, _opts?: { navigate?: boolean }) => void
+  createCharacter: () => void
+  finalizeCharacter: () => void
+  cancelCreation: () => void
+  deleteCharacter: (_idx: number) => void
+  exportCharacters: () => string
+  importCharacters: (_data: unknown) => boolean
+  roll: (_notation: string, _label?: string) => number
+  logInventory: (_message: string) => void
+}
+
+export const GameContext = createContext<GameContextValue | null>(null)
+export const useGameContext = () => useContext(GameContext) as GameContextValue
 
 export function GameProvider({ children }: { children: ReactNode }) {
-  const [characters, setCharacters] = useState<any[]>(() => {
+  const [characters, setCharacters] = useState<Character[]>(() => {
     const saved = localStorage.getItem('characters')
     return saved ? JSON.parse(saved) : []
   })
   const [current, setCurrent] = useState<number | null>(null)
-  const [sheet, setSheet] = useState<any>(() => createSheet())
-  const [inventory, setInventory] = useState<any[]>([])
-  const [scrolls, setScrolls] = useState<any[]>([])
-  const [log, setLog] = useState<any[]>(() => {
+  const [sheet, setSheet] = useState<Sheet>(() => createSheet())
+  const [inventory, setInventory] = useState<InventoryItem[]>([])
+  const [scrolls, setScrolls] = useState<Scroll[]>([])
+  const [log, setLog] = useState<LogEntry[]>(() => {
     const saved = localStorage.getItem('log')
     return saved ? JSON.parse(saved) : []
   })
   const [activeTab, setActiveTab] = useState<string>('character')
-  const [overlay, setOverlay] = useState<{ message: string; visible: boolean }>({ message: '', visible: false })
+  const [overlay, setOverlay] = useState<OverlayState>({ message: '', visible: false })
   const overlayTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const skipSave = useRef<boolean>(false)
-  const charactersRef = useRef<any[]>(characters)
+  const charactersRef = useRef<Character[]>(characters)
 
   useEffect(() => {
     charactersRef.current = characters
@@ -106,8 +180,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   const exportCharacters = () => JSON.stringify(characters, null, 2)
 
-  const importCharacters = (data: any) => {
-    let parsed: any
+  const importCharacters = (data: unknown) => {
+    let parsed: unknown
     try {
       parsed = typeof data === 'string' ? JSON.parse(data) : data
     } catch {
@@ -115,10 +189,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }
     if (!Array.isArray(parsed)) return false
     const sanitized = parsed.map(c => {
-      const name = typeof c.name === 'string' ? c.name : ''
-      const sheet = typeof c.sheet === 'object' ? { ...createSheet(), ...c.sheet } : createSheet()
-      const inventory = Array.isArray(c.inventory) ? c.inventory : []
-      const scrolls = Array.isArray(c.scrolls) ? c.scrolls : []
+      const name = typeof (c as Character).name === 'string' ? (c as Character).name : ''
+      const sheet =
+        typeof (c as Character).sheet === 'object'
+          ? { ...createSheet(), ...(c as Character).sheet }
+          : createSheet()
+      const inventory = Array.isArray((c as Character).inventory) ? (c as Character).inventory : []
+      const scrolls = Array.isArray((c as Character).scrolls) ? (c as Character).scrolls : []
       return { name, sheet, inventory, scrolls }
     })
     setCharacters(prev => [...prev, ...sanitized])
@@ -128,8 +205,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const roller = new DiceParser()
 
   const roll = (notation: string, label = '') => {
-    const result = roller.roll(notation) as any
-    const entry = { label, notation, output: result.output, total: result.total }
+    const result = roller.roll(notation) as DiceRoll
+    const entry: LogEntry = { label, notation, output: result.output, total: result.total }
     setLog(prev => [entry, ...prev])
     const message = `${label ? `${label}: ` : ''}${result.output}`
     setOverlay({ message, visible: true })

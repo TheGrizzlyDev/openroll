@@ -3,21 +3,24 @@ import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
 import NumericInput from '../components/NumericInput'
 import classes from './classes'
+import type { Sheet } from './sheet'
 
 export default function CharacterSheet() {
   const { sheet, setSheet, roll } = useGameContext()
-  const [statDiceErrors, setStatDiceErrors] = useState<Record<string, string>>({
+  const [statDiceErrors, setStatDiceErrors] = useState<
+    Record<keyof Sheet['statDice'], string>
+  >({
     str: '',
     agi: '',
     pre: '',
     tou: ''
   })
 
-  const updateField = (field: string, value: any) =>
-    setSheet((prev: any) => ({ ...prev, [field]: value }))
+  const updateField = <K extends keyof Sheet>(field: K, value: Sheet[K]) =>
+    setSheet(prev => ({ ...prev, [field]: value }))
 
-  const updateStatDice = (stat: string, value: any) =>
-    setSheet((prev: any) => ({
+  const updateStatDice = (stat: keyof Sheet['statDice'], value: string) =>
+    setSheet(prev => ({
       ...prev,
       statDice: { ...prev.statDice, [stat]: value }
     }))
@@ -52,13 +55,15 @@ export default function CharacterSheet() {
       </label>
 
       <div className="stats">
-        {['str', 'agi', 'pre', 'tou'].map(stat => (
+        {(['str', 'agi', 'pre', 'tou'] as Array<keyof Sheet>).map(stat => (
           <div key={stat} className="stat">
             <label>
               {stat.toUpperCase()}
               <NumericInput
                 value={sheet[stat]}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => updateField(stat, e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  updateField(stat, Number(e.target.value))
+                }
               />
             </label>
             <input
@@ -80,27 +85,63 @@ export default function CharacterSheet() {
 
       <label>
         HP
-        <NumericInput value={sheet.hp} onChange={(e: ChangeEvent<HTMLInputElement>) => updateField('hp', e.target.value)} min={0} />
+        <NumericInput
+          value={sheet.hp}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            updateField('hp', Number(e.target.value))
+          }
+          min={0}
+        />
       </label>
       <label>
         Max HP
-        <NumericInput value={sheet.maxHp} onChange={(e: ChangeEvent<HTMLInputElement>) => updateField('maxHp', e.target.value)} min={0} />
+        <NumericInput
+          value={sheet.maxHp}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            updateField('maxHp', Number(e.target.value))
+          }
+          min={0}
+        />
       </label>
       <label>
         Armor
-        <NumericInput value={sheet.armor} onChange={(e: ChangeEvent<HTMLInputElement>) => updateField('armor', e.target.value)} min={0} />
+        <NumericInput
+          value={sheet.armor}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            updateField('armor', Number(e.target.value))
+          }
+          min={0}
+        />
       </label>
       <label>
         Omens
-        <NumericInput value={sheet.omens} onChange={(e: ChangeEvent<HTMLInputElement>) => updateField('omens', e.target.value)} min={0} />
+        <NumericInput
+          value={sheet.omens}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            updateField('omens', Number(e.target.value))
+          }
+          min={0}
+        />
       </label>
       <label>
         Silver
-        <NumericInput value={sheet.silver} onChange={(e: ChangeEvent<HTMLInputElement>) => updateField('silver', e.target.value)} min={0} />
+        <NumericInput
+          value={sheet.silver}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            updateField('silver', Number(e.target.value))
+          }
+          min={0}
+        />
       </label>
       <label>
         Notes
-        <textarea rows={4} value={sheet.notes} onChange={(e: ChangeEvent<HTMLTextAreaElement>) => updateField('notes', e.target.value)} />
+        <textarea
+          rows={4}
+          value={sheet.notes}
+          onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+            updateField('notes', e.target.value)
+          }
+        />
       </label>
     </div>
   )

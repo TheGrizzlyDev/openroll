@@ -19,7 +19,7 @@ export default function NumericInput({ value, onChange, min, max, step = 1, ...p
 
   const handleButton = (delta: number) => {
     const newVal = clamp((Number(value) || 0) + delta)
-    onChange?.({ target: { value: String(newVal) } } as any)
+    onChange?.({ target: { value: String(newVal) } } as unknown as React.ChangeEvent<HTMLInputElement>)
   }
 
   return (

@@ -1,4 +1,25 @@
-export const createSheet = () => ({
+export interface Sheet {
+  name: string
+  class: string
+  str: number
+  agi: number
+  pre: number
+  tou: number
+  statDice: {
+    str: string
+    agi: string
+    pre: string
+    tou: string
+  }
+  hp: number
+  maxHp: number
+  armor: number
+  omens: number
+  silver: number
+  notes: string
+}
+
+export const createSheet = (): Sheet => ({
   name: '',
   class: '',
   str: 0,

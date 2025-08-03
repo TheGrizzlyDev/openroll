@@ -39,7 +39,7 @@ export default function CharacterSelect() {
     <div className="container start-screen">
       <h1>Open Roll</h1>
       <ul className="character-list">
-        {characters.map((c: any, idx: number) => (
+        {characters.map((c, idx) => (
           <li key={idx}>
             <button onClick={() => loadCharacter(idx)}>{c.name || `Character ${idx + 1}`}</button>
             <button onClick={() => confirmDelete(idx)}>Delete</button>

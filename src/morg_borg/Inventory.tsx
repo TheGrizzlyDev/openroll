@@ -1,10 +1,16 @@
 import { useState, type ChangeEvent } from 'react'
-import { DndContext } from '@dnd-kit/core'
+import { DndContext, type DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, useSortable, arrayMove } from '@dnd-kit/sortable'
-import { useGameContext } from '../GameContext'
+import { useGameContext, type InventoryItem, type Scroll } from '../GameContext'
 import NumericInput from '../components/NumericInput'
 
-function SortableItem({ item, startEdit, handleDelete }: any) {
+interface SortableItemProps {
+  item: InventoryItem
+  startEdit: (_id: number) => void
+  handleDelete: (_id: number) => void
+}
+
+function SortableItem({ item, startEdit, handleDelete }: SortableItemProps) {
   const {
     attributes,
     listeners,
@@ -39,14 +45,19 @@ export default function Inventory() {
     roll,
     logInventory: onLog
   } = useGameContext()
-  const empty = { name: '', qty: 1, notes: '' }
-  const [form, setForm] = useState(empty)
+  type InventoryForm = { name: string; qty: number | string; notes: string }
+  const empty: InventoryForm = { name: '', qty: 1, notes: '' }
+  const [form, setForm] = useState<InventoryForm>(empty)
   const [editingId, setEditingId] = useState<number | null>(null)
-  const emptyScroll = { name: '', type: 'unclean', casts: 1, notes: '' }
-  const [scrollForm, setScrollForm] = useState(emptyScroll)
+  type ScrollForm = { name: string; type: Scroll['type']; casts: number | string; notes: string }
+  const emptyScroll: ScrollForm = { name: '', type: 'unclean', casts: 1, notes: '' }
+  const [scrollForm, setScrollForm] = useState<ScrollForm>(emptyScroll)
   const [editingScrollId, setEditingScrollId] = useState<number | null>(null)
 
-  const handleFormChange = (field: string, value: any) => {
+  const handleFormChange = <K extends keyof InventoryForm>(
+    field: K,
+    value: InventoryForm[K]
+  ) => {
     setForm(prev => ({ ...prev, [field]: value }))
   }
 
@@ -69,35 +80,40 @@ export default function Inventory() {
   }
 
   const startEdit = (id: number) => {
-    const item = items.find((i: any) => i.id === id)
+    const item = items.find(i => i.id === id)
     if (!item) return
     setForm({ name: item.name, qty: item.qty, notes: item.notes })
     setEditingId(id)
   }
 
   const handleSave = () => {
-    onChange(items.map((i: any) => (i.id === editingId ? { ...i, ...form, qty: Number(form.qty) || 0 } : i)))
+    onChange(
+      items.map(i => (i.id === editingId ? { ...i, ...form, qty: Number(form.qty) || 0 } : i))
+    )
     onLog?.(`Updated ${form.name}`)
     resetForm()
   }
 
   const handleDelete = (id: number) => {
-    const item = items.find((i: any) => i.id === id)
-    onChange(items.filter((i: any) => i.id !== id))
+    const item = items.find(i => i.id === id)
+    onChange(items.filter(i => i.id !== id))
     onLog?.(`Removed ${item?.name}`)
     if (editingId === id) resetForm()
   }
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
     if (over && active.id !== over.id) {
-      const oldIndex = items.findIndex((i: any) => i.id === active.id)
-      const newIndex = items.findIndex((i: any) => i.id === over.id)
+      const oldIndex = items.findIndex(i => i.id === active.id)
+      const newIndex = items.findIndex(i => i.id === over.id)
       onChange(arrayMove(items, oldIndex, newIndex))
     }
   }
 
-  const handleScrollFormChange = (field: string, value: any) => {
+  const handleScrollFormChange = <K extends keyof ScrollForm>(
+    field: K,
+    value: ScrollForm[K]
+  ) => {
     setScrollForm(prev => ({ ...prev, [field]: value }))
   }
 
@@ -121,7 +137,7 @@ export default function Inventory() {
   }
 
   const startScrollEdit = (id: number) => {
-    const scroll = scrolls.find((s: any) => s.id === id)
+    const scroll = scrolls.find(s => s.id === id)
     if (!scroll) return
     setScrollForm({
       name: scroll.name,
@@ -134,7 +150,7 @@ export default function Inventory() {
 
   const handleSaveScroll = () => {
     setScrolls(
-      scrolls.map((s: any) =>
+      scrolls.map(s =>
         s.id === editingScrollId
           ? { ...s, ...scrollForm, casts: Number(scrollForm.casts) || 0 }
           : s
@@ -145,14 +161,14 @@ export default function Inventory() {
   }
 
   const handleDeleteScroll = (id: number) => {
-    const scroll = scrolls.find((s: any) => s.id === id)
-    setScrolls(scrolls.filter((s: any) => s.id !== id))
+    const scroll = scrolls.find(s => s.id === id)
+    setScrolls(scrolls.filter(s => s.id !== id))
     onLog?.(`Removed scroll ${scroll?.name}`)
     if (editingScrollId === id) resetScrollForm()
   }
 
   const handleCastScroll = (id: number) => {
-    const scroll = scrolls.find((s: any) => s.id === id)
+    const scroll = scrolls.find(s => s.id === id)
     if (!scroll) return
     const result = roll(`1d20+${sheet.pre}`, `Cast ${scroll.name}`)
     const success = result >= 12
@@ -161,11 +177,11 @@ export default function Inventory() {
       `${scroll.name} ${success ? 'succeeds' : 'fails'} (${remaining} left)`
     )
     if (remaining <= 0) {
-      setScrolls(scrolls.filter((s: any) => s.id !== id))
+      setScrolls(scrolls.filter(s => s.id !== id))
       onLog?.(`${scroll.name} is spent`)
     } else {
       setScrolls(
-        scrolls.map((s: any) => (s.id === id ? { ...s, casts: remaining } : s))
+        scrolls.map(s => (s.id === id ? { ...s, casts: remaining } : s))
       )
     }
   }
@@ -174,9 +190,9 @@ export default function Inventory() {
     <div className="inventory">
       <h2>Inventory</h2>
       <DndContext onDragEnd={handleDragEnd}>
-        <SortableContext items={items.map((i: any) => i.id)}>
+        <SortableContext items={items.map(i => i.id)}>
           <ul>
-            {items.map((item: any) => (
+            {items.map(item => (
               <SortableItem
                 key={item.id}
                 item={item}
@@ -215,7 +231,7 @@ export default function Inventory() {
       </div>
       <h2>Scrolls</h2>
       <ul>
-        {scrolls.map((scroll: any) => (
+        {scrolls.map(scroll => (
           <li key={scroll.id}>
             <span>
               {scroll.name} [{scroll.type}] ({scroll.casts})

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest'
-import { DiceRoller, NumberGenerator } from '@dice-roller/rpg-dice-roller'
+import { DiceRoller, NumberGenerator, type DiceRoll } from '@dice-roller/rpg-dice-roller'
 
 describe('dice expressions', () => {
   afterEach(() => {
@@ -10,7 +10,7 @@ describe('dice expressions', () => {
   it('evaluates complex expressions with correct total and breakdown', () => {
     NumberGenerator.generator.engine = NumberGenerator.engines.min
     const roller = new DiceRoller()
-    const result = roller.roll('4d6kh3+2') as any
+    const result = roller.roll('4d6kh3+2') as DiceRoll
     expect(result.total).toBe(5)
     expect(result.output).toBe('4d6kh3+2: [1d, 1, 1, 1]+2 = 5')
   })

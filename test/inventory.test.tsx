@@ -2,11 +2,14 @@ import React from 'react'
 import { render, fireEvent, cleanup } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import Inventory from '../src/morg_borg/Inventory'
-import { GameContext } from '../src/GameContext'
+import { GameContext, type GameContextValue } from '../src/GameContext'
 
-const renderWithContext = (ui: React.ReactElement, { providerValue }: { providerValue: any }) => {
+const renderWithContext = (
+  ui: React.ReactElement,
+  { providerValue }: { providerValue: Partial<GameContextValue> }
+) => {
   return render(
-    <GameContext.Provider value={providerValue}>{ui}</GameContext.Provider>
+    <GameContext.Provider value={providerValue as GameContextValue}>{ui}</GameContext.Provider>
   )
 }
 
