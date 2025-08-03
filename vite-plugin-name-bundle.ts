@@ -2,17 +2,14 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import type { Plugin } from 'vite';
-
-interface SourceConfig {
-  tags: Record<string, string[]>;
-}
-
-export interface NameRecord {
-  name: string;
-  tags: Record<string, string[]>;
-}
+import type {
+  NameRecord,
+  SourcesConfig,
+  TagIndex,
+} from './src/name_service/types';
 
 function readNames(filePath: string): string[] {
+  if (!fs.existsSync(filePath)) return [];
   const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
   if (Array.isArray(data)) {
     return data;
@@ -27,10 +24,10 @@ function readNames(filePath: string): string[] {
 
 export function loadNameData(
   root = path.dirname(fileURLToPath(import.meta.url)),
-  sources?: Record<string, SourceConfig>,
+  sources?: SourcesConfig,
 ) {
   const corporaRoot = path.join(root, 'third_party', 'corpora', 'data');
-  const srcs: Record<string, SourceConfig> =
+  const srcs: SourcesConfig =
     sources ?? JSON.parse(fs.readFileSync(path.join(root, 'name-sources.json'), 'utf-8'));
 
   const records: NameRecord[] = [];
@@ -50,7 +47,7 @@ export function loadNameData(
     }
   }
 
-  const indexObj = Object.fromEntries(
+  const indexObj: TagIndex = Object.fromEntries(
     Object.entries(tagIndex).map(([k, v]) => [k, Array.from(v).sort()]),
   );
 
@@ -58,34 +55,33 @@ export function loadNameData(
 }
 
 export default function nameBundlePlugin(): Plugin {
-  let outDir = '';
-
   return {
     name: 'name-bundle',
-    configResolved(config) {
-      outDir = path.resolve(config.root, config.build.outDir);
-    },
     async buildStart() {
       const root = path.dirname(fileURLToPath(import.meta.url));
       const configPath = path.join(root, 'name-sources.json');
       this.addWatchFile(configPath);
-      const sources: Record<string, SourceConfig> = JSON.parse(
+      const sources: SourcesConfig = JSON.parse(
         fs.readFileSync(configPath, 'utf-8'),
       );
       const corporaRoot = path.join(root, 'third_party', 'corpora', 'data');
       for (const rel of Object.keys(sources)) {
-        this.addWatchFile(path.join(corporaRoot, rel));
+        const abs = path.join(corporaRoot, rel);
+        if (fs.existsSync(abs)) this.addWatchFile(abs);
       }
 
       const { records, tagIndex } = loadNameData(root, sources);
 
-      const genDir = path.join(outDir, 'generated');
+      const genDir = path.join(root, 'dist', 'generated');
       fs.mkdirSync(genDir, { recursive: true });
-      const namesModule = `export interface NameRecord { name: string; tags: Record<string, string[]> }\nexport const names: NameRecord[] = ${JSON.stringify(records, null, 2)};\n`;
-      fs.writeFileSync(path.join(genDir, 'names.js'), namesModule);
-
-      const indexModule = `export const tagIndex: Record<string, string[]> = ${JSON.stringify(tagIndex, null, 2)};\n`;
-      fs.writeFileSync(path.join(genDir, 'tagIndex.js'), indexModule);
+      fs.writeFileSync(
+        path.join(genDir, 'names.json'),
+        JSON.stringify(records, null, 2),
+      );
+      fs.writeFileSync(
+        path.join(genDir, 'tagIndex.json'),
+        JSON.stringify(tagIndex, null, 2),
+      );
     },
   };
 }

@@ -1,0 +1,37 @@
+name: Generate Parts
+
+on:
+  workflow_dispatch:
+
+jobs:
+  list:
+    runs-on: ubuntu-latest
+    outputs:
+      parts: ${{ steps.parts.outputs.parts }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm run ci-update
+      - id: parts
+        run: |
+          parts=$(node scripts/parts-generator.js list-parts-to-update)
+          echo "parts=$parts" >> "$GITHUB_OUTPUT"
+
+  generate:
+    needs: list
+    if: ${{ fromJson(needs.list.outputs.parts).length > 0 }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        part: ${{ fromJson(needs.list.outputs.parts) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm run ci-update
+      - env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: node scripts/parts-generator.js update-part ${{ matrix.part }}
