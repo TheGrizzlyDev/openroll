@@ -1,15 +1,19 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-import CharacterSelect from './components/CharacterSelect'
-import SheetPage from './components/SheetPage'
-import LogView from './components/LogView'
+import { Suspense, lazy } from 'react'
+
+const CharacterSelect = lazy(() => import('./components/CharacterSelect'))
+const SheetPage = lazy(() => import('./components/SheetPage'))
+const LogView = lazy(() => import('./components/LogView'))
 
 export default function AppRoutes() {
   return (
-    <Routes>
-      <Route path="/characters" element={<CharacterSelect />} />
-      <Route path="/sheet/:id" element={<SheetPage />} />
-      <Route path="/log" element={<LogView />} />
-      <Route path="*" element={<Navigate to="/characters" />} />
-    </Routes>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Routes>
+        <Route path="/characters" element={<CharacterSelect />} />
+        <Route path="/sheet/:id" element={<SheetPage />} />
+        <Route path="/log" element={<LogView />} />
+        <Route path="*" element={<Navigate to="/characters" />} />
+      </Routes>
+    </Suspense>
   )
 }
