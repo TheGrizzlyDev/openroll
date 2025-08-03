@@ -3,6 +3,7 @@ import { render, fireEvent, cleanup } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import Inventory from '../src/morg_borg/Inventory'
 import { GameContext, type GameContextValue } from '../src/GameContext'
+import { Sheet } from '../src/morg_borg/sheet'
 
 const renderWithContext = (
   ui: React.ReactElement,
@@ -12,6 +13,27 @@ const renderWithContext = (
     <GameContext.Provider value={providerValue as GameContextValue}>{ui}</GameContext.Provider>
   )
 }
+
+const createSimpleSheet = () : Sheet => ({ 
+  name: '',
+  class: '',
+  str: 0,
+  agi: 0,
+  pre: 0,
+  tou: 0,
+  statDice: {
+    str: '1d20',
+    agi: '1d20',
+    pre: '1d20',
+    tou: '1d20',
+  },
+  hp: 1,
+  maxHp: 1,
+  armor: 0,
+  omens: 0,
+  silver: 0,
+  notes: "",
+})
 
 afterEach(() => cleanup())
 
@@ -25,7 +47,7 @@ describe('Inventory handlers', () => {
       logInventory,
       scrolls: [],
       setScrolls: vi.fn(),
-      sheet: { pre: 0 },
+      sheet: createSimpleSheet(),
       roll: vi.fn()
     }
     const {
@@ -59,7 +81,7 @@ describe('Inventory handlers', () => {
       logInventory,
       scrolls: [],
       setScrolls: vi.fn(),
-      sheet: { pre: 0 },
+      sheet: createSimpleSheet(),
       roll: vi.fn()
     }
     const { getByText, getByPlaceholderText } = renderWithContext(
@@ -85,7 +107,7 @@ describe('Inventory handlers', () => {
       logInventory,
       scrolls: [],
       setScrolls: vi.fn(),
-      sheet: { pre: 0 },
+      sheet: createSimpleSheet(),
       roll: vi.fn()
     }
     const { getByText } = renderWithContext(<Inventory />, { providerValue })
@@ -103,7 +125,7 @@ describe('Inventory handlers', () => {
       logInventory,
       scrolls: [],
       setScrolls,
-      sheet: { pre: 0 },
+      sheet: createSimpleSheet(),
       roll: vi.fn()
     }
     const {
