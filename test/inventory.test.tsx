@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, fireEvent, cleanup } from '@testing-library/react'
+import { render, fireEvent, cleanup, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import Inventory from '../src/morg_borg/Inventory'
 import { GameContext, type GameContextValue, type InventoryItem, type Scroll } from '../src/GameContext'
@@ -210,5 +210,37 @@ describe('Inventory handlers', () => {
     const scrollDice = getByText('1d6')
     fireEvent.click(scrollDice)
     expect(roll).toHaveBeenCalledWith('1d6')
+  })
+
+  it('only starts dragging via the handle and toggles dragging class', async () => {
+    const items = [
+      { id: 1, name: 'Sword', qty: 1, notes: '' },
+      { id: 2, name: 'Shield', qty: 1, notes: '' }
+    ]
+    const setInventory = vi.fn()
+    const providerValue = {
+      inventory: items,
+      setInventory,
+      logInventory: vi.fn(),
+      scrolls: [],
+      setScrolls: vi.fn(),
+      sheet: createSimpleSheet(),
+      roll: vi.fn()
+    }
+    const { container } = renderWithContext(<Inventory />, { providerValue })
+    const firstItem = container.querySelector('li') as HTMLElement
+    const handle = firstItem.querySelector('.drag-handle') as HTMLElement
+
+    expect(firstItem.getAttribute('role')).toBeNull()
+    expect(handle.getAttribute('role')).toBe('button')
+
+    fireEvent.keyDown(handle, { key: ' ', code: 'Space', keyCode: 32 })
+    await waitFor(() =>
+      expect(firstItem.classList.contains('dragging')).toBe(true),
+    )
+    fireEvent.keyDown(handle, { key: ' ', code: 'Space', keyCode: 32 })
+    await waitFor(() =>
+      expect(firstItem.classList.contains('dragging')).toBe(false),
+    )
   })
 })

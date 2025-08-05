@@ -107,7 +107,14 @@ h1, h2 {
   margin-bottom: 0.25rem;
 }
 
-.inventory li span {
+.inventory li > div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.inventory li > div span {
   flex-grow: 1;
 }
 
@@ -124,6 +131,16 @@ h1, h2 {
 .inventory-form button,
 .inventory li button {
   width: auto;
+}
+
+.drag-handle {
+  cursor: grab;
+  width: 1em;
+  flex: none;
+}
+
+.inventory li.dragging {
+  opacity: 0.5;
 }
 
 .presets ul {

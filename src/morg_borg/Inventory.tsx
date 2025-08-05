@@ -18,7 +18,8 @@ function SortableItem({ item, startEdit, handleDelete }: SortableItemProps) {
     listeners,
     setNodeRef,
     transform,
-    transition
+    transition,
+    isDragging
   } = useSortable({ id: item.id })
 
   const style = {
@@ -27,13 +28,20 @@ function SortableItem({ item, startEdit, handleDelete }: SortableItemProps) {
   }
 
   return (
-    <li ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <span>
-        {item.name} ({item.qty})
-        {item.notes ? <> - {renderOml(item.notes)}</> : ''}
-      </span>
-      <button onClick={() => startEdit(item.id)}>Edit</button>
-      <button onClick={() => handleDelete(item.id)}>Delete</button>
+    <li
+      ref={setNodeRef}
+      style={style}
+      className={isDragging ? 'dragging' : ''}
+    >
+      <span className="drag-handle" {...attributes} {...listeners}>::</span>
+      <div>
+        <span>
+          {item.name} ({item.qty})
+          {item.notes ? <> - {renderOml(item.notes)}</> : ''}
+        </span>
+        <button onClick={() => startEdit(item.id)}>Edit</button>
+        <button onClick={() => handleDelete(item.id)}>Delete</button>
+      </div>
     </li>
   )
 }
