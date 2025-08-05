@@ -87,6 +87,16 @@ h1, h2 {
   margin-bottom: 0.25rem;
 }
 
+.log button {
+  background: #111;
+  color: #ffff00;
+  border: 1px solid #ffff00;
+  padding: 0.4rem;
+  font-family: inherit;
+  width: auto;
+  margin-bottom: 0.5rem;
+}
+
 @media (min-width: 768px) {
   .dice-roller input,
   .dice-roller button {
