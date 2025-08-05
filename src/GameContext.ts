@@ -1,5 +1,5 @@
 import { create, type StateCreator } from 'zustand'
-import { devtools, persist, createJSONStorage } from 'zustand/middleware'
+import { devtools, persist, createJSONStorage, type NamedSet } from 'zustand/middleware'
 import { DiceRoller as DiceParser, type DiceRoll } from '@dice-roller/rpg-dice-roller'
 import { createSheet, type Sheet } from './morg_borg/sheet'
 import { generateCharacter } from './morg_borg/generateCharacter'
@@ -160,12 +160,16 @@ const reducer = (state: GameState, action: GameAction): GameState => {
   }
 }
 
-const storeCreator: StateCreator<GameContextValue> = (set, get) => ({
+const storeCreator: StateCreator<
+  GameContextValue,
+  [],
+  [["zustand/devtools", never], ["zustand/persist", unknown]]
+> = (set: NamedSet<GameContextValue>, get) => ({
   state: initialState,
   dispatch: (action: GameAction) =>
-    set(state => ({ state: reducer(state.state, action) })),
+    set(state => ({ state: reducer(state.state, action) }), false, action.type),
   overlayTimeout: null,
-  setOverlayTimeout: t => set({ overlayTimeout: t }),
+  setOverlayTimeout: t => set({ overlayTimeout: t }, false, 'setOverlayTimeout'),
   loadCharacter: idx => {
     const char = get().state.characters[idx]
     if (!char) return
@@ -177,7 +181,7 @@ const storeCreator: StateCreator<GameContextValue> = (set, get) => ({
         inventory: char.inventory || [],
         scrolls: char.scrolls || []
       }
-    }))
+    }), false, 'loadCharacter')
   },
   createCharacter: () => {
     const { sheet, inventory } = generateCharacter()
@@ -190,7 +194,7 @@ const storeCreator: StateCreator<GameContextValue> = (set, get) => ({
         scrolls: [],
         current: index
       }
-    }))
+    }), false, 'createCharacter')
   },
   finalizeCharacter: () => {
     const { state } = get()
@@ -202,11 +206,11 @@ const storeCreator: StateCreator<GameContextValue> = (set, get) => ({
       inventory: state.inventory,
       scrolls: state.scrolls
     }
-    set({ state: { ...state, characters: updated, current: index } })
+    set({ state: { ...state, characters: updated, current: index } }, false, 'finalizeCharacter')
     return index
   },
   cancelCreation: () =>
-    set(({ state }) => ({ state: { ...state, current: null } })),
+    set(({ state }) => ({ state: { ...state, current: null } }), false, 'cancelCreation'),
   deleteCharacter: idx =>
     set(({ state }) => ({
       state: {
@@ -214,7 +218,7 @@ const storeCreator: StateCreator<GameContextValue> = (set, get) => ({
         characters: state.characters.filter((_, i) => i !== idx),
         current: null
       }
-    })),
+    }), false, 'deleteCharacter'),
   exportCharacters: () => JSON.stringify(get().state.characters, null, 2),
   importCharacters: data => {
     let parsed: unknown
@@ -240,7 +244,7 @@ const storeCreator: StateCreator<GameContextValue> = (set, get) => ({
     })
     set(({ state }) => ({
       state: { ...state, characters: [...state.characters, ...sanitized] }
-    }))
+    }), false, 'importCharacters')
     return true
   },
   roll: (notation: string, label = '') => {
@@ -254,12 +258,12 @@ const storeCreator: StateCreator<GameContextValue> = (set, get) => ({
       set(({ state }) => ({
         state: { ...state, overlay: { ...state.overlay, visible: false } },
         overlayTimeout: null
-      }))
+      }), false, 'hideOverlay')
     }, 10000)
     set(({ state }) => ({
       state: { ...state, log: [entry, ...state.log], overlay: { message, visible: true } },
       overlayTimeout: timeout
-    }))
+    }), false, 'roll')
     return result.total as number
   },
   logInventory: message =>
@@ -268,7 +272,7 @@ const storeCreator: StateCreator<GameContextValue> = (set, get) => ({
         ...state,
         log: [{ label: 'Inventory', output: message }, ...state.log]
       }
-    }))
+    }), false, 'logInventory')
 })
 
 type PersistedState = { state: { characters: Character[]; log: LogEntry[] } }
