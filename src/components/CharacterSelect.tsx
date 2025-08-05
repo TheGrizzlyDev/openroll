@@ -4,14 +4,13 @@ import Overlay from './Overlay'
 
 export default function CharacterSelect() {
   const {
-    characters,
+    state: { characters, overlay },
+    dispatch,
     loadCharacter,
     deleteCharacter,
     createCharacter,
     exportCharacters,
     importCharacters,
-    overlay,
-    setOverlay,
     overlayTimeout
   } = useGameContext()
 
@@ -34,7 +33,10 @@ export default function CharacterSelect() {
       const data = target?.result as string
       const success = importCharacters(data)
       if (!success) {
-        setOverlay({ message: 'Failed to import characters', visible: true })
+        dispatch({
+          type: 'SET_OVERLAY',
+          overlay: { message: 'Failed to import characters', visible: true }
+        })
       } else {
         let count = 0
         try {
@@ -43,14 +45,17 @@ export default function CharacterSelect() {
         } catch {
           count = 0
         }
-        setOverlay({
-          message: `${count} character${count === 1 ? '' : 's'} imported`,
-          visible: true
+        dispatch({
+          type: 'SET_OVERLAY',
+          overlay: {
+            message: `${count} character${count === 1 ? '' : 's'} imported`,
+            visible: true
+          }
         })
       }
       if (overlayTimeout.current) clearTimeout(overlayTimeout.current)
       overlayTimeout.current = setTimeout(
-        () => setOverlay(prev => ({ ...prev, visible: false })),
+        () => dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } }),
         10000
       )
     }
@@ -79,7 +84,7 @@ export default function CharacterSelect() {
         visible={overlay.visible}
         onClose={() => {
           if (overlayTimeout.current) clearTimeout(overlayTimeout.current)
-          setOverlay(prev => ({ ...prev, visible: false }))
+          dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } })
         }}
       />
     </div>

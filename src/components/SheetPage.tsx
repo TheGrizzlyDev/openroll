@@ -10,10 +10,8 @@ import { useGameContext } from '../GameContext'
 
 export default function SheetPage() {
   const {
-    activeTab,
-    setActiveTab,
-    overlay,
-    setOverlay,
+    state: { activeTab, overlay },
+    dispatch,
     overlayTimeout,
     loadCharacter
   } = useGameContext()
@@ -35,25 +33,25 @@ export default function SheetPage() {
       <div className="tabs">
         <button
           className={activeTab === 'character' ? 'active' : ''}
-          onClick={() => setActiveTab('character')}
+          onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'character' })}
         >
           Character
         </button>
         <button
           className={activeTab === 'inventory' ? 'active' : ''}
-          onClick={() => setActiveTab('inventory')}
+          onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'inventory' })}
         >
           Inventory
         </button>
         <button
           className={activeTab === 'presets' ? 'active' : ''}
-          onClick={() => setActiveTab('presets')}
+          onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'presets' })}
         >
           Presets
         </button>
         <button
           className={activeTab === 'log' ? 'active' : ''}
-          onClick={() => setActiveTab('log')}
+          onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'log' })}
         >
           Log
         </button>
@@ -76,7 +74,7 @@ export default function SheetPage() {
         visible={overlay.visible}
         onClose={() => {
           if (overlayTimeout.current) clearTimeout(overlayTimeout.current)
-          setOverlay(prev => ({ ...prev, visible: false }))
+          dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } })
         }}
       />
     </div>

@@ -108,11 +108,8 @@ function SortableScroll({
 
 export default function Inventory() {
   const {
-    inventory: items,
-    setInventory: onChange,
-    scrolls,
-    setScrolls,
-    sheet,
+    state: { inventory: items, scrolls, sheet },
+    dispatch,
     roll,
     logInventory: onLog
   } = useGameContext()
@@ -145,7 +142,7 @@ export default function Inventory() {
       qty: Number(form.qty) || 0,
       notes: form.notes
     }
-    onChange([...items, newItem])
+    dispatch({ type: 'SET_INVENTORY', inventory: [...items, newItem] })
     onLog?.(`Added ${newItem.name} x${newItem.qty}`)
     resetForm()
   }
@@ -158,16 +155,19 @@ export default function Inventory() {
   }
 
   const handleSave = () => {
-    onChange(
-      items.map(i => (i.id === editingId ? { ...i, ...form, qty: Number(form.qty) || 0 } : i))
-    )
+    dispatch({
+      type: 'SET_INVENTORY',
+      inventory: items.map(i =>
+        i.id === editingId ? { ...i, ...form, qty: Number(form.qty) || 0 } : i
+      )
+    })
     onLog?.(`Updated ${form.name}`)
     resetForm()
   }
 
   const handleDelete = (id: number) => {
     const item = items.find(i => i.id === id)
-    onChange(items.filter(i => i.id !== id))
+    dispatch({ type: 'SET_INVENTORY', inventory: items.filter(i => i.id !== id) })
     onLog?.(`Removed ${item?.name}`)
     if (editingId === id) resetForm()
   }
@@ -177,16 +177,17 @@ export default function Inventory() {
     if (over && active.id !== over.id) {
       const oldIndex = items.findIndex(i => i.id === active.id)
       const newIndex = items.findIndex(i => i.id === over.id)
-      onChange(arrayMove(items, oldIndex, newIndex))
+      dispatch({ type: 'SET_INVENTORY', inventory: arrayMove(items, oldIndex, newIndex) })
     }
   }
 
   const handleScrollDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
     if (over && active.id !== over.id) {
-      setScrolls(
-        reorderScrolls(scrolls, Number(active.id), Number(over.id))
-      )
+      dispatch({
+        type: 'SET_SCROLLS',
+        scrolls: reorderScrolls(scrolls, Number(active.id), Number(over.id))
+      })
     }
   }
 
@@ -211,7 +212,7 @@ export default function Inventory() {
       casts: Number(scrollForm.casts) || 0,
       notes: scrollForm.notes
     }
-    setScrolls([...scrolls, newScroll])
+    dispatch({ type: 'SET_SCROLLS', scrolls: [...scrolls, newScroll] })
     onLog?.(`Added ${newScroll.type} scroll ${newScroll.name} (${newScroll.casts})`)
     resetScrollForm()
   }
@@ -229,20 +230,21 @@ export default function Inventory() {
   }
 
   const handleSaveScroll = () => {
-    setScrolls(
-      scrolls.map(s =>
+    dispatch({
+      type: 'SET_SCROLLS',
+      scrolls: scrolls.map(s =>
         s.id === editingScrollId
           ? { ...s, ...scrollForm, casts: Number(scrollForm.casts) || 0 }
           : s
       )
-    )
+    })
     onLog?.(`Updated scroll ${scrollForm.name}`)
     resetScrollForm()
   }
 
   const handleDeleteScroll = (id: number) => {
     const scroll = scrolls.find(s => s.id === id)
-    setScrolls(scrolls.filter(s => s.id !== id))
+    dispatch({ type: 'SET_SCROLLS', scrolls: scrolls.filter(s => s.id !== id) })
     onLog?.(`Removed scroll ${scroll?.name}`)
     if (editingScrollId === id) resetScrollForm()
   }
@@ -257,12 +259,13 @@ export default function Inventory() {
       `${scroll.name} ${success ? 'succeeds' : 'fails'} (${remaining} left)`
     )
     if (remaining <= 0) {
-      setScrolls(scrolls.filter(s => s.id !== id))
+      dispatch({ type: 'SET_SCROLLS', scrolls: scrolls.filter(s => s.id !== id) })
       onLog?.(`${scroll.name} is spent`)
     } else {
-      setScrolls(
-        scrolls.map(s => (s.id === id ? { ...s, casts: remaining } : s))
-      )
+      dispatch({
+        type: 'SET_SCROLLS',
+        scrolls: scrolls.map(s => (s.id === id ? { ...s, casts: remaining } : s))
+      })
     }
   }
 

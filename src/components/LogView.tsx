@@ -2,10 +2,15 @@ import React from 'react'
 import { useGameContext } from '../GameContext'
 
 export default function LogView() {
-  const { log, setLog } = useGameContext()
+  const {
+    state: { log },
+    dispatch
+  } = useGameContext()
   return (
     <div className="log">
-      <button onClick={() => setLog([])}>Clear Log</button>
+      <button onClick={() => dispatch({ type: 'SET_LOG', log: [] })}>
+        Clear Log
+      </button>
       <ul>
         {log.map((entry, idx) => (
           <li key={idx}>

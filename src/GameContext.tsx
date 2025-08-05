@@ -5,10 +5,9 @@ import {
   useCallback,
   useEffect,
   useRef,
-  useState,
+  useReducer,
   type ReactNode,
-  type Dispatch,
-  type SetStateAction
+  type Dispatch
 } from 'react'
 import { DiceRoller as DiceParser, type DiceRoll } from '@dice-roller/rpg-dice-roller'
 import { useNavigate, useLocation } from 'react-router-dom'
@@ -50,23 +49,31 @@ export interface OverlayState {
   visible: boolean
 }
 
-export interface GameContextValue {
+export interface GameState {
   characters: Character[]
-  setCharacters: Dispatch<SetStateAction<Character[]>>
   current: number | null
-  setCurrent: Dispatch<SetStateAction<number | null>>
   sheet: Sheet
-  setSheet: Dispatch<SetStateAction<Sheet>>
   inventory: InventoryItem[]
-  setInventory: Dispatch<SetStateAction<InventoryItem[]>>
   scrolls: Scroll[]
-  setScrolls: Dispatch<SetStateAction<Scroll[]>>
   log: LogEntry[]
-  setLog: Dispatch<SetStateAction<LogEntry[]>>
   activeTab: string
-  setActiveTab: Dispatch<SetStateAction<string>>
   overlay: OverlayState
-  setOverlay: Dispatch<SetStateAction<OverlayState>>
+}
+
+export type GameAction =
+  | { type: 'SET_CHARACTERS'; characters: Character[] }
+  | { type: 'SET_CURRENT'; current: number | null }
+  | { type: 'SET_SHEET'; sheet: Sheet }
+  | { type: 'SET_INVENTORY'; inventory: InventoryItem[] }
+  | { type: 'SET_SCROLLS'; scrolls: Scroll[] }
+  | { type: 'ADD_LOG'; entry: LogEntry }
+  | { type: 'SET_LOG'; log: LogEntry[] }
+  | { type: 'SET_ACTIVE_TAB'; tab: string }
+  | { type: 'SET_OVERLAY'; overlay: OverlayState }
+
+export interface GameContextValue {
+  state: GameState
+  dispatch: Dispatch<GameAction>
   overlayTimeout: MutableRefObject<ReturnType<typeof setTimeout> | null>
   loadCharacter: (_idx: number, _opts?: { navigate?: boolean }) => void
   createCharacter: () => void
@@ -83,102 +90,143 @@ export const GameContext = createContext<GameContextValue | null>(null)
 export const useGameContext = () => useContext(GameContext) as GameContextValue
 
 export function GameProvider({ children }: { children: ReactNode }) {
-  const [characters, setCharacters] = useState<Character[]>(() => {
-    const saved = localStorage.getItem('characters')
-    return saved ? JSON.parse(saved) : []
-  })
-  const [current, setCurrent] = useState<number | null>(null)
-  const [sheet, setSheet] = useState<Sheet>(() => createSheet())
-  const [inventory, setInventory] = useState<InventoryItem[]>([])
-  const [scrolls, setScrolls] = useState<Scroll[]>([])
-  const [log, setLog] = useState<LogEntry[]>(() => {
-    const saved = localStorage.getItem('log')
-    return saved ? JSON.parse(saved) : []
-  })
-  const [activeTab, setActiveTab] = useState<string>('character')
-  const [overlay, setOverlay] = useState<OverlayState>({ message: '', visible: false })
+  const initialState: GameState = {
+    characters: (() => {
+      const saved = localStorage.getItem('characters')
+      return saved ? JSON.parse(saved) : []
+    })(),
+    current: null,
+    sheet: createSheet(),
+    inventory: [],
+    scrolls: [],
+    log: (() => {
+      const saved = localStorage.getItem('log')
+      return saved ? JSON.parse(saved) : []
+    })(),
+    activeTab: 'character',
+    overlay: { message: '', visible: false }
+  }
+
+  const reducer = (state: GameState, action: GameAction): GameState => {
+    switch (action.type) {
+      case 'SET_CHARACTERS':
+        return { ...state, characters: action.characters }
+      case 'SET_CURRENT':
+        return { ...state, current: action.current }
+      case 'SET_SHEET':
+        return { ...state, sheet: action.sheet }
+      case 'SET_INVENTORY':
+        return { ...state, inventory: action.inventory }
+      case 'SET_SCROLLS':
+        return { ...state, scrolls: action.scrolls }
+      case 'ADD_LOG':
+        return { ...state, log: [action.entry, ...state.log] }
+      case 'SET_LOG':
+        return { ...state, log: action.log }
+      case 'SET_ACTIVE_TAB':
+        return { ...state, activeTab: action.tab }
+      case 'SET_OVERLAY':
+        return { ...state, overlay: action.overlay }
+      default:
+        return state
+    }
+  }
+
+  const [state, dispatch] = useReducer(reducer, initialState)
   const overlayTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const skipSave = useRef<boolean>(false)
-  const charactersRef = useRef<Character[]>(characters)
+  const charactersRef = useRef<Character[]>(state.characters)
 
   useEffect(() => {
-    charactersRef.current = characters
-  }, [characters])
-
-  useEffect(() => {
-    if (skipSave.current) return
-    localStorage.setItem('characters', JSON.stringify(characters))
-  }, [characters])
+    charactersRef.current = state.characters
+  }, [state.characters])
 
   useEffect(() => {
     if (skipSave.current) return
-    localStorage.setItem('log', JSON.stringify(log))
-  }, [log])
+    localStorage.setItem('characters', JSON.stringify(state.characters))
+  }, [state.characters])
 
   useEffect(() => {
-    if (current === null) return
     if (skipSave.current) return
-    setCharacters(prev => {
-      const updated = [...prev]
-      const existing = updated[current] || { name: '', sheet: createSheet(), inventory: [], scrolls: [] }
-      updated[current] = { ...existing, name: sheet.name, sheet, inventory, scrolls }
-      return updated
-    })
-  }, [sheet, inventory, scrolls, current])
+    localStorage.setItem('log', JSON.stringify(state.log))
+  }, [state.log])
+
+  useEffect(() => {
+    if (state.current === null) return
+    if (skipSave.current) return
+    const updated = [...state.characters]
+    const existing =
+      updated[state.current] || { name: '', sheet: createSheet(), inventory: [], scrolls: [] }
+    updated[state.current] = {
+      ...existing,
+      name: state.sheet.name,
+      sheet: state.sheet,
+      inventory: state.inventory,
+      scrolls: state.scrolls
+    }
+    dispatch({ type: 'SET_CHARACTERS', characters: updated })
+  }, [state.sheet, state.inventory, state.scrolls, state.current])
 
   const navigate = useNavigate()
   const location = useLocation()
 
-  const loadCharacter = useCallback((idx: number, { navigate: doNavigate = true }: { navigate?: boolean } = {}) => {
-    const char = charactersRef.current[idx]
-    if (!char) return
-    skipSave.current = true
-    setCurrent(idx)
-    setSheet(char.sheet || createSheet())
-    setInventory(char.inventory || [])
-    setScrolls(char.scrolls || [])
-    if (doNavigate) navigate(`/sheet/${idx}`)
-    setTimeout(() => {
-      skipSave.current = false
-    })
-  }, [navigate])
+  const loadCharacter = useCallback(
+    (idx: number, { navigate: doNavigate = true }: { navigate?: boolean } = {}) => {
+      const char = charactersRef.current[idx]
+      if (!char) return
+      skipSave.current = true
+      dispatch({ type: 'SET_CURRENT', current: idx })
+      dispatch({ type: 'SET_SHEET', sheet: char.sheet || createSheet() })
+      dispatch({ type: 'SET_INVENTORY', inventory: char.inventory || [] })
+      dispatch({ type: 'SET_SCROLLS', scrolls: char.scrolls || [] })
+      if (doNavigate) navigate(`/sheet/${idx}`)
+      setTimeout(() => {
+        skipSave.current = false
+      })
+    },
+    [navigate]
+  )
 
   const createCharacter = () => {
     skipSave.current = true
     const { sheet: newSheet, inventory: newInv } = generateCharacter()
-    const index = characters.length
-    setSheet(newSheet)
-    setInventory(newInv)
-    setScrolls([])
-    setCurrent(index)
+    const index = state.characters.length
+    dispatch({ type: 'SET_SHEET', sheet: newSheet })
+    dispatch({ type: 'SET_INVENTORY', inventory: newInv })
+    dispatch({ type: 'SET_SCROLLS', scrolls: [] })
+    dispatch({ type: 'SET_CURRENT', current: index })
     navigate('/generator')
   }
 
   const finalizeCharacter = () => {
-    const index = current ?? characters.length
-    setCharacters(prev => {
-      const updated = [...prev]
-      updated[index] = { name: '', sheet, inventory, scrolls }
-      return updated
-    })
+    const index = state.current ?? state.characters.length
+    const updated = [...state.characters]
+    updated[index] = {
+      name: '',
+      sheet: state.sheet,
+      inventory: state.inventory,
+      scrolls: state.scrolls
+    }
+    dispatch({ type: 'SET_CHARACTERS', characters: updated })
     skipSave.current = false
     navigate(`/sheet/${index}`)
   }
 
   const cancelCreation = () => {
     skipSave.current = false
-    setCurrent(null)
+    dispatch({ type: 'SET_CURRENT', current: null })
     navigate('/characters')
   }
 
   const deleteCharacter = (idx: number) => {
-    setCharacters(prev => prev.filter((_, i) => i !== idx))
-    setCurrent(null)
+    const updated = state.characters.filter((_, i) => i !== idx)
+    dispatch({ type: 'SET_CHARACTERS', characters: updated })
+    dispatch({ type: 'SET_CURRENT', current: null })
     navigate('/characters')
   }
 
-  const exportCharacters = () => JSON.stringify(characters, null, 2)
+  const exportCharacters = () => JSON.stringify(state.characters, null, 2)
 
   const importCharacters = (data: unknown) => {
     let parsed: unknown
@@ -194,11 +242,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
         typeof (c as Character).sheet === 'object'
           ? { ...createSheet(), ...(c as Character).sheet }
           : createSheet()
-      const inventory = Array.isArray((c as Character).inventory) ? (c as Character).inventory : []
-      const scrolls = Array.isArray((c as Character).scrolls) ? (c as Character).scrolls : []
+      const inventory = Array.isArray((c as Character).inventory)
+        ? (c as Character).inventory
+        : []
+      const scrolls = Array.isArray((c as Character).scrolls)
+        ? (c as Character).scrolls
+        : []
       return { name, sheet, inventory, scrolls }
     })
-    setCharacters(prev => [...prev, ...sanitized])
+    dispatch({ type: 'SET_CHARACTERS', characters: [...state.characters, ...sanitized] })
     return true
   }
 
@@ -207,41 +259,30 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const roll = (notation: string, label = '') => {
     const result = roller.roll(notation) as DiceRoll
     const entry: LogEntry = { label, notation, output: result.output, total: result.total }
-    setLog(prev => [entry, ...prev])
+    dispatch({ type: 'ADD_LOG', entry })
     const message = `${label ? `${label}: ` : ''}${result.output}`
-    setOverlay({ message, visible: true })
+    dispatch({ type: 'SET_OVERLAY', overlay: { message, visible: true } })
     if (overlayTimeout.current) clearTimeout(overlayTimeout.current)
-    overlayTimeout.current = setTimeout(() => setOverlay(prev => ({ ...prev, visible: false })), 10000)
+    overlayTimeout.current = setTimeout(
+      () => dispatch({ type: 'SET_OVERLAY', overlay: { ...state.overlay, visible: false } }),
+      10000
+    )
     return result.total as number
   }
 
   const logInventory = (message: string) => {
-    setLog(prev => [{ label: 'Inventory', output: message }, ...prev])
+    dispatch({ type: 'ADD_LOG', entry: { label: 'Inventory', output: message } })
   }
 
   useEffect(() => {
     if (location.pathname === '/characters') {
-      setCurrent(null)
+      dispatch({ type: 'SET_CURRENT', current: null })
     }
   }, [location.pathname])
 
   const value = {
-    characters,
-    setCharacters,
-    current,
-    setCurrent,
-    sheet,
-    setSheet,
-    inventory,
-    setInventory,
-    scrolls,
-    setScrolls,
-    log,
-    setLog,
-    activeTab,
-    setActiveTab,
-    overlay,
-    setOverlay,
+    state,
+    dispatch,
     overlayTimeout,
     loadCharacter,
     createCharacter,

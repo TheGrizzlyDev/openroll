@@ -7,10 +7,10 @@ import { Sheet } from '../src/morg_borg/sheet'
 
 const renderWithContext = (
   ui: React.ReactElement,
-  { providerValue }: { providerValue: Partial<GameContextValue> }
+  { providerValue }: { providerValue: any }
 ) => {
   return render(
-    <GameContext.Provider value={providerValue as GameContextValue}>{ui}</GameContext.Provider>
+    <GameContext.Provider value={providerValue as unknown as GameContextValue}>{ui}</GameContext.Provider>
   )
 }
 
@@ -157,7 +157,7 @@ describe('Inventory handlers', () => {
     function Wrapper() {
       const [inventory, setInventory] = React.useState<InventoryItem[]>([])
       const [scrolls, setScrolls] = React.useState<Scroll[]>([])
-      const providerValue: Partial<GameContextValue> = {
+      const providerValue = {
         inventory,
         setInventory,
         scrolls,
@@ -165,9 +165,9 @@ describe('Inventory handlers', () => {
         logInventory: vi.fn(),
         sheet: createSimpleSheet(),
         roll
-      }
+      } as unknown as GameContextValue
       return (
-        <GameContext.Provider value={providerValue as GameContextValue}>
+        <GameContext.Provider value={providerValue}>
           <Inventory />
         </GameContext.Provider>
       )

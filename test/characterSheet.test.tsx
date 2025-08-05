@@ -9,9 +9,9 @@ const renderWithWrapper = () => {
   const roll = vi.fn()
   function Wrapper() {
     const [sheet, setSheet] = React.useState(createSheet())
-    const providerValue: Partial<GameContextValue> = { sheet, setSheet, roll }
+    const providerValue = { sheet, setSheet, roll } as unknown as GameContextValue
     return (
-      <GameContext.Provider value={providerValue as GameContextValue}>
+      <GameContext.Provider value={providerValue}>
         <CharacterSheet />
       </GameContext.Provider>
     )

@@ -9,7 +9,11 @@ import type { Sheet } from './sheet'
 type StatKey = keyof Sheet & keyof Sheet['statDice'];
 
 export default function CharacterSheet() {
-  const { sheet, setSheet, roll } = useGameContext()
+  const {
+    state: { sheet },
+    dispatch,
+    roll
+  } = useGameContext()
   const [statDiceErrors, setStatDiceErrors] = useState<
     Record<StatKey, string>
   >({
@@ -20,13 +24,13 @@ export default function CharacterSheet() {
   })
 
   const updateField = <K extends keyof Sheet>(field: K, value: Sheet[K]) =>
-    setSheet(prev => ({ ...prev, [field]: value }))
+    dispatch({ type: 'SET_SHEET', sheet: { ...sheet, [field]: value } })
 
   const updateStatDice = (stat: StatKey, value: string) =>
-    setSheet(prev => ({
-      ...prev,
-      statDice: { ...prev.statDice, [stat]: value }
-    }))
+    dispatch({
+      type: 'SET_SHEET',
+      sheet: { ...sheet, statDice: { ...sheet.statDice, [stat]: value } }
+    })
 
   const rollStat = (stat: StatKey) => {
     const mod = Number(sheet[stat]) || 0

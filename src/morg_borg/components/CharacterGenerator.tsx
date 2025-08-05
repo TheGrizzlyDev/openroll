@@ -3,8 +3,7 @@ import type { InventoryItem } from '../generateCharacter'
 
 export default function CharacterGenerator() {
   const {
-    sheet,
-    inventory,
+    state: { sheet, inventory },
     createCharacter,
     finalizeCharacter,
     cancelCreation
