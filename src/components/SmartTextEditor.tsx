@@ -28,9 +28,11 @@ export default function SmartTextEditor({ value, onChange }: SmartTextEditorProp
       ) : (
         <div>{renderOml(value)}</div>
       )}
-      <button type="button" onClick={handleToggle}>
-        {editing ? 'Save' : 'Edit'}
-      </button>
+      <div className="editor-controls">
+        <button type="button" onClick={handleToggle}>
+          {editing ? 'Save' : 'Edit'}
+        </button>
+      </div>
     </div>
   )
 }

@@ -76,8 +76,10 @@ export default function Presets() {
               placeholder="1d20"
               className={preset.error ? 'error' : ''}
             />
-            <button onClick={() => handleRoll(preset)}>Roll</button>
-            <button onClick={() => removePreset(preset.id)}>Remove</button>
+            <div className="preset-buttons">
+              <button onClick={() => handleRoll(preset)}>Roll</button>
+              <button onClick={() => removePreset(preset.id)}>Remove</button>
+            </div>
             {preset.error && <span className="error-message">{preset.error}</span>}
           </li>
         ))}

@@ -147,6 +147,15 @@ h1, h2 {
   width: auto;
 }
 
+.preset-buttons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.preset-buttons button {
+  flex: 1;
+}
+
 .overlay {
   position: fixed;
   bottom: 1rem;
@@ -189,4 +198,49 @@ h1, h2 {
 
 .start-screen button {
   width: auto;
+}
+
+.smart-text-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.smart-text-editor textarea,
+.smart-text-editor button {
+  background: #111;
+  color: #ffff00;
+  border: 1px solid #ffff00;
+  padding: 0.4rem;
+  font-family: inherit;
+}
+
+.smart-text-editor textarea {
+  width: 100%;
+}
+
+.smart-text-editor .editor-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.smart-text-editor .editor-controls button {
+  width: auto;
+  cursor: pointer;
+}
+
+.badge {
+  display: inline-block;
+  background: #111;
+  color: #ffff00;
+  border: 1px solid #ffff00;
+  padding: 0.1rem 0.4rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.badge:hover {
+  background: #ffff00;
+  color: #111;
 }
