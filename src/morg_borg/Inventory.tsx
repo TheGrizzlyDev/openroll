@@ -3,6 +3,8 @@ import { DndContext, type DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, useSortable, arrayMove } from '@dnd-kit/sortable'
 import { useGameContext, type InventoryItem, type Scroll } from '../GameContext'
 import NumericInput from '../components/NumericInput'
+import SmartTextEditor from '../components/SmartTextEditor'
+import { renderOml } from '../oml/render'
 
 interface SortableItemProps {
   item: InventoryItem
@@ -27,7 +29,8 @@ function SortableItem({ item, startEdit, handleDelete }: SortableItemProps) {
   return (
     <li ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <span>
-        {item.name} ({item.qty}){item.notes ? ` - ${item.notes}` : ''}
+        {item.name} ({item.qty})
+        {item.notes ? <> - {renderOml(item.notes)}</> : ''}
       </span>
       <button onClick={() => startEdit(item.id)}>Edit</button>
       <button onClick={() => handleDelete(item.id)}>Delete</button>
@@ -215,10 +218,9 @@ export default function Inventory() {
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleFormChange('qty', e.target.value)}
           min={0}
         />
-        <input
-          placeholder="Notes"
+        <SmartTextEditor
           value={form.notes}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => handleFormChange('notes', e.target.value)}
+          onChange={value => handleFormChange('notes', value)}
         />
         {editingId ? (
           <>
@@ -235,7 +237,7 @@ export default function Inventory() {
           <li key={scroll.id}>
             <span>
               {scroll.name} [{scroll.type}] ({scroll.casts})
-              {scroll.notes ? ` - ${scroll.notes}` : ''}
+              {scroll.notes ? <> - {renderOml(scroll.notes)}</> : ''}
             </span>
             <button onClick={() => handleCastScroll(scroll.id)}>Cast</button>
             <button onClick={() => startScrollEdit(scroll.id)}>Edit</button>
@@ -262,10 +264,9 @@ export default function Inventory() {
           value={scrollForm.casts}
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleScrollFormChange('casts', e.target.value)}
         />
-        <input
-          placeholder="Notes"
+        <SmartTextEditor
           value={scrollForm.notes}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => handleScrollFormChange('notes', e.target.value)}
+          onChange={value => handleScrollFormChange('notes', value)}
         />
         {editingScrollId ? (
           <>

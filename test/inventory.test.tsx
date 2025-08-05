@@ -2,7 +2,7 @@ import React from 'react'
 import { render, fireEvent, cleanup } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import Inventory from '../src/morg_borg/Inventory'
-import { GameContext, type GameContextValue } from '../src/GameContext'
+import { GameContext, type GameContextValue, type InventoryItem, type Scroll } from '../src/GameContext'
 import { Sheet } from '../src/morg_borg/sheet'
 
 const renderWithContext = (
@@ -53,7 +53,8 @@ describe('Inventory handlers', () => {
     const {
       getAllByPlaceholderText,
       getByPlaceholderText,
-      getAllByText
+      getAllByText,
+      container
     } = renderWithContext(<Inventory />, {
       providerValue
     })
@@ -61,9 +62,11 @@ describe('Inventory handlers', () => {
       target: { value: 'Sword' }
     })
     fireEvent.change(getByPlaceholderText('Qty'), { target: { value: '2' } })
-    fireEvent.change(getAllByPlaceholderText('Notes')[0], {
-      target: { value: 'Sharp' }
-    })
+    const editBtn = getAllByText('Edit')[0]
+    fireEvent.click(editBtn)
+    const textarea = container.querySelector('textarea') as HTMLTextAreaElement
+    fireEvent.change(textarea, { target: { value: 'Sharp' } })
+    fireEvent.click(getAllByText('Save')[0])
     fireEvent.click(getAllByText('Add')[0])
     expect(setInventory).toHaveBeenCalledWith([
       expect.objectContaining({ name: 'Sword', qty: 2, notes: 'Sharp' })
@@ -84,13 +87,14 @@ describe('Inventory handlers', () => {
       sheet: createSimpleSheet(),
       roll: vi.fn()
     }
-    const { getByText, getByPlaceholderText } = renderWithContext(
+    const { getAllByText, getByPlaceholderText } = renderWithContext(
       <Inventory />,
       { providerValue }
     )
-    fireEvent.click(getByText('Edit'))
+    const editItemBtn = getAllByText('Edit').find(btn => btn.closest('li'))
+    fireEvent.click(editItemBtn!)
     fireEvent.change(getByPlaceholderText('Qty'), { target: { value: '3' } })
-    fireEvent.click(getByText('Save'))
+    fireEvent.click(getAllByText('Save')[0])
     expect(setInventory).toHaveBeenCalledWith([
       expect.objectContaining({ id: 1, name: 'Sword', qty: 3 })
     ])
@@ -146,5 +150,65 @@ describe('Inventory handlers', () => {
     expect(logInventory).toHaveBeenCalledWith(
       'Added unclean scroll Fireball (3)'
     )
+  })
+
+  it('renders dice in item and scroll notes and persists', () => {
+    const roll = vi.fn()
+    function Wrapper() {
+      const [inventory, setInventory] = React.useState<InventoryItem[]>([])
+      const [scrolls, setScrolls] = React.useState<Scroll[]>([])
+      const providerValue: Partial<GameContextValue> = {
+        inventory,
+        setInventory,
+        scrolls,
+        setScrolls,
+        logInventory: vi.fn(),
+        sheet: createSimpleSheet(),
+        roll
+      }
+      return (
+        <GameContext.Provider value={providerValue as GameContextValue}>
+          <Inventory />
+        </GameContext.Provider>
+      )
+    }
+
+    const {
+      getAllByPlaceholderText,
+      getByPlaceholderText,
+      getAllByText,
+      container,
+      getByText
+    } = render(<Wrapper />)
+
+    // add item with dice note
+    fireEvent.change(getAllByPlaceholderText('Name')[0], {
+      target: { value: 'Torch' }
+    })
+    fireEvent.change(getByPlaceholderText('Qty'), { target: { value: '1' } })
+    fireEvent.click(getAllByText('Edit')[0])
+    const itemTextarea = container.querySelector('textarea') as HTMLTextAreaElement
+    fireEvent.change(itemTextarea, { target: { value: 'Burn [dice 1d4]' } })
+    fireEvent.click(getAllByText('Save')[0])
+    fireEvent.click(getAllByText('Add')[0])
+
+    const itemDice = getByText('1d4')
+    fireEvent.click(itemDice)
+    expect(roll).toHaveBeenCalledWith('1d4')
+
+    // add scroll with dice note
+    fireEvent.change(getAllByPlaceholderText('Name')[1], {
+      target: { value: 'Zap' }
+    })
+    fireEvent.change(getByPlaceholderText('Casts'), { target: { value: '2' } })
+    fireEvent.click(getAllByText('Edit')[1])
+    const scrollTextarea = container.querySelector('textarea') as HTMLTextAreaElement
+    fireEvent.change(scrollTextarea, { target: { value: 'Power [dice 1d6]' } })
+    fireEvent.click(getByText('Save'))
+    fireEvent.click(getAllByText('Add')[1])
+
+    const scrollDice = getByText('1d6')
+    fireEvent.click(scrollDice)
+    expect(roll).toHaveBeenCalledWith('1d6')
   })
 })

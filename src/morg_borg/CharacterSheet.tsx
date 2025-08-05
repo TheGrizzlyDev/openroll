@@ -2,6 +2,7 @@ import { useState, type ChangeEvent } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
 import NumericInput from '../components/NumericInput'
+import SmartTextEditor from '../components/SmartTextEditor'
 import classes from './classes'
 import type { Sheet } from './sheet'
 
@@ -137,12 +138,9 @@ export default function CharacterSheet() {
       </label>
       <label>
         Notes
-        <textarea
-          rows={4}
+        <SmartTextEditor
           value={sheet.notes}
-          onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-            updateField('notes', e.target.value)
-          }
+          onChange={value => updateField('notes', value)}
         />
       </label>
     </div>
