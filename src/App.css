@@ -126,6 +126,27 @@ h1, h2 {
   width: auto;
 }
 
+.presets ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem 0;
+}
+
+.presets li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.presets li input {
+  flex: 1;
+}
+
+.presets button {
+  width: auto;
+}
+
 .overlay {
   position: fixed;
   bottom: 1rem;

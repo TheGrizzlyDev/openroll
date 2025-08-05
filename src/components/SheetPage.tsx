@@ -4,6 +4,7 @@ import DiceRoller from '../DiceRoller'
 import Inventory from '../morg_borg/Inventory'
 import CharacterSheet from '../morg_borg/CharacterSheet'
 import LogView from './LogView'
+import Presets from './Presets'
 import Overlay from './Overlay'
 import { useGameContext } from '../GameContext'
 
@@ -45,6 +46,12 @@ export default function SheetPage() {
           Inventory
         </button>
         <button
+          className={activeTab === 'presets' ? 'active' : ''}
+          onClick={() => setActiveTab('presets')}
+        >
+          Presets
+        </button>
+        <button
           className={activeTab === 'log' ? 'active' : ''}
           onClick={() => setActiveTab('log')}
         >
@@ -59,6 +66,8 @@ export default function SheetPage() {
       {activeTab === 'inventory' && (
         <Inventory />
       )}
+
+      {activeTab === 'presets' && <Presets />}
 
       {activeTab === 'log' && <LogView />}
 
