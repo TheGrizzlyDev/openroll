@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, fireEvent, cleanup, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import Inventory from '../src/morg_borg/Inventory'
+import Inventory, { reorderScrolls } from '../src/morg_borg/Inventory'
 import { GameContext, type GameContextValue, type InventoryItem, type Scroll } from '../src/GameContext'
 import { Sheet } from '../src/morg_borg/sheet'
 
@@ -241,6 +241,46 @@ describe('Inventory handlers', () => {
     fireEvent.keyDown(handle, { key: ' ', code: 'Space', keyCode: 32 })
     await waitFor(() =>
       expect(firstItem.classList.contains('dragging')).toBe(false),
+    )
+  })
+
+  it('reorders scrolls using arrayMove', () => {
+    const scrolls = [
+      { id: 1, type: 'unclean', name: 'Fireball', casts: 1, notes: '' },
+      { id: 2, type: 'unclean', name: 'Zap', casts: 1, notes: '' }
+    ]
+    const reordered = reorderScrolls(scrolls, 1, 2)
+    expect(reordered).toEqual([scrolls[1], scrolls[0]])
+  })
+
+  it('only starts dragging scrolls via the handle and toggles dragging class', async () => {
+    const scrolls = [
+      { id: 1, type: 'unclean', name: 'Fireball', casts: 1, notes: '' },
+      { id: 2, type: 'unclean', name: 'Zap', casts: 1, notes: '' }
+    ]
+    const providerValue = {
+      inventory: [],
+      setInventory: vi.fn(),
+      logInventory: vi.fn(),
+      scrolls,
+      setScrolls: vi.fn(),
+      sheet: createSimpleSheet(),
+      roll: vi.fn()
+    }
+    const { container } = renderWithContext(<Inventory />, { providerValue })
+    const firstScroll = container.querySelector('.scrolls li') as HTMLElement
+    const handle = firstScroll.querySelector('.drag-handle') as HTMLElement
+
+    expect(firstScroll.getAttribute('role')).toBeNull()
+    expect(handle.getAttribute('role')).toBe('button')
+
+    fireEvent.keyDown(handle, { key: ' ', code: 'Space', keyCode: 32 })
+    await waitFor(() =>
+      expect(firstScroll.classList.contains('dragging')).toBe(true),
+    )
+    fireEvent.keyDown(handle, { key: ' ', code: 'Space', keyCode: 32 })
+    await waitFor(() =>
+      expect(firstScroll.classList.contains('dragging')).toBe(false),
     )
   })
 })

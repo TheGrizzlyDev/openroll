@@ -46,6 +46,65 @@ function SortableItem({ item, startEdit, handleDelete }: SortableItemProps) {
   )
 }
 
+export function reorderScrolls(
+  scrolls: Scroll[],
+  activeId: number,
+  overId: number
+) {
+  const oldIndex = scrolls.findIndex(s => s.id === activeId)
+  const newIndex = scrolls.findIndex(s => s.id === overId)
+  return arrayMove(scrolls, oldIndex, newIndex)
+}
+
+interface SortableScrollProps {
+  scroll: Scroll
+  startEdit: (_id: number) => void
+  handleDelete: (_id: number) => void
+  handleCast: (_id: number) => void
+}
+
+function SortableScroll({
+  scroll,
+  startEdit,
+  handleDelete,
+  handleCast
+}: SortableScrollProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({ id: scroll.id })
+
+  const style = {
+    transform: transform
+      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+      : undefined,
+    transition
+  }
+
+  return (
+    <li
+      ref={setNodeRef}
+      style={style}
+      className={isDragging ? 'dragging' : ''}
+    >
+      <span className="drag-handle" {...attributes} {...listeners}>::</span>
+      <div>
+        <span>
+          {scroll.name} [{scroll.type}] ({scroll.casts})
+          {scroll.notes ? <> - {renderOml(scroll.notes)}</> : ''}
+        </span>
+        <button onClick={() => handleCast(scroll.id)}>Cast</button>
+        <button onClick={() => startEdit(scroll.id)}>Edit</button>
+        <button onClick={() => handleDelete(scroll.id)}>Delete</button>
+      </div>
+    </li>
+  )
+}
+
 export default function Inventory() {
   const {
     inventory: items,
@@ -118,6 +177,15 @@ export default function Inventory() {
       const oldIndex = items.findIndex(i => i.id === active.id)
       const newIndex = items.findIndex(i => i.id === over.id)
       onChange(arrayMove(items, oldIndex, newIndex))
+    }
+  }
+
+  const handleScrollDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+    if (over && active.id !== over.id) {
+      setScrolls(
+        reorderScrolls(scrolls, Number(active.id), Number(over.id))
+      )
     }
   }
 
@@ -240,19 +308,21 @@ export default function Inventory() {
         )}
       </div>
       <h2>Scrolls</h2>
-      <ul>
-        {scrolls.map(scroll => (
-          <li key={scroll.id}>
-            <span>
-              {scroll.name} [{scroll.type}] ({scroll.casts})
-              {scroll.notes ? <> - {renderOml(scroll.notes)}</> : ''}
-            </span>
-            <button onClick={() => handleCastScroll(scroll.id)}>Cast</button>
-            <button onClick={() => startScrollEdit(scroll.id)}>Edit</button>
-            <button onClick={() => handleDeleteScroll(scroll.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      <DndContext onDragEnd={handleScrollDragEnd}>
+        <SortableContext items={scrolls.map(s => s.id)}>
+          <ul className="scrolls">
+            {scrolls.map(scroll => (
+              <SortableScroll
+                key={scroll.id}
+                scroll={scroll}
+                startEdit={startScrollEdit}
+                handleDelete={handleDeleteScroll}
+                handleCast={handleCastScroll}
+              />
+            ))}
+          </ul>
+        </SortableContext>
+      </DndContext>
       <div className="inventory-form">
         <select
           value={scrollForm.type}

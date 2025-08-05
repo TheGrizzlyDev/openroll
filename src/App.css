@@ -143,6 +143,10 @@ h1, h2 {
   opacity: 0.5;
 }
 
+.scrolls li.dragging {
+  opacity: 0.5;
+}
+
 .presets ul {
   list-style: none;
   padding: 0;

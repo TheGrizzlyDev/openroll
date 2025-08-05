@@ -1,0 +1,14 @@
+{
+  "humans/firstNames.json": {
+    "tags": { "class": ["first"], "ethnicity": ["general"] }
+  },
+  "humans/lastNames.json": {
+    "tags": { "class": ["last"], "ethnicity": ["general"] }
+  },
+  "humans/spanishFirstNames.json": {
+    "tags": { "class": ["first"], "ethnicity": ["spanish"] }
+  },
+  "humans/spanishLastNames.json": {
+    "tags": { "class": ["last"], "ethnicity": ["spanish"] }
+  }
+}
