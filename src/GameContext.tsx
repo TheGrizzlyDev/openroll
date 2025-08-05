@@ -152,21 +152,23 @@ export function GameProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('log', JSON.stringify(state.log))
   }, [state.log])
 
+  const { sheet, inventory, scrolls, current } = state
+
   useEffect(() => {
-    if (state.current === null) return
+    if (current === null) return
     if (skipSave.current) return
-    const updated = [...state.characters]
+    const updated = [...charactersRef.current]
     const existing =
-      updated[state.current] || { name: '', sheet: createSheet(), inventory: [], scrolls: [] }
-    updated[state.current] = {
+      updated[current] || { name: '', sheet: createSheet(), inventory: [], scrolls: [] }
+    updated[current] = {
       ...existing,
-      name: state.sheet.name,
-      sheet: state.sheet,
-      inventory: state.inventory,
-      scrolls: state.scrolls
+      name: sheet.name,
+      sheet,
+      inventory,
+      scrolls
     }
     dispatch({ type: 'SET_CHARACTERS', characters: updated })
-  }, [state.sheet, state.inventory, state.scrolls, state.current])
+  }, [sheet, inventory, scrolls, current])
 
   const navigate = useNavigate()
   const location = useLocation()

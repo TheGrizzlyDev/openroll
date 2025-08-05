@@ -2,14 +2,48 @@ import React from 'react'
 import { render, fireEvent, cleanup } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import CharacterSheet from '../src/morg_borg/CharacterSheet'
-import { GameContext, type GameContextValue } from '../src/GameContext'
+import {
+  GameContext,
+  type GameContextValue,
+  type GameState,
+  type GameAction
+} from '../src/GameContext'
 import { createSheet } from '../src/morg_borg/sheet'
 
 const renderWithWrapper = () => {
   const roll = vi.fn()
   function Wrapper() {
-    const [sheet, setSheet] = React.useState(createSheet())
-    const providerValue = { sheet, setSheet, roll } as unknown as GameContextValue
+    const [state, setState] = React.useState<GameState>({
+      characters: [],
+      current: null,
+      sheet: createSheet(),
+      inventory: [],
+      scrolls: [],
+      log: [],
+      activeTab: 'character',
+      overlay: { message: '', visible: false }
+    })
+
+    const dispatch = vi.fn((action: GameAction) => {
+      if (action.type === 'SET_SHEET') {
+        setState(prev => ({ ...prev, sheet: action.sheet }))
+      }
+    })
+
+    const providerValue: GameContextValue = {
+      state,
+      dispatch,
+      overlayTimeout: { current: null },
+      loadCharacter: vi.fn(),
+      createCharacter: vi.fn(),
+      finalizeCharacter: vi.fn(),
+      cancelCreation: vi.fn(),
+      deleteCharacter: vi.fn(),
+      exportCharacters: () => '',
+      importCharacters: () => false,
+      roll,
+      logInventory: vi.fn()
+    }
     return (
       <GameContext.Provider value={providerValue}>
         <CharacterSheet />

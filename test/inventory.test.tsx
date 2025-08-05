@@ -2,16 +2,79 @@ import React from 'react'
 import { render, fireEvent, cleanup, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import Inventory, { reorderScrolls } from '../src/morg_borg/Inventory'
-import { GameContext, type GameContextValue, type InventoryItem, type Scroll } from '../src/GameContext'
+import {
+  GameContext,
+  type GameContextValue,
+  type InventoryItem,
+  type Scroll,
+  type GameState,
+  type GameAction
+} from '../src/GameContext'
 import { Sheet } from '../src/morg_borg/sheet'
 
 const renderWithContext = (
   ui: React.ReactElement,
-  { providerValue }: { providerValue: any }
+  {
+    providerValue
+  }: {
+    providerValue: {
+      inventory: InventoryItem[]
+      scrolls: Scroll[]
+      sheet: Sheet
+      logInventory: GameContextValue['logInventory']
+      roll: GameContextValue['roll']
+    }
+  }
 ) => {
-  return render(
-    <GameContext.Provider value={providerValue as unknown as GameContextValue}>{ui}</GameContext.Provider>
-  )
+  let dispatchMock: ReturnType<typeof vi.fn> = vi.fn(() => {});
+
+  function Wrapper() {
+    const [state, setState] = React.useState<GameState>({
+      characters: [],
+      current: null,
+      sheet: providerValue.sheet,
+      inventory: providerValue.inventory,
+      scrolls: providerValue.scrolls,
+      log: [],
+      activeTab: 'character',
+      overlay: { message: '', visible: false }
+    })
+
+    dispatchMock = vi.fn((action: GameAction) => {
+      switch (action.type) {
+        case 'SET_INVENTORY':
+          setState(prev => ({ ...prev, inventory: action.inventory }))
+          break
+        case 'SET_SCROLLS':
+          setState(prev => ({ ...prev, scrolls: action.scrolls }))
+          break
+        case 'SET_SHEET':
+          setState(prev => ({ ...prev, sheet: action.sheet }))
+          break
+        default:
+          break
+      }
+    })
+
+    const value: GameContextValue = {
+      state,
+      dispatch: dispatchMock,
+      overlayTimeout: { current: null },
+      loadCharacter: vi.fn(),
+      createCharacter: vi.fn(),
+      finalizeCharacter: vi.fn(),
+      cancelCreation: vi.fn(),
+      deleteCharacter: vi.fn(),
+      exportCharacters: () => '',
+      importCharacters: () => false,
+      roll: providerValue.roll,
+      logInventory: providerValue.logInventory
+    }
+    return <GameContext.Provider value={value}>{ui}</GameContext.Provider>
+  }
+
+  const result = render(<Wrapper />)
+  return { ...result, dispatch: dispatchMock }
 }
 
 const createSimpleSheet = () : Sheet => ({ 
@@ -39,24 +102,21 @@ afterEach(() => cleanup())
 
 describe('Inventory handlers', () => {
   it('adds items', () => {
-    const setInventory = vi.fn()
     const logInventory = vi.fn()
-    const providerValue = {
-      inventory: [],
-      setInventory,
-      logInventory,
-      scrolls: [],
-      setScrolls: vi.fn(),
-      sheet: createSimpleSheet(),
-      roll: vi.fn()
-    }
     const {
       getAllByPlaceholderText,
       getByPlaceholderText,
       getAllByText,
-      container
+      container,
+      dispatch
     } = renderWithContext(<Inventory />, {
-      providerValue
+      providerValue: {
+        inventory: [],
+        scrolls: [],
+        sheet: createSimpleSheet(),
+        logInventory,
+        roll: vi.fn()
+      }
     })
     fireEvent.change(getAllByPlaceholderText('Name')[0], {
       target: { value: 'Sword' }
@@ -68,75 +128,79 @@ describe('Inventory handlers', () => {
     fireEvent.change(textarea, { target: { value: 'Sharp' } })
     fireEvent.click(getAllByText('Save')[0])
     fireEvent.click(getAllByText('Add')[0])
-    expect(setInventory).toHaveBeenCalledWith([
-      expect.objectContaining({ name: 'Sword', qty: 2, notes: 'Sharp' })
-    ])
+    expect(dispatch).toHaveBeenCalledWith({
+      type: 'SET_INVENTORY',
+      inventory: [
+        expect.objectContaining({ name: 'Sword', qty: 2, notes: 'Sharp' })
+      ]
+    })
     expect(logInventory).toHaveBeenCalledWith('Added Sword x2')
   })
 
   it('updates items', () => {
     const items = [{ id: 1, name: 'Sword', qty: 1, notes: '' }]
-    const setInventory = vi.fn()
     const logInventory = vi.fn()
-    const providerValue = {
-      inventory: items,
-      setInventory,
-      logInventory,
-      scrolls: [],
-      setScrolls: vi.fn(),
-      sheet: createSimpleSheet(),
-      roll: vi.fn()
-    }
-    const { getAllByText, getByPlaceholderText } = renderWithContext(
+    const { getAllByText, getByPlaceholderText, dispatch } = renderWithContext(
       <Inventory />,
-      { providerValue }
+      {
+        providerValue: {
+          inventory: items,
+          scrolls: [],
+          sheet: createSimpleSheet(),
+          logInventory,
+          roll: vi.fn()
+        }
+      }
     )
     const editItemBtn = getAllByText('Edit').find(btn => btn.closest('li'))
     fireEvent.click(editItemBtn!)
     fireEvent.change(getByPlaceholderText('Qty'), { target: { value: '3' } })
     fireEvent.click(getAllByText('Save')[0])
-    expect(setInventory).toHaveBeenCalledWith([
-      expect.objectContaining({ id: 1, name: 'Sword', qty: 3 })
-    ])
+    expect(dispatch).toHaveBeenCalledWith({
+      type: 'SET_INVENTORY',
+      inventory: [
+        expect.objectContaining({ id: 1, name: 'Sword', qty: 3 })
+      ]
+    })
     expect(logInventory).toHaveBeenCalledWith('Updated Sword')
   })
 
   it('deletes items', () => {
     const items = [{ id: 1, name: 'Sword', qty: 1, notes: '' }]
-    const setInventory = vi.fn()
     const logInventory = vi.fn()
-    const providerValue = {
-      inventory: items,
-      setInventory,
-      logInventory,
-      scrolls: [],
-      setScrolls: vi.fn(),
-      sheet: createSimpleSheet(),
-      roll: vi.fn()
-    }
-    const { getByText } = renderWithContext(<Inventory />, { providerValue })
+    const { getByText, dispatch } = renderWithContext(<Inventory />, {
+      providerValue: {
+        inventory: items,
+        scrolls: [],
+        sheet: createSimpleSheet(),
+        logInventory,
+        roll: vi.fn()
+      }
+    })
     fireEvent.click(getByText('Delete'))
-    expect(setInventory).toHaveBeenCalledWith([])
+    expect(dispatch).toHaveBeenCalledWith({
+      type: 'SET_INVENTORY',
+      inventory: []
+    })
     expect(logInventory).toHaveBeenCalledWith('Removed Sword')
   })
 
   it('adds scrolls', () => {
-    const setScrolls = vi.fn()
     const logInventory = vi.fn()
-    const providerValue = {
-      inventory: [],
-      setInventory: vi.fn(),
-      logInventory,
-      scrolls: [],
-      setScrolls,
-      sheet: createSimpleSheet(),
-      roll: vi.fn()
-    }
     const {
       getAllByPlaceholderText,
       getByPlaceholderText,
-      getAllByText
-    } = renderWithContext(<Inventory />, { providerValue })
+      getAllByText,
+      dispatch
+    } = renderWithContext(<Inventory />, {
+      providerValue: {
+        inventory: [],
+        scrolls: [],
+        sheet: createSimpleSheet(),
+        logInventory,
+        roll: vi.fn()
+      }
+    })
 
     fireEvent.change(getAllByPlaceholderText('Name')[1], {
       target: { value: 'Fireball' }
@@ -144,9 +208,10 @@ describe('Inventory handlers', () => {
     fireEvent.change(getByPlaceholderText('Casts'), { target: { value: '3' } })
     fireEvent.click(getAllByText('Add')[1])
 
-    expect(setScrolls).toHaveBeenCalledWith([
-      expect.objectContaining({ name: 'Fireball', casts: 3 })
-    ])
+    expect(dispatch).toHaveBeenCalledWith({
+      type: 'SET_SCROLLS',
+      scrolls: [expect.objectContaining({ name: 'Fireball', casts: 3 })]
+    })
     expect(logInventory).toHaveBeenCalledWith(
       'Added unclean scroll Fireball (3)'
     )
@@ -154,32 +219,21 @@ describe('Inventory handlers', () => {
 
   it('renders dice in item and scroll notes and persists', () => {
     const roll = vi.fn()
-    function Wrapper() {
-      const [inventory, setInventory] = React.useState<InventoryItem[]>([])
-      const [scrolls, setScrolls] = React.useState<Scroll[]>([])
-      const providerValue = {
-        inventory,
-        setInventory,
-        scrolls,
-        setScrolls,
-        logInventory: vi.fn(),
-        sheet: createSimpleSheet(),
-        roll
-      } as unknown as GameContextValue
-      return (
-        <GameContext.Provider value={providerValue}>
-          <Inventory />
-        </GameContext.Provider>
-      )
-    }
-
     const {
       getAllByPlaceholderText,
       getByPlaceholderText,
       getAllByText,
       container,
       getByText
-    } = render(<Wrapper />)
+    } = renderWithContext(<Inventory />, {
+      providerValue: {
+        inventory: [],
+        scrolls: [],
+        sheet: createSimpleSheet(),
+        logInventory: vi.fn(),
+        roll
+      }
+    })
 
     // add item with dice note
     fireEvent.change(getAllByPlaceholderText('Name')[0], {
@@ -217,17 +271,15 @@ describe('Inventory handlers', () => {
       { id: 1, name: 'Sword', qty: 1, notes: '' },
       { id: 2, name: 'Shield', qty: 1, notes: '' }
     ]
-    const setInventory = vi.fn()
-    const providerValue = {
-      inventory: items,
-      setInventory,
-      logInventory: vi.fn(),
-      scrolls: [],
-      setScrolls: vi.fn(),
-      sheet: createSimpleSheet(),
-      roll: vi.fn()
-    }
-    const { container } = renderWithContext(<Inventory />, { providerValue })
+    const { container } = renderWithContext(<Inventory />, {
+      providerValue: {
+        inventory: items,
+        scrolls: [],
+        sheet: createSimpleSheet(),
+        logInventory: vi.fn(),
+        roll: vi.fn()
+      }
+    })
     const firstItem = container.querySelector('li') as HTMLElement
     const handle = firstItem.querySelector('.drag-handle') as HTMLElement
 
@@ -258,16 +310,15 @@ describe('Inventory handlers', () => {
       { id: 1, type: 'unclean', name: 'Fireball', casts: 1, notes: '' },
       { id: 2, type: 'unclean', name: 'Zap', casts: 1, notes: '' }
     ]
-    const providerValue = {
-      inventory: [],
-      setInventory: vi.fn(),
-      logInventory: vi.fn(),
-      scrolls,
-      setScrolls: vi.fn(),
-      sheet: createSimpleSheet(),
-      roll: vi.fn()
-    }
-    const { container } = renderWithContext(<Inventory />, { providerValue })
+    const { container } = renderWithContext(<Inventory />, {
+      providerValue: {
+        inventory: [],
+        scrolls,
+        sheet: createSimpleSheet(),
+        logInventory: vi.fn(),
+        roll: vi.fn()
+      }
+    })
     const firstScroll = container.querySelector('.scrolls li') as HTMLElement
     const handle = firstScroll.querySelector('.drag-handle') as HTMLElement
 
