@@ -245,7 +245,7 @@ describe('Inventory handlers', () => {
   })
 
   it('reorders scrolls using arrayMove', () => {
-    const scrolls = [
+    const scrolls: Scroll[] = [
       { id: 1, type: 'unclean', name: 'Fireball', casts: 1, notes: '' },
       { id: 2, type: 'unclean', name: 'Zap', casts: 1, notes: '' }
     ]
@@ -254,7 +254,7 @@ describe('Inventory handlers', () => {
   })
 
   it('only starts dragging scrolls via the handle and toggles dragging class', async () => {
-    const scrolls = [
+    const scrolls: Scroll[] = [
       { id: 1, type: 'unclean', name: 'Fireball', casts: 1, notes: '' },
       { id: 2, type: 'unclean', name: 'Zap', casts: 1, notes: '' }
     ]

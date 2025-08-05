@@ -10,6 +10,8 @@ jobs:
       parts: ${{ steps.parts.outputs.parts }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -27,6 +29,8 @@ jobs:
         part: ${{ fromJson(needs.list.outputs.parts) }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
       - uses: actions/setup-node@v4
         with:
           node-version: 20

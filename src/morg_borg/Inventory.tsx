@@ -46,6 +46,7 @@ function SortableItem({ item, startEdit, handleDelete }: SortableItemProps) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function reorderScrolls(
   scrolls: Scroll[],
   activeId: number,
