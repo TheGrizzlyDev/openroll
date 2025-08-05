@@ -22,8 +22,7 @@ function renderNodes(nodes: OmlNode[], roll: (_notation: string) => unknown) {
 }
 
 export function renderOml(text: string, rollFn?: (_notation: string) => unknown) {
-  const { roll } = useGameContext()
-  const doRoll = rollFn ?? roll
+  const doRoll = rollFn ?? useGameContext().roll
   const nodes = parseOml(text)
   return <>{renderNodes(nodes, doRoll)}</>
 }

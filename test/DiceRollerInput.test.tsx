@@ -1,24 +1,18 @@
-import React from 'react'
 import { render, fireEvent, createEvent, cleanup } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import DiceRoller from '../src/DiceRoller'
-import { GameContext, type GameContextValue } from '../src/GameContext'
+import { useGameContext } from '../src/GameContext'
 
-const renderWithContext = (
-  ui: React.ReactElement,
-  { providerValue }: { providerValue: Partial<GameContextValue> }
-) => {
-  return render(
-    <GameContext.Provider value={providerValue as GameContextValue}>{ui}</GameContext.Provider>
-  )
-}
-
-afterEach(() => cleanup())
+afterEach(() => {
+  cleanup()
+  useGameContext.setState({ roll: vi.fn() })
+})
 
 describe('DiceRoller', () => {
   it('rolls dice on button click', () => {
     const roll = vi.fn()
-    const { getByRole, getByText } = renderWithContext(<DiceRoller />, { providerValue: { roll } })
+    useGameContext.setState({ roll })
+    const { getByRole, getByText } = render(<DiceRoller />)
     const input = getByRole('textbox') as HTMLInputElement
     fireEvent.change(input, { target: { value: '2d6' } })
     fireEvent.click(getByText('Roll'))
@@ -27,7 +21,8 @@ describe('DiceRoller', () => {
 
   it('rolls dice on Enter key press and prevents default', () => {
     const roll = vi.fn()
-    const { getByRole } = renderWithContext(<DiceRoller />, { providerValue: { roll } })
+    useGameContext.setState({ roll })
+    const { getByRole } = render(<DiceRoller />)
     const input = getByRole('textbox') as HTMLInputElement
     fireEvent.change(input, { target: { value: '3d8' } })
     const event = createEvent.keyDown(input, { key: 'Enter' })
@@ -36,3 +31,4 @@ describe('DiceRoller', () => {
     expect(event.defaultPrevented).toBe(true)
   })
 })
+

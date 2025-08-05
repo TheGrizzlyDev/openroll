@@ -2,7 +2,7 @@ import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import { parseOml, renderOml } from '../src/oml/render'
-import { GameContext, type GameContextValue } from '../src/GameContext'
+import { useGameContext } from '../src/GameContext'
 
 describe('oml parsing', () => {
   it('tokenizes text and dice tags', () => {
@@ -18,13 +18,9 @@ describe('oml parsing', () => {
 describe('oml rendering', () => {
   it('renders spans and clickable dice badges', () => {
     const roll = vi.fn()
-    const providerValue = { roll } as unknown as GameContextValue
+    useGameContext.setState({ roll })
     const Test = () => <div>{renderOml('Roll [dice 1d4] now')}</div>
-    const { getByText, container } = render(
-      <GameContext.Provider value={providerValue}>
-        <Test />
-      </GameContext.Provider>
-    )
+    const { getByText, container } = render(<Test />)
     const badge = getByText('1d4')
     fireEvent.click(badge)
     expect(roll).toHaveBeenCalledWith('1d4')

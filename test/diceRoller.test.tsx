@@ -1,17 +1,7 @@
-import React from 'react'
 import { render, fireEvent, cleanup, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import Presets from '../src/components/Presets'
-import { GameContext, type GameContextValue } from '../src/GameContext'
-
-const renderWithContext = (
-  ui: React.ReactElement,
-  { providerValue }: { providerValue: Partial<GameContextValue> }
-) => {
-  return render(
-    <GameContext.Provider value={providerValue as GameContextValue}>{ui}</GameContext.Provider>
-  )
-}
+import { useGameContext } from '../src/GameContext'
 
 const createStorage = () => {
   let store: Record<string, string> = {}
@@ -39,21 +29,31 @@ beforeEach(() => {
   })
 })
 
-afterEach(() => cleanup())
+afterEach(() => {
+  cleanup()
+  useGameContext.setState({ roll: vi.fn() })
+})
 
 describe('DiceRoller presets', () => {
   it('renders default presets in order', async () => {
     const roll = vi.fn()
-    const { findAllByRole } = renderWithContext(<Presets />, { providerValue: { roll } })
+    useGameContext.setState({ roll })
+    const { findAllByRole } = render(<Presets />)
     const inputs = (await findAllByRole('textbox')) as HTMLInputElement[]
-    expect(inputs.map(i => i.value)).toEqual(['1d4', '1d6', '1d8', '1d10', '1d12', '1d20'])
+    expect(inputs.map(i => i.value)).toEqual([
+      '1d4',
+      '1d6',
+      '1d8',
+      '1d10',
+      '1d12',
+      '1d20'
+    ])
   })
 
   it('adds, edits, and removes presets', async () => {
     const roll = vi.fn()
-    const { findAllByRole, getByText, getAllByRole, getAllByText } = renderWithContext(
-      <Presets />, { providerValue: { roll } }
-    )
+    useGameContext.setState({ roll })
+    const { findAllByRole, getByText, getAllByRole, getAllByText } = render(<Presets />)
     await findAllByRole('textbox')
 
     fireEvent.click(getByText('Add preset'))
@@ -71,9 +71,8 @@ describe('DiceRoller presets', () => {
 
   it('invokes roll with correct notation', async () => {
     const roll = vi.fn()
-    const { findAllByText, findAllByRole } = renderWithContext(<Presets />, {
-      providerValue: { roll }
-    })
+    useGameContext.setState({ roll })
+    const { findAllByText, findAllByRole } = render(<Presets />)
     await findAllByRole('textbox')
     const rollButtons = await findAllByText('Roll')
     fireEvent.click(rollButtons[0])
@@ -82,9 +81,8 @@ describe('DiceRoller presets', () => {
 
   it('persists presets across re-renders via localStorage', async () => {
     const roll = vi.fn()
-    const { findAllByRole, unmount } = renderWithContext(<Presets />, {
-      providerValue: { roll }
-    })
+    useGameContext.setState({ roll })
+    const { findAllByRole, unmount } = render(<Presets />)
     const inputs = (await findAllByRole('textbox')) as HTMLInputElement[]
     fireEvent.change(inputs[0], { target: { value: '2d4' } })
 
@@ -96,9 +94,7 @@ describe('DiceRoller presets', () => {
     )
 
     unmount()
-    const { findAllByRole: findAllByRole2 } = renderWithContext(<Presets />, {
-      providerValue: { roll }
-    })
+    const { findAllByRole: findAllByRole2 } = render(<Presets />)
     const inputs2 = (await findAllByRole2('textbox')) as HTMLInputElement[]
     expect(inputs2[0].value).toBe('2d4')
     expect(localStorage.getItem).toHaveBeenCalledTimes(2)

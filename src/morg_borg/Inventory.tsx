@@ -13,6 +13,7 @@ interface SortableItemProps {
 }
 
 function SortableItem({ item, startEdit, handleDelete }: SortableItemProps) {
+  const { roll } = useGameContext()
   const {
     attributes,
     listeners,
@@ -37,7 +38,7 @@ function SortableItem({ item, startEdit, handleDelete }: SortableItemProps) {
       <div>
         <span>
           {item.name} ({item.qty})
-          {item.notes ? <> - {renderOml(item.notes)}</> : ''}
+          {item.notes ? <> - {renderOml(item.notes, roll)}</> : ''}
         </span>
         <button onClick={() => startEdit(item.id)}>Edit</button>
         <button onClick={() => handleDelete(item.id)}>Delete</button>
@@ -70,6 +71,7 @@ function SortableScroll({
   handleDelete,
   handleCast
 }: SortableScrollProps) {
+  const { roll } = useGameContext()
   const {
     attributes,
     listeners,
@@ -96,7 +98,7 @@ function SortableScroll({
       <div>
         <span>
           {scroll.name} [{scroll.type}] ({scroll.casts})
-          {scroll.notes ? <> - {renderOml(scroll.notes)}</> : ''}
+          {scroll.notes ? <> - {renderOml(scroll.notes, roll)}</> : ''}
         </span>
         <button onClick={() => handleCast(scroll.id)}>Cast</button>
         <button onClick={() => startEdit(scroll.id)}>Edit</button>

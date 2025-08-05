@@ -1,4 +1,5 @@
 import React, { type ChangeEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useGameContext } from '../GameContext'
 import Overlay from './Overlay'
 
@@ -11,8 +12,10 @@ export default function CharacterSelect() {
     createCharacter,
     exportCharacters,
     importCharacters,
-    overlayTimeout
+    overlayTimeout,
+    setOverlayTimeout
   } = useGameContext()
+  const navigate = useNavigate()
 
   const handleExport = () => {
     const data = exportCharacters()
@@ -53,11 +56,12 @@ export default function CharacterSelect() {
           }
         })
       }
-      if (overlayTimeout.current) clearTimeout(overlayTimeout.current)
-      overlayTimeout.current = setTimeout(
+      if (overlayTimeout) clearTimeout(overlayTimeout)
+      const timeout = setTimeout(
         () => dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } }),
         10000
       )
+      setOverlayTimeout(timeout)
     }
     reader.readAsText(file)
     e.target.value = ''
@@ -65,25 +69,36 @@ export default function CharacterSelect() {
 
   const confirmDelete = (idx: number) =>
     window.confirm('Delete this character?') && deleteCharacter(idx)
+
+  const handleLoad = (idx: number) => {
+    loadCharacter(idx)
+    navigate(`/sheet/${idx}`)
+  }
+
+  const handleCreate = () => {
+    createCharacter()
+    navigate('/generator')
+  }
   return (
     <div className="container start-screen">
       <h1>Open Roll</h1>
       <ul className="character-list">
         {characters.map((c, idx) => (
           <li key={idx}>
-            <button onClick={() => loadCharacter(idx)}>{c.name || `Character ${idx + 1}`}</button>
+            <button onClick={() => handleLoad(idx)}>{c.name || `Character ${idx + 1}`}</button>
             <button onClick={() => confirmDelete(idx)}>Delete</button>
           </li>
         ))}
       </ul>
-      <button onClick={createCharacter}>Create New</button>
+      <button onClick={handleCreate}>Create New</button>
       <button onClick={handleExport}>Export</button>
       <input type="file" accept="application/json" onChange={handleImport} />
       <Overlay
         message={overlay.message}
         visible={overlay.visible}
         onClose={() => {
-          if (overlayTimeout.current) clearTimeout(overlayTimeout.current)
+          if (overlayTimeout) clearTimeout(overlayTimeout)
+          setOverlayTimeout(null)
           dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } })
         }}
       />

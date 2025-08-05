@@ -1,28 +1,21 @@
-import React from 'react'
 import { render, fireEvent, cleanup } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import SmartTextEditor from '../src/components/SmartTextEditor'
-import { GameContext, type GameContextValue } from '../src/GameContext'
+import { useGameContext } from '../src/GameContext'
 
-const renderWithContext = (
-  ui: React.ReactElement,
-  { providerValue }: { providerValue: Partial<GameContextValue> }
-) => {
-  return render(
-    <GameContext.Provider value={providerValue as GameContextValue}>{ui}</GameContext.Provider>
-  )
-}
-
-afterEach(() => cleanup())
+afterEach(() => {
+  cleanup()
+  useGameContext.setState({ roll: vi.fn() })
+})
 
 describe('SmartTextEditor', () => {
   it('switches between modes and saves changes', () => {
     const roll = vi.fn()
     const onChange = vi.fn()
-    const providerValue = { roll }
+    useGameContext.setState({ roll })
     const initial = 'Roll [dice 1d4] now'
-    const { getByText, getByRole, queryByRole } = renderWithContext(
-      <SmartTextEditor value={initial} onChange={onChange} />, { providerValue }
+    const { getByText, getByRole, queryByRole } = render(
+      <SmartTextEditor value={initial} onChange={onChange} />
     )
     getByText('1d4')
     const toggle = getByText('Edit')
@@ -38,12 +31,13 @@ describe('SmartTextEditor', () => {
 
   it('calls roll when dice badge clicked in visual mode', () => {
     const roll = vi.fn()
-    const providerValue = { roll }
-    const { getByText } = renderWithContext(
-      <SmartTextEditor value={'Roll [dice 1d4]'} onChange={() => {}} />, { providerValue }
+    useGameContext.setState({ roll })
+    const { getByText } = render(
+      <SmartTextEditor value={'Roll [dice 1d4]'} onChange={() => {}} />
     )
     const badge = getByText('1d4')
     fireEvent.click(badge)
     expect(roll).toHaveBeenCalledWith('1d4')
   })
 })
+

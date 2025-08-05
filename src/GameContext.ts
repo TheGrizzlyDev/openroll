@@ -1,0 +1,295 @@
+import { create, type StateCreator } from 'zustand'
+import { devtools, persist, createJSONStorage } from 'zustand/middleware'
+import { DiceRoller as DiceParser, type DiceRoll } from '@dice-roller/rpg-dice-roller'
+import { createSheet, type Sheet } from './morg_borg/sheet'
+import { generateCharacter } from './morg_borg/generateCharacter'
+
+export interface InventoryItem {
+  id: number
+  name: string
+  qty: number
+  notes: string
+}
+
+export interface Scroll {
+  id: number
+  type: 'unclean' | 'sacred'
+  name: string
+  casts: number
+  notes: string
+}
+
+export interface LogEntry {
+  label: string
+  notation?: string
+  output: string
+  total?: number
+}
+
+export interface Character {
+  name: string
+  sheet: Sheet
+  inventory: InventoryItem[]
+  scrolls: Scroll[]
+}
+
+export interface OverlayState {
+  message: string
+  visible: boolean
+}
+
+export interface GameState {
+  characters: Character[]
+  current: number | null
+  sheet: Sheet
+  inventory: InventoryItem[]
+  scrolls: Scroll[]
+  log: LogEntry[]
+  activeTab: string
+  overlay: OverlayState
+}
+
+export type GameAction =
+  | { type: 'SET_CHARACTERS'; characters: Character[] }
+  | { type: 'SET_CURRENT'; current: number | null }
+  | { type: 'SET_SHEET'; sheet: Sheet }
+  | { type: 'SET_INVENTORY'; inventory: InventoryItem[] }
+  | { type: 'SET_SCROLLS'; scrolls: Scroll[] }
+  | { type: 'ADD_LOG'; entry: LogEntry }
+  | { type: 'SET_LOG'; log: LogEntry[] }
+  | { type: 'SET_ACTIVE_TAB'; tab: string }
+  | { type: 'SET_OVERLAY'; overlay: OverlayState }
+
+export interface GameContextValue {
+  state: GameState
+  dispatch: (_action: GameAction) => void
+  overlayTimeout: ReturnType<typeof setTimeout> | null
+  setOverlayTimeout: (_t: ReturnType<typeof setTimeout> | null) => void
+  loadCharacter: (_idx: number) => void
+  createCharacter: () => void
+  finalizeCharacter: () => number
+  cancelCreation: () => void
+  deleteCharacter: (_idx: number) => void
+  exportCharacters: () => string
+  importCharacters: (_data: unknown) => boolean
+  roll: (_notation: string, _label?: string) => number
+  logInventory: (_message: string) => void
+}
+
+const initialState: GameState = {
+  characters: [],
+  current: null,
+  sheet: createSheet(),
+  inventory: [],
+  scrolls: [],
+  log: [],
+  activeTab: 'character',
+  overlay: { message: '', visible: false }
+}
+
+const reducer = (state: GameState, action: GameAction): GameState => {
+  switch (action.type) {
+    case 'SET_CHARACTERS':
+      return { ...state, characters: action.characters }
+    case 'SET_CURRENT':
+      return { ...state, current: action.current }
+    case 'SET_SHEET': {
+      const newState = { ...state, sheet: action.sheet }
+      if (state.current !== null) {
+        const updated = [...state.characters]
+        const existing =
+          updated[state.current] || {
+            name: '',
+            sheet: createSheet(),
+            inventory: [],
+            scrolls: []
+          }
+        updated[state.current] = {
+          ...existing,
+          name: action.sheet.name,
+          sheet: action.sheet,
+          inventory: state.inventory,
+          scrolls: state.scrolls
+        }
+        newState.characters = updated
+      }
+      return newState
+    }
+    case 'SET_INVENTORY': {
+      const newState = { ...state, inventory: action.inventory }
+      if (state.current !== null) {
+        const updated = [...state.characters]
+        const existing =
+          updated[state.current] || {
+            name: '',
+            sheet: createSheet(),
+            inventory: [],
+            scrolls: []
+          }
+        updated[state.current] = { ...existing, inventory: action.inventory }
+        newState.characters = updated
+      }
+      return newState
+    }
+    case 'SET_SCROLLS': {
+      const newState = { ...state, scrolls: action.scrolls }
+      if (state.current !== null) {
+        const updated = [...state.characters]
+        const existing =
+          updated[state.current] || {
+            name: '',
+            sheet: createSheet(),
+            inventory: state.inventory,
+            scrolls: []
+          }
+        updated[state.current] = { ...existing, scrolls: action.scrolls }
+        newState.characters = updated
+      }
+      return newState
+    }
+    case 'ADD_LOG':
+      return { ...state, log: [action.entry, ...state.log] }
+    case 'SET_LOG':
+      return { ...state, log: action.log }
+    case 'SET_ACTIVE_TAB':
+      return { ...state, activeTab: action.tab }
+    case 'SET_OVERLAY':
+      return { ...state, overlay: action.overlay }
+    default:
+      return state
+  }
+}
+
+const storeCreator: StateCreator<GameContextValue> = (set, get) => ({
+  state: initialState,
+  dispatch: (action: GameAction) =>
+    set(state => ({ state: reducer(state.state, action) })),
+  overlayTimeout: null,
+  setOverlayTimeout: t => set({ overlayTimeout: t }),
+  loadCharacter: idx => {
+    const char = get().state.characters[idx]
+    if (!char) return
+    set(({ state }) => ({
+      state: {
+        ...state,
+        current: idx,
+        sheet: char.sheet || createSheet(),
+        inventory: char.inventory || [],
+        scrolls: char.scrolls || []
+      }
+    }))
+  },
+  createCharacter: () => {
+    const { sheet, inventory } = generateCharacter()
+    const index = get().state.characters.length
+    set(({ state }) => ({
+      state: {
+        ...state,
+        sheet,
+        inventory,
+        scrolls: [],
+        current: index
+      }
+    }))
+  },
+  finalizeCharacter: () => {
+    const { state } = get()
+    const index = state.current ?? state.characters.length
+    const updated = [...state.characters]
+    updated[index] = {
+      name: '',
+      sheet: state.sheet,
+      inventory: state.inventory,
+      scrolls: state.scrolls
+    }
+    set({ state: { ...state, characters: updated, current: index } })
+    return index
+  },
+  cancelCreation: () =>
+    set(({ state }) => ({ state: { ...state, current: null } })),
+  deleteCharacter: idx =>
+    set(({ state }) => ({
+      state: {
+        ...state,
+        characters: state.characters.filter((_, i) => i !== idx),
+        current: null
+      }
+    })),
+  exportCharacters: () => JSON.stringify(get().state.characters, null, 2),
+  importCharacters: data => {
+    let parsed: unknown
+    try {
+      parsed = typeof data === 'string' ? JSON.parse(data) : data
+    } catch {
+      return false
+    }
+    if (!Array.isArray(parsed)) return false
+    const sanitized = parsed.map(c => {
+      const name = typeof (c as Character).name === 'string' ? (c as Character).name : ''
+      const sheet =
+        typeof (c as Character).sheet === 'object'
+          ? { ...createSheet(), ...(c as Character).sheet }
+          : createSheet()
+      const inventory = Array.isArray((c as Character).inventory)
+        ? (c as Character).inventory
+        : []
+      const scrolls = Array.isArray((c as Character).scrolls)
+        ? (c as Character).scrolls
+        : []
+      return { name, sheet, inventory, scrolls }
+    })
+    set(({ state }) => ({
+      state: { ...state, characters: [...state.characters, ...sanitized] }
+    }))
+    return true
+  },
+  roll: (notation: string, label = '') => {
+    const roller = new DiceParser()
+    const result = roller.roll(notation) as DiceRoll
+    const entry: LogEntry = { label, notation, output: result.output, total: result.total }
+    const message = `${label ? `${label}: ` : ''}${result.output}`
+    const { overlayTimeout } = get()
+    if (overlayTimeout) clearTimeout(overlayTimeout)
+    const timeout = setTimeout(() => {
+      set(({ state }) => ({
+        state: { ...state, overlay: { ...state.overlay, visible: false } },
+        overlayTimeout: null
+      }))
+    }, 10000)
+    set(({ state }) => ({
+      state: { ...state, log: [entry, ...state.log], overlay: { message, visible: true } },
+      overlayTimeout: timeout
+    }))
+    return result.total as number
+  },
+  logInventory: message =>
+    set(({ state }) => ({
+      state: {
+        ...state,
+        log: [{ label: 'Inventory', output: message }, ...state.log]
+      }
+    }))
+})
+
+export const useGameContext = create<GameContextValue>()(
+  (import.meta.env.DEV ? devtools : (f: StateCreator<GameContextValue>) => f)(
+    persist(storeCreator, {
+      name: 'openroll-store',
+      storage: createJSONStorage(() => localStorage),
+      partialize: state => ({
+        state: { characters: state.state.characters, log: state.state.log }
+      }),
+      merge: (persistedState, currentState) => ({
+        ...currentState,
+        state: {
+          ...currentState.state,
+          ...(persistedState as Partial<GameContextValue>).state
+        }
+      })
+    })
+  )
+)
+
+// Alias for compatibility with previous naming
+export type { GameContextValue as GameStore }
+

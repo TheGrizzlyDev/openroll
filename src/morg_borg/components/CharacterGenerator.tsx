@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { useGameContext } from '../../GameContext'
 import type { InventoryItem } from '../generateCharacter'
 
@@ -8,6 +9,17 @@ export default function CharacterGenerator() {
     finalizeCharacter,
     cancelCreation
   } = useGameContext()
+  const navigate = useNavigate()
+
+  const handleConfirm = () => {
+    const index = finalizeCharacter()
+    navigate(`/sheet/${index}`)
+  }
+
+  const handleCancel = () => {
+    cancelCreation()
+    navigate('/characters')
+  }
 
   return (
     <div className="container start-screen">
@@ -26,8 +38,8 @@ export default function CharacterGenerator() {
       </div>
       <div className="actions">
         <button onClick={createCharacter}>Reroll</button>
-        <button onClick={finalizeCharacter}>Confirm</button>
-        <button onClick={cancelCreation}>Cancel</button>
+        <button onClick={handleConfirm}>Confirm</button>
+        <button onClick={handleCancel}>Cancel</button>
       </div>
     </div>
   )

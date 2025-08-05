@@ -13,13 +13,14 @@ export default function SheetPage() {
     state: { activeTab, overlay },
     dispatch,
     overlayTimeout,
+    setOverlayTimeout,
     loadCharacter
   } = useGameContext()
   const { id } = useParams()
 
   useEffect(() => {
     if (id !== undefined) {
-      loadCharacter(parseInt(id, 10), { navigate: false })
+      loadCharacter(parseInt(id, 10))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
@@ -73,7 +74,8 @@ export default function SheetPage() {
         message={overlay.message}
         visible={overlay.visible}
         onClose={() => {
-          if (overlayTimeout.current) clearTimeout(overlayTimeout.current)
+          if (overlayTimeout) clearTimeout(overlayTimeout)
+          setOverlayTimeout(null)
           dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } })
         }}
       />

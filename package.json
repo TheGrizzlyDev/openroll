@@ -21,7 +21,8 @@
     "@dnd-kit/sortable": "^10.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^6.30.1"
+    "react-router-dom": "^6.30.1",
+    "zustand": "^4.5.7"
   },
   "devDependencies": {
     "@dice-roller/rpg-dice-roller": "^5.5.1",

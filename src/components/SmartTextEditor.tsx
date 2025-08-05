@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { renderOml } from '../oml/render'
+import { useGameContext } from '../GameContext'
 
 interface SmartTextEditorProps {
   value: string
@@ -7,6 +8,7 @@ interface SmartTextEditorProps {
 }
 
 export default function SmartTextEditor({ value, onChange }: SmartTextEditorProps) {
+  const { roll } = useGameContext()
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(value)
 
@@ -26,7 +28,7 @@ export default function SmartTextEditor({ value, onChange }: SmartTextEditorProp
       {editing ? (
         <textarea value={draft} onChange={e => setDraft(e.target.value)} />
       ) : (
-        <div>{renderOml(value)}</div>
+        <div>{renderOml(value, roll)}</div>
       )}
       <div className="editor-controls">
         <button type="button" onClick={handleToggle}>
