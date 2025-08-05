@@ -271,24 +271,32 @@ const storeCreator: StateCreator<GameContextValue> = (set, get) => ({
     }))
 })
 
-export const useGameContext = create<GameContextValue>()(
-  (import.meta.env.DEV ? devtools : (f: StateCreator<GameContextValue>) => f)(
-    persist(storeCreator, {
-      name: 'openroll-store',
-      storage: createJSONStorage(() => localStorage),
-      partialize: state => ({
-        state: { characters: state.state.characters, log: state.state.log }
-      }),
-      merge: (persistedState, currentState) => ({
-        ...currentState,
-        state: {
-          ...currentState.state,
-          ...(persistedState as Partial<GameContextValue>).state
-        }
-      })
-    })
-  )
-)
+type PersistedState = { state: { characters: Character[]; log: LogEntry[] } }
+
+const storeWithPersist = persist(storeCreator, {
+  name: 'openroll-store',
+  storage: createJSONStorage<PersistedState>(() => localStorage),
+  partialize: state => ({
+    state: { characters: state.state.characters, log: state.state.log }
+  }),
+  merge: (persistedState, currentState) => ({
+    ...currentState,
+    state: {
+      ...currentState.state,
+      ...(persistedState as PersistedState).state
+    }
+  })
+})
+
+const store = (import.meta.env.DEV
+  ? devtools(storeWithPersist)
+  : storeWithPersist) as StateCreator<
+  GameContextValue,
+  [],
+  [["zustand/devtools", never], ["zustand/persist", unknown]]
+>
+
+export const useGameContext = create<GameContextValue>()(store)
 
 // Alias for compatibility with previous naming
 export type { GameContextValue as GameStore }
