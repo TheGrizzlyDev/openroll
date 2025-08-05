@@ -5,7 +5,6 @@ export default function LogView() {
   const { log } = useGameContext()
   return (
     <div className="log">
-      <h2>Rolls</h2>
       <ul>
         {log.map((entry, idx) => (
           <li key={idx}>
