@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useGameContext } from '../GameContext'
 import { Button } from '../ui'
 
@@ -10,6 +10,7 @@ interface InventoryLookupProps {
 export default function InventoryLookup({ description, attrs }: InventoryLookupProps) {
   const { state } = useGameContext()
   const [open, setOpen] = useState(false)
+  const overlayRef = useRef<HTMLDivElement | null>(null)
 
   const types = attrs.type ? attrs.type.split(',').map(t => t.trim()) : []
   const ownedOnly = attrs.owned === 'true'
@@ -25,19 +26,43 @@ export default function InventoryLookup({ description, attrs }: InventoryLookupP
     }
   }
 
+  useEffect(() => {
+    if (!open) return
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false)
+      }
+    }
+    const onMouseDown = (e: MouseEvent) => {
+      if (overlayRef.current && !overlayRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+    document.addEventListener('mousedown', onMouseDown)
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.removeEventListener('mousedown', onMouseDown)
+    }
+  }, [open])
+
   return (
     <>
       <Button type="button" className="badge" onClick={() => setOpen(true)}>
         {description || 'Inventory'}
       </Button>
       {open && (
-        <div className="overlay show">
+        <div ref={overlayRef} className="overlay show">
           <ul>
             {items.map(item => (
-              <li key={item.id}>{item.name}</li>
+              <li key={item.id}>
+                <button type="button" onClick={() => setOpen(false)}>{item.name}</button>
+              </li>
             ))}
           </ul>
-          <Button onClick={() => setOpen(false)}>
+          <Button type="button" onClick={() => setOpen(false)}>
             ×
           </Button>
         </div>
