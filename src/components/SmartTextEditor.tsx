@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { renderOml } from '../oml/render'
 import { useGameContext } from '../GameContext'
-import { Textarea } from '../ui'
+import CodeMirror from '@uiw/react-codemirror'
+import { autocompletion } from '@codemirror/autocomplete'
+import { omlLanguage, omlCompletion } from '../oml/codemirror'
 import { Button } from '../ui'
 
 interface SmartTextEditorProps {
@@ -28,7 +30,12 @@ export default function SmartTextEditor({ value, onChange }: SmartTextEditorProp
   return (
     <div className="smart-text-editor">
       {editing ? (
-        <Textarea value={draft} onChange={e => setDraft(e.target.value)} />
+        <CodeMirror
+          value={draft}
+          height="200px"
+          extensions={[omlLanguage, autocompletion({ override: [omlCompletion] })]}
+          onChange={value => setDraft(value)}
+        />
       ) : (
         <div>{renderOml(value, roll)}</div>
       )}

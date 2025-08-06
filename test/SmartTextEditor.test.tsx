@@ -3,6 +3,12 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import SmartTextEditor from '../src/components/SmartTextEditor'
 import { useGameContext } from '../src/GameContext'
 
+vi.mock('@uiw/react-codemirror', () => ({
+  default: ({ value, onChange }: { value: string; onChange: (v: string) => void }) => (
+    <textarea value={value} onChange={e => onChange(e.target.value)} />
+  )
+}))
+
 afterEach(() => {
   cleanup()
   useGameContext.setState({ roll: vi.fn() })

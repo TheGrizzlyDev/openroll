@@ -1,5 +1,11 @@
 import { render, fireEvent, cleanup, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
+
+vi.mock('@uiw/react-codemirror', () => ({
+  default: ({ value, onChange }: { value: string; onChange: (v: string) => void }) => (
+    <textarea value={value} onChange={e => onChange(e.target.value)} />
+  )
+}))
 import Inventory, { reorderScrolls } from '../src/morg_borg/Inventory'
 import {
   useGameContext,

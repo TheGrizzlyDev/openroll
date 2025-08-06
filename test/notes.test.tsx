@@ -4,6 +4,12 @@ import Notes from '../src/components/Notes'
 import { useGameContext, type GameState } from '../src/GameContext'
 import { createSheet } from '../src/morg_borg/sheet'
 
+vi.mock('@uiw/react-codemirror', () => ({
+  default: ({ value, onChange }: { value: string; onChange: (v: string) => void }) => (
+    <textarea value={value} onChange={e => onChange(e.target.value)} />
+  )
+}))
+
 const resetStore = () => {
   const initial: GameState = {
     characters: [],
