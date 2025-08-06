@@ -331,8 +331,11 @@ export default function Inventory() {
       </DndContext>
       <div className="inventory-form">
         <select
+          className="styled-select"
           value={scrollForm.type}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) => handleScrollFormChange('type', e.target.value as ScrollForm['type'])}
+          onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+            handleScrollFormChange('type', e.target.value as ScrollForm['type'])
+          }
         >
           <option value="unclean">Unclean</option>
           <option value="sacred">Sacred</option>

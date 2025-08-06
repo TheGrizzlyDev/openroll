@@ -38,7 +38,11 @@ export default function CharacterGenerator() {
       <div className="class-select">
         <label>
           Class
-          <select value={sheet.class} onChange={handleClassChange}>
+          <select
+            className="styled-select"
+            value={sheet.class}
+            onChange={handleClassChange}
+          >
             <option value="">Random</option>
             {classes.map(cls => (
               <option key={cls} value={cls}>

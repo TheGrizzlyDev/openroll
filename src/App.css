@@ -27,6 +27,15 @@ h1, h2 {
   font-family: inherit;
 }
 
+.styled-select {
+  width: 100%;
+  background: #111;
+  color: #ffff00;
+  border: 1px solid #ffff00;
+  padding: 0.4rem;
+  font-family: inherit;
+}
+
 .error {
   border-color: #ff0000;
 }

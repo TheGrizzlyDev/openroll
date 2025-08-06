@@ -53,7 +53,13 @@ export default function CharacterSheet() {
       </label>
       <label>
         Class
-        <select value={sheet.class} onChange={(e: ChangeEvent<HTMLSelectElement>) => updateField('class', e.target.value)}>
+        <select
+          className="styled-select"
+          value={sheet.class}
+          onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+            updateField('class', e.target.value)
+          }
+        >
           <option value="">No class</option>
           {classes.map(cls => (
             <option key={cls} value={cls}>{cls}</option>
