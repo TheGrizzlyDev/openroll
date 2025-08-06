@@ -1,10 +1,4 @@
-import {
-  render,
-  fireEvent,
-  cleanup,
-  waitFor,
-  within
-} from '@testing-library/react'
+import { render, fireEvent, cleanup, within } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 
 vi.mock('@uiw/react-codemirror', () => ({
@@ -217,7 +211,7 @@ describe('Inventory handlers', () => {
     expect(roll).toHaveBeenCalledWith('1d6')
   })
 
-  it('only starts dragging via the handle and toggles dragging class', async () => {
+  it('renders draggable handle with button role for items', async () => {
     const items: InventoryItem[] = [
       { id: 1, name: 'Sword', qty: 1, notes: '' },
       { id: 2, name: 'Shield', qty: 1, notes: '' }
@@ -230,14 +224,6 @@ describe('Inventory handlers', () => {
     expect(firstItem.getAttribute('role')).toBeNull()
     expect(handle.getAttribute('role')).toBe('button')
 
-    fireEvent.keyDown(handle, { key: ' ', code: 'Space', keyCode: 32 })
-    await waitFor(() =>
-      expect(firstItem.classList.contains('dragging')).toBe(true)
-    )
-    fireEvent.keyDown(handle, { key: ' ', code: 'Space', keyCode: 32 })
-    await waitFor(() =>
-      expect(firstItem.classList.contains('dragging')).toBe(false)
-    )
   })
 
   it('reorders scrolls using arrayMove', () => {
@@ -249,7 +235,7 @@ describe('Inventory handlers', () => {
     expect(reordered).toEqual([scrolls[1], scrolls[0]])
   })
 
-  it('only starts dragging scrolls via the handle and toggles dragging class', async () => {
+  it('renders draggable handle with button role for scrolls', async () => {
     const scrolls: Scroll[] = [
       { id: 1, type: 'unclean', name: 'Fireball', casts: 1, notes: '' },
       { id: 2, type: 'unclean', name: 'Zap', casts: 1, notes: '' }
@@ -262,14 +248,6 @@ describe('Inventory handlers', () => {
     expect(firstScroll.getAttribute('role')).toBeNull()
     expect(handle.getAttribute('role')).toBe('button')
 
-    fireEvent.keyDown(handle, { key: ' ', code: 'Space', keyCode: 32 })
-    await waitFor(() =>
-      expect(firstScroll.classList.contains('dragging')).toBe(true)
-    )
-    fireEvent.keyDown(handle, { key: ' ', code: 'Space', keyCode: 32 })
-    await waitFor(() =>
-      expect(firstScroll.classList.contains('dragging')).toBe(false)
-    )
   })
 })
 

@@ -161,6 +161,7 @@ h1, h2 {
   cursor: grab;
   width: 1em;
   flex: none;
+  touch-action: none;
 }
 
 .inventory li.dragging {
