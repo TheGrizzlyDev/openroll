@@ -159,7 +159,7 @@ describe('Inventory handlers', () => {
     fireEvent.change(getByPlaceholderText('Qty'), { target: { value: '1' } })
     fireEvent.click(getAllByText('Edit')[0])
     const itemTextarea = container.querySelector('textarea') as HTMLTextAreaElement
-    fireEvent.change(itemTextarea, { target: { value: 'Burn [dice 1d4]' } })
+    fireEvent.change(itemTextarea, { target: { value: '[dice 1d4] damage' } })
     fireEvent.click(getAllByText('Save')[0])
     fireEvent.click(getAllByText('Add')[0])
 
@@ -173,12 +173,25 @@ describe('Inventory handlers', () => {
     fireEvent.change(getByPlaceholderText('Casts'), { target: { value: '2' } })
     fireEvent.click(getAllByText('Edit')[1])
     const scrollTextarea = container.querySelector('textarea') as HTMLTextAreaElement
-    fireEvent.change(scrollTextarea, { target: { value: 'Power [dice 1d6]' } })
+    fireEvent.change(scrollTextarea, { target: { value: '[dice 1d6] damage' } })
     fireEvent.click(getByText('Save'))
     fireEvent.click(getAllByText('Add')[1])
 
     const scrollDice = getByText('1d6')
     fireEvent.click(scrollDice)
+    expect(roll).toHaveBeenCalledWith('1d6')
+  })
+
+  it('renders dice badges for preloaded item notes', () => {
+    const roll = vi.fn()
+    const items: InventoryItem[] = [
+      { id: 1, name: 'Sword', qty: 1, notes: '[dice 1d6] damage' }
+    ]
+    resetStore({ inventory: items }, { roll })
+    const { getByText } = render(<Inventory />)
+
+    const itemDice = getByText('1d6')
+    fireEvent.click(itemDice)
     expect(roll).toHaveBeenCalledWith('1d6')
   })
 
