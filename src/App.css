@@ -276,26 +276,6 @@ h1, h2 {
   width: auto;
 }
 
-.smart-text-editor {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.smart-text-editor textarea {
-  width: 100%;
-}
-
-.smart-text-editor .editor-controls {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.smart-text-editor .editor-controls button {
-  width: auto;
-  cursor: pointer;
-}
-
 .badge {
   display: inline-block;
   padding: 0.1rem 0.4rem;
