@@ -1,6 +1,7 @@
 import { useEffect, useState, type ChangeEvent } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
+import { Input } from '../ui/Input'
 
 interface Preset {
   id: number
@@ -69,13 +70,15 @@ export default function Presets() {
       <ul>
         {presets.map(preset => (
           <li key={preset.id}>
-            <input
-              type="text"
-              value={preset.notation}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => updatePreset(preset.id, e.target.value)}
-              placeholder="1d20"
-              className={preset.error ? 'base-input error' : 'base-input'}
-            />
+            <div style={{ flex: 1 }}>
+              <Input
+                type="text"
+                value={preset.notation}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => updatePreset(preset.id, e.target.value)}
+                placeholder="1d20"
+                className={preset.error ? 'error' : undefined}
+              />
+            </div>
             <div className="preset-buttons">
               <button className="base-button" onClick={() => handleRoll(preset)}>Roll</button>
               <button className="base-button" onClick={() => removePreset(preset.id)}>Remove</button>

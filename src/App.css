@@ -24,8 +24,6 @@ h1, h2 {
   margin-bottom: 0.5rem;
 }
 
-.sheet .base-input,
-.dice-roller .base-input,
 .dice-roller .base-button {
   width: 100%;
 }
@@ -96,7 +94,6 @@ h1, h2 {
 }
 
 @media (min-width: 768px) {
-  .dice-roller .base-input,
   .dice-roller .base-button {
     width: auto;
   }
@@ -132,10 +129,6 @@ h1, h2 {
   gap: 0.5rem;
 }
 
-.inventory-form .base-input {
-  flex: 1;
-}
-
 .inventory-form .base-button,
 .inventory li .base-button {
   width: auto;
@@ -166,10 +159,6 @@ h1, h2 {
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.25rem;
-}
-
-.presets li .base-input {
-  flex: 1;
 }
 
 .presets .base-button {

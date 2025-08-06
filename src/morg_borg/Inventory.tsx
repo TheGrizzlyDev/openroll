@@ -4,6 +4,7 @@ import { SortableContext, useSortable, arrayMove } from '@dnd-kit/sortable'
 import { useGameContext, type InventoryItem, type Scroll } from '../GameContext'
 import NumericInput from '../components/NumericInput'
 import SmartTextEditor from '../components/SmartTextEditor'
+import { Input } from '../ui/Input'
 import { Select } from '../ui/Select'
 import { renderOml } from '../oml/render'
 
@@ -290,12 +291,13 @@ export default function Inventory() {
         </SortableContext>
       </DndContext>
       <div className="inventory-form">
-        <input
-          className="base-input"
-          placeholder="Name"
-          value={form.name}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => handleFormChange('name', e.target.value)}
-        />
+        <div style={{ flex: 1 }}>
+          <Input
+            placeholder="Name"
+            value={form.name}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => handleFormChange('name', e.target.value)}
+          />
+        </div>
         <NumericInput
           placeholder="Qty"
           value={form.qty}
@@ -341,19 +343,21 @@ export default function Inventory() {
           <option value="unclean">Unclean</option>
           <option value="sacred">Sacred</option>
         </Select>
-        <input
-          className="base-input"
-          placeholder="Name"
-          value={scrollForm.name}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => handleScrollFormChange('name', e.target.value)}
-        />
-        <input
-          className="base-input"
-          type="number"
-          placeholder="Casts"
-          value={scrollForm.casts}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => handleScrollFormChange('casts', e.target.value)}
-        />
+        <div style={{ flex: 1 }}>
+          <Input
+            placeholder="Name"
+            value={scrollForm.name}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => handleScrollFormChange('name', e.target.value)}
+          />
+        </div>
+        <div style={{ flex: 1 }}>
+          <Input
+            type="number"
+            placeholder="Casts"
+            value={scrollForm.casts}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => handleScrollFormChange('casts', e.target.value)}
+          />
+        </div>
         <SmartTextEditor
           value={scrollForm.notes}
           onChange={value => handleScrollFormChange('notes', value)}

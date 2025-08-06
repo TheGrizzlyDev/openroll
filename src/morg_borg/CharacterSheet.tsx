@@ -3,6 +3,7 @@ import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
 import NumericInput from '../components/NumericInput'
 import SmartTextEditor from '../components/SmartTextEditor'
+import { Input } from '../ui/Input'
 import { Select } from '../ui/Select'
 import classes from './classes'
 import type { Sheet } from './sheet'
@@ -50,7 +51,7 @@ export default function CharacterSheet() {
     <div className="sheet">
       <label>
         Character
-        <input className="base-input" value={sheet.name} onChange={(e: ChangeEvent<HTMLInputElement>) => updateField('name', e.target.value)} />
+        <Input value={sheet.name} onChange={(e: ChangeEvent<HTMLInputElement>) => updateField('name', e.target.value)} />
       </label>
       <label>
         Class
@@ -69,8 +70,7 @@ export default function CharacterSheet() {
 
       <label>
         Trait
-        <input
-          className="base-input"
+        <Input
           value={sheet.trait}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             updateField('trait', e.target.value)
@@ -79,8 +79,7 @@ export default function CharacterSheet() {
       </label>
       <label>
         Background
-        <input
-          className="base-input"
+        <Input
           value={sheet.background}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             updateField('background', e.target.value)
@@ -100,8 +99,8 @@ export default function CharacterSheet() {
                 }
               />
             </label>
-            <input
-              className={statDiceErrors[stat] ? 'base-input error' : 'base-input'}
+            <Input
+              className={statDiceErrors[stat] ? 'error' : undefined}
               value={sheet.statDice[stat]}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 updateStatDice(stat, e.target.value)
