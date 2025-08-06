@@ -7,6 +7,7 @@ interface NumericInputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   min?: number
   max?: number
   step?: number
+  width?: React.CSSProperties['maxWidth']
 }
 
 export default function NumericInput({
@@ -16,6 +17,7 @@ export default function NumericInput({
   max,
   step = 1,
   className,
+  width,
   ...props
 }: NumericInputProps) {
   const clamp = (val: unknown) => {
@@ -32,7 +34,7 @@ export default function NumericInput({
   }
 
   return (
-    <div className="numeric-input">
+    <div className="numeric-input" style={width ? { maxWidth: width } : undefined}>
       <Button
         type="button"
         aria-label="Decrease value"
