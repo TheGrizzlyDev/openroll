@@ -130,6 +130,18 @@ describe('Inventory handlers', () => {
     expect(logInventory).toHaveBeenCalledWith('Added unclean scroll Fireball (3)')
   })
 
+  it('renders existing scroll notes and rolls dice', () => {
+    const roll = vi.fn()
+    const scrolls: Scroll[] = [
+      { id: 1, type: 'unclean', name: 'Zap', casts: 1, notes: 'Power [dice 1d6]' }
+    ]
+    resetStore({ scrolls }, { roll })
+    const { getByText } = render(<Inventory />)
+    const diceBtn = getByText('1d6')
+    fireEvent.click(diceBtn)
+    expect(roll).toHaveBeenCalledWith('1d6')
+  })
+
   it('renders dice in item and scroll notes and persists', () => {
     const roll = vi.fn()
     resetStore({}, { roll })

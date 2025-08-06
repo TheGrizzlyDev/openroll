@@ -119,7 +119,7 @@ export default function Inventory() {
   const empty: InventoryForm = { name: '', qty: 1, notes: '' }
   const [form, setForm] = useState<InventoryForm>(empty)
   const [editingId, setEditingId] = useState<number | null>(null)
-  type ScrollForm = { name: string; type: Scroll['type']; casts: number | string; notes: string }
+  type ScrollForm = Omit<Scroll, 'id' | 'casts'> & { casts: number | string }
   const emptyScroll: ScrollForm = { name: '', type: 'unclean', casts: 1, notes: '' }
   const [scrollForm, setScrollForm] = useState<ScrollForm>(emptyScroll)
   const [editingScrollId, setEditingScrollId] = useState<number | null>(null)

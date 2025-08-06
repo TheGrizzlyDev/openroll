@@ -2,7 +2,11 @@ import { DiceRoller, type DiceRoll } from '@dice-roller/rpg-dice-roller'
 import { createSheet } from './sheet'
 import { rollArmor, rollWeapon, rollGear, rollSilver } from './data/gear'
 import { rollTrait, rollBackground } from './data/traits'
-import { rollUncleanScroll, rollSacredScroll } from './data/scrolls'
+import {
+  rollUncleanScroll,
+  rollSacredScroll,
+  type ScrollData
+} from './data/scrolls'
 import classNames, { classMap } from './classes'
 
 export interface InventoryItem {
@@ -103,10 +107,16 @@ export function generateCharacter(clsName?: string): GeneratedCharacter {
   const scrolls: Scroll[] = []
   if (stats.pre >= 0) {
     const scrollType = rollTotal('1d2') === 1 ? 'unclean' : 'sacred'
-    const scrollName =
+    const scrollData: ScrollData =
       scrollType === 'unclean' ? rollUncleanScroll() : rollSacredScroll()
     const casts = rollTotal('1d4')
-    scrolls.push({ id: nextId++, type: scrollType, name: scrollName, casts, notes: '' })
+    scrolls.push({
+      id: nextId++,
+      type: scrollType,
+      name: scrollData.name,
+      casts,
+      notes: scrollData.notes
+    })
   }
 
   return { sheet, inventory, scrolls }
