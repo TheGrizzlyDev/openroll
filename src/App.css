@@ -284,3 +284,25 @@ h1, h2 {
   background: #ffff00;
   color: #111;
 }
+
+.numeric-input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.numeric-input-button {
+  background: #111;
+  color: #ffff00;
+  border: 1px solid #ffff00;
+  border-radius: 20px;
+  padding: 0.25rem;
+  width: 1.5rem;
+  line-height: 1;
+}
+
+.numeric-input-field {
+  flex: 1;
+  text-align: center;
+  margin: 0 4px;
+}

@@ -8,7 +8,15 @@ interface NumericInputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   step?: number
 }
 
-export default function NumericInput({ value, onChange, min, max, step = 1, ...props }: NumericInputProps) {
+export default function NumericInput({
+  value,
+  onChange,
+  min,
+  max,
+  step = 1,
+  className,
+  ...props
+}: NumericInputProps) {
   const clamp = (val: unknown) => {
     let num = Number(val)
     if (!Number.isFinite(num)) num = 0
@@ -23,20 +31,12 @@ export default function NumericInput({ value, onChange, min, max, step = 1, ...p
   }
 
   return (
-    <div className="numeric-input" style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+    <div className="numeric-input">
       <button
         type="button"
         aria-label="Decrease value"
         onClick={() => handleButton(-step)}
-        style={{
-          background: '#111',
-          color: '#ffff00',
-          border: '1px solid #ffff00',
-          borderRadius: '20px',
-          padding: '0.25rem',
-          width: '1.5rem',
-          lineHeight: 1,
-        }}
+        className="numeric-input-button"
       >
         −
       </button>
@@ -47,22 +47,14 @@ export default function NumericInput({ value, onChange, min, max, step = 1, ...p
         min={min}
         max={max}
         step={step}
-        style={{ flex: 1, textAlign: 'center', margin: '0 4px' }}
+        className={`numeric-input-field${className ? ` ${className}` : ''}`}
         {...props}
       />
       <button
         type="button"
         aria-label="Increase value"
         onClick={() => handleButton(step)}
-        style={{
-          background: '#111',
-          color: '#ffff00',
-          border: '1px solid #ffff00',
-          borderRadius: '20px',
-          padding: '0.25rem',
-          width: '1.5rem',
-          lineHeight: 1,
-        }}
+        className="numeric-input-button"
       >
         +
       </button>
