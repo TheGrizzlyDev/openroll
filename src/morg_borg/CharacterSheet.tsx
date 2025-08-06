@@ -61,6 +61,25 @@ export default function CharacterSheet() {
         </select>
       </label>
 
+      <label>
+        Trait
+        <input
+          value={sheet.trait}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            updateField('trait', e.target.value)
+          }
+        />
+      </label>
+      <label>
+        Background
+        <input
+          value={sheet.background}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            updateField('background', e.target.value)
+          }
+        />
+      </label>
+
       <div className="stats">
         {(['str', 'agi', 'pre', 'tou'] as Array<StatKey>).map(stat => (
           <div key={stat} className="stat">

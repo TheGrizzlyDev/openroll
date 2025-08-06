@@ -55,6 +55,8 @@ export default function CharacterGenerator() {
         <p>HP: {sheet.hp}</p>
         <p>Omens: {sheet.omens}</p>
         <p>Silver: {sheet.silver}</p>
+        <p>Trait: {sheet.trait}</p>
+        <p>Background: {sheet.background}</p>
         {sheet.notes && (
           <>
             <h3>Abilities</h3>

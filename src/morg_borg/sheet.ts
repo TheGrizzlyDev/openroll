@@ -16,6 +16,8 @@ export interface Sheet {
   armor: number
   omens: number
   silver: number
+  trait: string
+  background: string
   notes: string
 }
 
@@ -37,5 +39,7 @@ export const createSheet = (): Sheet => ({
   armor: 0,
   omens: 0,
   silver: 0,
+  trait: '',
+  background: '',
   notes: ''
 })

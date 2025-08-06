@@ -69,10 +69,8 @@ export function generateCharacter(clsName?: string): GeneratedCharacter {
   const silver = rollSilver()
   const trait = rollTrait()
   const background = rollBackground()
-
-  const sheet = {
-    ...createSheet(),
-    ...stats,
+  const sheet = createSheet()
+  Object.assign(sheet, stats, {
     class: classData.name,
     hp,
     maxHp: hp,
@@ -82,7 +80,7 @@ export function generateCharacter(clsName?: string): GeneratedCharacter {
     trait,
     background,
     notes: classData.abilities.join('\n')
-  }
+  })
 
   const baseId = Date.now()
   const inventory = [

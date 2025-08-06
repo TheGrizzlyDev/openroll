@@ -28,6 +28,8 @@ const createSimpleSheet = (): Sheet => ({
   armor: 0,
   omens: 0,
   silver: 0,
+  trait: '',
+  background: '',
   notes: ''
 })
 
