@@ -151,4 +151,10 @@ describe('oml rendering', () => {
     expect(styledTexts).not.toContain('live')
     expect(styledTexts).not.toContain('none')
   })
+
+  it('preserves newline characters in text', () => {
+    const Test = () => <div>{renderOml('line1\nline2\n')}</div>
+    const { container } = render(<Test />)
+    expect(container.querySelectorAll('br')).toHaveLength(2)
+  })
 })

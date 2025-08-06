@@ -85,7 +85,14 @@ export function renderNodes(
         </a>
       )
     }
-    return <span key={i}>{node.text}</span>
+    const parts = node.text.split(/(\r?\n)/)
+    return (
+      <span key={i}>
+        {parts.map((part, idx) =>
+          /\r?\n/.test(part) ? <br key={idx} /> : <React.Fragment key={idx}>{part}</React.Fragment>
+        )}
+      </span>
+    )
   })
 }
 
