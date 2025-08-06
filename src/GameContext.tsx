@@ -76,7 +76,7 @@ export interface GameContextValue {
   dispatch: Dispatch<GameAction>
   overlayTimeout: MutableRefObject<ReturnType<typeof setTimeout> | null>
   loadCharacter: (_idx: number, _opts?: { navigate?: boolean }) => void
-  createCharacter: () => void
+  createCharacter: (_class?: string) => void
   finalizeCharacter: () => void
   cancelCreation: () => void
   deleteCharacter: (_idx: number) => void
@@ -190,13 +190,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
     [navigate]
   )
 
-  const createCharacter = () => {
+  const createCharacter = (cls?: string) => {
     skipSave.current = true
     const {
       sheet: newSheet,
       inventory: newInv,
       scrolls: newScrolls
-    } = generateCharacter()
+    } = generateCharacter(cls)
     const index = state.characters.length
     dispatch({ type: 'SET_SHEET', sheet: newSheet })
     dispatch({ type: 'SET_INVENTORY', inventory: newInv })

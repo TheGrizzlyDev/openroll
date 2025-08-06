@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom'
+import type { ChangeEvent } from 'react'
 import { useGameContext } from '../../GameContext'
+import classes from '../classes'
 import type { InventoryItem, Scroll } from '../generateCharacter'
 
 export default function CharacterGenerator() {
@@ -21,14 +23,48 @@ export default function CharacterGenerator() {
     navigate('/characters')
   }
 
+  const handleClassChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value
+    createCharacter(value || undefined)
+  }
+
+  const handleRollClass = () => {
+    createCharacter()
+  }
+
   return (
     <div className="container start-screen">
       <h1>Character Generator</h1>
+      <div className="class-select">
+        <label>
+          Class
+          <select value={sheet.class} onChange={handleClassChange}>
+            <option value="">Random</option>
+            {classes.map(cls => (
+              <option key={cls} value={cls}>
+                {cls}
+              </option>
+            ))}
+          </select>
+        </label>
+        <button onClick={handleRollClass}>Roll Class</button>
+      </div>
       <div className="generated-results">
+        <p>Class: {sheet.class}</p>
         <p>STR: {sheet.str}, AGI: {sheet.agi}, PRE: {sheet.pre}, TGH: {sheet.tou}</p>
         <p>HP: {sheet.hp}</p>
         <p>Omens: {sheet.omens}</p>
         <p>Silver: {sheet.silver}</p>
+        {sheet.notes && (
+          <>
+            <h3>Abilities</h3>
+            <ul>
+              {sheet.notes.split('\n').map((n, i) => (
+                <li key={i}>{n}</li>
+              ))}
+            </ul>
+          </>
+        )}
         <h3>Inventory</h3>
         <ul>
           {inventory.map((item: InventoryItem) => (
@@ -52,7 +88,9 @@ export default function CharacterGenerator() {
         )}
       </div>
       <div className="actions">
-        <button onClick={createCharacter}>Reroll</button>
+        <button onClick={() => createCharacter(sheet.class || undefined)}>
+          Reroll
+        </button>
         <button onClick={handleConfirm}>Confirm</button>
         <button onClick={handleCancel}>Cancel</button>
       </div>

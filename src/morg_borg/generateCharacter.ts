@@ -3,6 +3,7 @@ import { createSheet } from './sheet'
 import { rollArmor, rollWeapon, rollGear, rollSilver } from './data/gear'
 import { rollTrait, rollBackground } from './data/traits'
 import { rollUncleanScroll, rollSacredScroll } from './data/scrolls'
+import classNames, { classMap } from './classes'
 
 export interface InventoryItem {
   id: number
@@ -35,8 +36,14 @@ const abilityScoreToModifier = (score: number): number => {
   return 3
 }
 
-export function generateCharacter(): GeneratedCharacter {
+export function generateCharacter(clsName?: string): GeneratedCharacter {
   const roller = new DiceRoller()
+
+  const selectedClassName =
+    clsName && classMap[clsName]
+      ? clsName
+      : classNames[Math.floor(Math.random() * classNames.length)]
+  const classData = classMap[selectedClassName]
 
   const rollTotal = (notation: string): number => (roller.roll(notation) as DiceRoll).total as number
 
@@ -44,6 +51,10 @@ export function generateCharacter(): GeneratedCharacter {
   ;['str', 'agi', 'pre', 'tou'].forEach(stat => {
     const score = rollTotal('3d6')
     stats[stat] = abilityScoreToModifier(score)
+  })
+
+  Object.entries(classData.stats).forEach(([stat, mod]) => {
+    stats[stat] = (stats[stat] ?? 0) + (mod ?? 0)
   })
 
   const tgh = stats.tou
@@ -62,13 +73,15 @@ export function generateCharacter(): GeneratedCharacter {
   const sheet = {
     ...createSheet(),
     ...stats,
+    class: classData.name,
     hp,
     maxHp: hp,
     armor: armorResult.armor,
     omens,
     silver,
     trait,
-    background
+    background,
+    notes: classData.abilities.join('\n')
   }
 
   const baseId = Date.now()
@@ -81,13 +94,18 @@ export function generateCharacter(): GeneratedCharacter {
     inventory.push({ id: baseId + 2, name: armorResult.name, qty: 1, notes: '' })
   }
 
+  let nextId = baseId + inventory.length
+  classData.gear.forEach(name => {
+    inventory.push({ id: nextId++, name, qty: 1, notes: '' })
+  })
+
   const scrolls: Scroll[] = []
   if (stats.pre >= 0) {
     const scrollType = rollTotal('1d2') === 1 ? 'unclean' : 'sacred'
     const scrollName =
       scrollType === 'unclean' ? rollUncleanScroll() : rollSacredScroll()
     const casts = rollTotal('1d4')
-    scrolls.push({ id: baseId + 3, type: scrollType, name: scrollName, casts, notes: '' })
+    scrolls.push({ id: nextId++, type: scrollType, name: scrollName, casts, notes: '' })
   }
 
   return { sheet, inventory, scrolls }

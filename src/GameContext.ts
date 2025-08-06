@@ -66,7 +66,7 @@ export interface GameContextValue {
   overlayTimeout: ReturnType<typeof setTimeout> | null
   setOverlayTimeout: (_t: ReturnType<typeof setTimeout> | null) => void
   loadCharacter: (_idx: number) => void
-  createCharacter: () => void
+  createCharacter: (_class?: string) => void
   finalizeCharacter: () => number
   cancelCreation: () => void
   deleteCharacter: (_idx: number) => void
@@ -183,8 +183,8 @@ const storeCreator: StateCreator<
       }
     }), false, 'loadCharacter')
   },
-  createCharacter: () => {
-    const { sheet, inventory, scrolls } = generateCharacter()
+  createCharacter: cls => {
+    const { sheet, inventory, scrolls } = generateCharacter(cls)
     const index = get().state.characters.length
     set(({ state }) => ({
       state: {
