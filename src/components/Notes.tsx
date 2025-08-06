@@ -18,7 +18,7 @@ export default function Notes() {
       const presets = JSON.parse(stored) as Array<{ notation: string }>
       if (Array.isArray(presets) && presets.length) {
         const lines = presets
-          .map(p => `[dice \"${p.notation}\" ${p.notation}]`)
+          .map(p => `[dice "${p.notation}" ${p.notation}]`)
           .join('\n')
         const newNotes = sheet.notes ? `${sheet.notes}\n${lines}` : lines
         updateNotes(newNotes)

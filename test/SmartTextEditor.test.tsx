@@ -4,9 +4,13 @@ import SmartTextEditor from '../src/components/SmartTextEditor'
 import { useGameContext } from '../src/GameContext'
 
 vi.mock('@uiw/react-codemirror', () => ({
-  default: ({ value, onChange }: { value: string; onChange: (v: string) => void }) => (
-    <textarea value={value} onChange={e => onChange(e.target.value)} />
-  )
+  default: ({
+    value,
+    onChange
+  }: {
+    value: string
+    onChange: (_value: string) => void
+  }) => <textarea value={value} onChange={e => onChange(e.target.value)} />
 }))
 
 afterEach(() => {

@@ -1,12 +1,13 @@
 import { describe, it, expect } from 'vitest'
 import { StringStream } from '@codemirror/language'
 import { EditorState } from '@codemirror/state'
-import { CompletionContext } from '@codemirror/autocomplete'
+import { CompletionContext, type CompletionResult } from '@codemirror/autocomplete'
 import { omlParser, omlCompletion } from '../src/oml/codemirror'
 
 describe('oml codemirror language', () => {
   it('tokenizes dice tag', () => {
-    const state = omlParser.startState ? omlParser.startState(0) : ({} as any)
+    const state =
+      omlParser.startState?.(0) ?? { inTag: false, seenName: false, tagName: '' }
     const stream = new StringStream('[dice "1d4" 1d4]', 0, 0)
     const styles: string[] = []
     while (!stream.eol()) {
@@ -22,15 +23,15 @@ describe('oml codemirror language', () => {
     const doc = '['
     const state = EditorState.create({ doc })
     const ctx = new CompletionContext(state, doc.length, false)
-    const res = omlCompletion(ctx) as any
-    expect(res?.options.some((o: any) => o.label === 'dice')).toBe(true)
+    const res = omlCompletion(ctx) as CompletionResult | null
+    expect(res?.options.some(o => o.label === 'dice')).toBe(true)
   })
 
   it('suggests attributes', () => {
     const doc = '[dice '
     const state = EditorState.create({ doc })
     const ctx = new CompletionContext(state, doc.length, false)
-    const res = omlCompletion(ctx) as any
-    expect(res?.options.some((o: any) => o.label === 'kind')).toBe(true)
+    const res = omlCompletion(ctx) as CompletionResult | null
+    expect(res?.options.some(o => o.label === 'kind')).toBe(true)
   })
 })
