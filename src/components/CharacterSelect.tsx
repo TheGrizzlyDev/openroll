@@ -1,7 +1,8 @@
-import React, { type ChangeEvent } from 'react'
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGameContext } from '../GameContext'
 import Overlay from './Overlay'
+import { FileInput } from '../ui/FileInput'
 
 export default function CharacterSelect() {
   const {
@@ -28,9 +29,7 @@ export default function CharacterSelect() {
     URL.revokeObjectURL(url)
   }
 
-  const handleImport = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+  const handleImport = (file: File) => {
     const reader = new FileReader()
     reader.onload = ({ target }: ProgressEvent<FileReader>) => {
       const data = target?.result as string
@@ -64,7 +63,6 @@ export default function CharacterSelect() {
       setOverlayTimeout(timeout)
     }
     reader.readAsText(file)
-    e.target.value = ''
   }
 
   const confirmDelete = (idx: number) =>
@@ -92,7 +90,7 @@ export default function CharacterSelect() {
       </ul>
       <button className="base-button" onClick={handleCreate}>Create New</button>
       <button className="base-button" onClick={handleExport}>Export</button>
-      <input className="base-input" type="file" accept="application/json" onChange={handleImport} />
+      <FileInput accept="application/json" onFileSelect={handleImport}>Import</FileInput>
       <Overlay
         message={overlay.message}
         visible={overlay.visible}
