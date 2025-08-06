@@ -1,8 +1,14 @@
-import { render, fireEvent, cleanup, waitFor } from '@testing-library/react'
+import {
+  render,
+  fireEvent,
+  cleanup,
+  waitFor,
+  within
+} from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 
 vi.mock('@uiw/react-codemirror', () => ({
-  default: ({ value, onChange }: { value: string; onChange: (v: string) => void }) => (
+  default: ({ value, onChange }: { value: string; onChange: (_v: string) => void }) => (
     <textarea value={value} onChange={e => onChange(e.target.value)} />
   )
 }))
@@ -76,6 +82,7 @@ describe('Inventory handlers', () => {
     const logInventory = vi.fn()
     resetStore({}, { logInventory })
     const { getAllByPlaceholderText, getByPlaceholderText, getAllByText, container } = render(<Inventory />)
+    fireEvent.click(getAllByText('Add')[0])
     fireEvent.change(getAllByPlaceholderText('Name')[0], {
       target: { value: 'Sword' }
     })
@@ -85,7 +92,9 @@ describe('Inventory handlers', () => {
     const textarea = container.querySelector('textarea') as HTMLTextAreaElement
     fireEvent.change(textarea, { target: { value: 'Sharp' } })
     fireEvent.click(getAllByText('Save')[0])
-    fireEvent.click(getAllByText('Add')[0])
+    const itemPopup = container.querySelector('.overlay.show') as HTMLElement
+    const addItemBtn = within(itemPopup).getByText('Add')
+    fireEvent.click(addItemBtn)
     const items = useGameContext.getState().state.inventory
     expect(items).toEqual([
       expect.objectContaining({ name: 'Sword', qty: 2, notes: 'Sharp' })
@@ -123,16 +132,15 @@ describe('Inventory handlers', () => {
   it('adds scrolls', () => {
     const logInventory = vi.fn()
     resetStore({}, { logInventory })
-    const {
-      getAllByPlaceholderText,
-      getByPlaceholderText,
-      getAllByText
-    } = render(<Inventory />)
+    const { getAllByPlaceholderText, getByPlaceholderText, getAllByText, container } = render(<Inventory />)
+    fireEvent.click(getAllByText('Add')[1])
     fireEvent.change(getAllByPlaceholderText('Name')[1], {
       target: { value: 'Fireball' }
     })
     fireEvent.change(getByPlaceholderText('Casts'), { target: { value: '3' } })
-    fireEvent.click(getAllByText('Add')[1])
+    const scrollPopup = container.querySelectorAll('.overlay')[1] as HTMLElement
+    const addScrollBtn = within(scrollPopup).getByText('Add')
+    fireEvent.click(addScrollBtn)
     const scrolls = useGameContext.getState().state.scrolls
     expect(scrolls).toEqual([expect.objectContaining({ name: 'Fireball', casts: 3 })])
     expect(logInventory).toHaveBeenCalledWith('Added unclean scroll Fireball (3)')
@@ -161,6 +169,7 @@ describe('Inventory handlers', () => {
       getByText
     } = render(<Inventory />)
 
+    fireEvent.click(getAllByText('Add')[0])
     fireEvent.change(getAllByPlaceholderText('Name')[0], {
       target: { value: 'Torch' }
     })
@@ -169,12 +178,15 @@ describe('Inventory handlers', () => {
     const itemTextarea = container.querySelector('textarea') as HTMLTextAreaElement
     fireEvent.change(itemTextarea, { target: { value: '[dice "1d4" 1d4] damage' } })
     fireEvent.click(getAllByText('Save')[0])
-    fireEvent.click(getAllByText('Add')[0])
+    const itemPopup = container.querySelector('.overlay.show') as HTMLElement
+    const addItemBtn = within(itemPopup).getByText('Add')
+    fireEvent.click(addItemBtn)
 
     const itemDice = getByText('1d4')
     fireEvent.click(itemDice)
     expect(roll).toHaveBeenCalledWith('1d4')
 
+    fireEvent.click(getAllByText('Add')[1])
     fireEvent.change(getAllByPlaceholderText('Name')[1], {
       target: { value: 'Zap' }
     })
@@ -183,7 +195,9 @@ describe('Inventory handlers', () => {
     const scrollTextarea = container.querySelector('textarea') as HTMLTextAreaElement
     fireEvent.change(scrollTextarea, { target: { value: '[dice "1d6" 1d6] damage' } })
     fireEvent.click(getByText('Save'))
-    fireEvent.click(getAllByText('Add')[1])
+    const scrollPopup = container.querySelectorAll('.overlay')[1] as HTMLElement
+    const addScrollBtn = within(scrollPopup).getByText('Add')
+    fireEvent.click(addScrollBtn)
 
     const scrollDice = getByText('1d6')
     fireEvent.click(scrollDice)

@@ -7,6 +7,7 @@ import SmartTextEditor from '../components/SmartTextEditor'
 import { Input } from '../ui/Input'
 import { Select } from '../ui/Select'
 import { Button } from '../ui'
+import Popup from '../components/Popup'
 import { renderOml } from '../oml/render'
 
 interface SortableItemProps {
@@ -122,10 +123,12 @@ export default function Inventory() {
   const empty: InventoryForm = { name: '', qty: 1, notes: '' }
   const [form, setForm] = useState<InventoryForm>(empty)
   const [editingId, setEditingId] = useState<number | null>(null)
+  const [showItemPopup, setShowItemPopup] = useState(false)
   type ScrollForm = Omit<Scroll, 'id' | 'casts'> & { casts: number | string }
   const emptyScroll: ScrollForm = { name: '', type: 'unclean', casts: 1, notes: '' }
   const [scrollForm, setScrollForm] = useState<ScrollForm>(emptyScroll)
   const [editingScrollId, setEditingScrollId] = useState<number | null>(null)
+  const [showScrollPopup, setShowScrollPopup] = useState(false)
 
   const handleFormChange = <K extends keyof InventoryForm>(
     field: K,
@@ -150,6 +153,7 @@ export default function Inventory() {
     dispatch({ type: 'SET_INVENTORY', inventory: [...items, newItem] })
     onLog?.(`Added ${newItem.name} x${newItem.qty}`)
     resetForm()
+    setShowItemPopup(false)
   }
 
   const startEdit = (id: number) => {
@@ -157,6 +161,7 @@ export default function Inventory() {
     if (!item) return
     setForm({ name: item.name, qty: item.qty, notes: item.notes })
     setEditingId(id)
+    setShowItemPopup(true)
   }
 
   const handleSave = () => {
@@ -168,13 +173,17 @@ export default function Inventory() {
     })
     onLog?.(`Updated ${form.name}`)
     resetForm()
+    setShowItemPopup(false)
   }
 
   const handleDelete = (id: number) => {
     const item = items.find(i => i.id === id)
     dispatch({ type: 'SET_INVENTORY', inventory: items.filter(i => i.id !== id) })
     onLog?.(`Removed ${item?.name}`)
-    if (editingId === id) resetForm()
+    if (editingId === id) {
+      resetForm()
+      setShowItemPopup(false)
+    }
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -220,6 +229,7 @@ export default function Inventory() {
     dispatch({ type: 'SET_SCROLLS', scrolls: [...scrolls, newScroll] })
     onLog?.(`Added ${newScroll.type} scroll ${newScroll.name} (${newScroll.casts})`)
     resetScrollForm()
+    setShowScrollPopup(false)
   }
 
   const startScrollEdit = (id: number) => {
@@ -232,6 +242,7 @@ export default function Inventory() {
       notes: scroll.notes
     })
     setEditingScrollId(id)
+    setShowScrollPopup(true)
   }
 
   const handleSaveScroll = () => {
@@ -245,13 +256,17 @@ export default function Inventory() {
     })
     onLog?.(`Updated scroll ${scrollForm.name}`)
     resetScrollForm()
+    setShowScrollPopup(false)
   }
 
   const handleDeleteScroll = (id: number) => {
     const scroll = scrolls.find(s => s.id === id)
     dispatch({ type: 'SET_SCROLLS', scrolls: scrolls.filter(s => s.id !== id) })
     onLog?.(`Removed scroll ${scroll?.name}`)
-    if (editingScrollId === id) resetScrollForm()
+    if (editingScrollId === id) {
+      resetScrollForm()
+      setShowScrollPopup(false)
+    }
   }
 
   const handleCastScroll = (id: number) => {
@@ -276,7 +291,9 @@ export default function Inventory() {
 
   return (
     <div className="inventory">
-      <h2>Inventory</h2>
+      <h2>
+        Inventory <Button onClick={() => { resetForm(); setShowItemPopup(true) }}>Add</Button>
+      </h2>
       <DndContext onDragEnd={handleDragEnd}>
         <SortableContext items={items.map(i => i.id)}>
           <ul>
@@ -291,34 +308,9 @@ export default function Inventory() {
           </ul>
         </SortableContext>
       </DndContext>
-      <div className="inventory-form">
-        <div style={{ flex: 1 }}>
-          <Input
-            placeholder="Name"
-            value={form.name}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => handleFormChange('name', e.target.value)}
-          />
-        </div>
-        <NumericInput
-          placeholder="Qty"
-          value={form.qty}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => handleFormChange('qty', e.target.value)}
-          min={0}
-        />
-        <SmartTextEditor
-          value={form.notes}
-          onChange={value => handleFormChange('notes', value)}
-        />
-        {editingId ? (
-          <>
-            <Button onClick={handleSave}>Save</Button>
-            <Button onClick={resetForm}>Cancel</Button>
-          </>
-        ) : (
-          <Button onClick={handleAdd}>Add</Button>
-        )}
-      </div>
-      <h2>Scrolls</h2>
+      <h2>
+        Scrolls <Button onClick={() => { resetScrollForm(); setShowScrollPopup(true) }}>Add</Button>
+      </h2>
       <DndContext onDragEnd={handleScrollDragEnd}>
         <SortableContext items={scrolls.map(s => s.id)}>
           <ul className="scrolls">
@@ -334,44 +326,113 @@ export default function Inventory() {
           </ul>
         </SortableContext>
       </DndContext>
-      <div className="inventory-form">
-        <Select
-          value={scrollForm.type}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-            handleScrollFormChange('type', e.target.value as ScrollForm['type'])
-          }
-        >
-          <option value="unclean">Unclean</option>
-          <option value="sacred">Sacred</option>
-        </Select>
-        <div style={{ flex: 1 }}>
-          <Input
-            placeholder="Name"
-            value={scrollForm.name}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => handleScrollFormChange('name', e.target.value)}
+      <Popup
+        visible={showItemPopup}
+        onClose={() => {
+          resetForm()
+          setShowItemPopup(false)
+        }}
+      >
+        <div className="inventory-form">
+          <div style={{ flex: 1 }}>
+            <Input
+              placeholder="Name"
+              value={form.name}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleFormChange('name', e.target.value)
+              }
+            />
+          </div>
+          <NumericInput
+            placeholder="Qty"
+            value={form.qty}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              handleFormChange('qty', e.target.value)
+            }
+            min={0}
           />
-        </div>
-        <div style={{ flex: 1 }}>
-          <Input
-            type="number"
-            placeholder="Casts"
-            value={scrollForm.casts}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => handleScrollFormChange('casts', e.target.value)}
+          <SmartTextEditor
+            value={form.notes}
+            onChange={value => handleFormChange('notes', value)}
           />
+          <div className="inventory-actions">
+            {editingId ? (
+              <>
+                <Button onClick={handleSave}>Save</Button>
+                <Button
+                  onClick={() => {
+                    resetForm()
+                    setShowItemPopup(false)
+                  }}
+                >
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <Button onClick={handleAdd}>Add</Button>
+            )}
+          </div>
         </div>
-        <SmartTextEditor
-          value={scrollForm.notes}
-          onChange={value => handleScrollFormChange('notes', value)}
-        />
-        {editingScrollId ? (
-          <>
-            <Button onClick={handleSaveScroll}>Save</Button>
-            <Button onClick={resetScrollForm}>Cancel</Button>
-          </>
-        ) : (
-          <Button onClick={handleAddScroll}>Add</Button>
-        )}
-      </div>
+      </Popup>
+      <Popup
+        visible={showScrollPopup}
+        onClose={() => {
+          resetScrollForm()
+          setShowScrollPopup(false)
+        }}
+      >
+        <div className="inventory-form">
+          <Select
+            value={scrollForm.type}
+            onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+              handleScrollFormChange('type', e.target.value as ScrollForm['type'])
+            }
+          >
+            <option value="unclean">Unclean</option>
+            <option value="sacred">Sacred</option>
+          </Select>
+          <div style={{ flex: 1 }}>
+            <Input
+              placeholder="Name"
+              value={scrollForm.name}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleScrollFormChange('name', e.target.value)
+              }
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <Input
+              type="number"
+              placeholder="Casts"
+              value={scrollForm.casts}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleScrollFormChange('casts', e.target.value)
+              }
+            />
+          </div>
+          <SmartTextEditor
+            value={scrollForm.notes}
+            onChange={value => handleScrollFormChange('notes', value)}
+          />
+          <div className="inventory-actions">
+            {editingScrollId ? (
+              <>
+                <Button onClick={handleSaveScroll}>Save</Button>
+                <Button
+                  onClick={() => {
+                    resetScrollForm()
+                    setShowScrollPopup(false)
+                  }}
+                >
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <Button onClick={handleAddScroll}>Add</Button>
+            )}
+          </div>
+        </div>
+      </Popup>
     </div>
   )
 }

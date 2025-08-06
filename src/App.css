@@ -131,11 +131,18 @@ h1, h2 {
 
 .inventory-form {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 0.5rem;
+  min-width: 15rem;
 }
 
-.inventory-form button,
+.inventory-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.inventory-actions button,
 .inventory li button {
   width: auto;
 }
