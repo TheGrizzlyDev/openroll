@@ -275,13 +275,14 @@ describe('Inventory lookup component', () => {
       { id: 1, name: 'Shield', qty: 1, notes: '' }
     ]
     resetStore({ inventory })
-    const { getByText, queryByText } = render(
+    const { getByText, container } = render(
       <div>{renderOml('[inventory "Open" owned=true type="weapon"]', vi.fn())}</div>
     )
     fireEvent.click(getByText('Open'))
+    const overlay = container.querySelector('.overlay') as HTMLDivElement
     expect(getByText('Shield')).toBeTruthy()
     fireEvent.click(getByText('×'))
-    expect(queryByText('Shield')).toBeNull()
+    expect(overlay.classList.contains('show')).toBe(false)
   })
 })
 

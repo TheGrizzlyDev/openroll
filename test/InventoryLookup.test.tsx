@@ -34,44 +34,48 @@ describe('InventoryLookup overlay', () => {
 
   it('closes when close button clicked', () => {
     resetStore({ inventory: [item] })
-    const { getByText, queryByText } = render(
+    const { getByText, container } = render(
       <InventoryLookup description="Inventory" attrs={attrs} />
     )
     fireEvent.click(getByText('Inventory'))
+    const overlay = container.querySelector('.overlay') as HTMLDivElement
     const closeBtn = getByText('×') as HTMLButtonElement
     expect(closeBtn.getAttribute('type')).toBe('button')
     fireEvent.click(closeBtn)
-    expect(queryByText('Sword')).toBeNull()
+    expect(overlay.classList.contains('show')).toBe(false)
   })
 
   it('closes when an item is selected', () => {
     resetStore({ inventory: [item] })
-    const { getByText, queryByText } = render(
+    const { getByText, container } = render(
       <InventoryLookup description="Inventory" attrs={attrs} />
     )
     fireEvent.click(getByText('Inventory'))
+    const overlay = container.querySelector('.overlay') as HTMLDivElement
     fireEvent.click(getByText('Sword'))
-    expect(queryByText('Sword')).toBeNull()
+    expect(overlay.classList.contains('show')).toBe(false)
   })
 
   it('closes on Escape key press', () => {
     resetStore({ inventory: [item] })
-    const { getByText, queryByText } = render(
+    const { getByText, container } = render(
       <InventoryLookup description="Inventory" attrs={attrs} />
     )
     fireEvent.click(getByText('Inventory'))
+    const overlay = container.querySelector('.overlay') as HTMLDivElement
     fireEvent.keyDown(document, { key: 'Escape' })
-    expect(queryByText('Sword')).toBeNull()
+    expect(overlay.classList.contains('show')).toBe(false)
   })
 
   it('closes on outside click', () => {
     resetStore({ inventory: [item] })
-    const { getByText, queryByText } = render(
+    const { getByText, container } = render(
       <InventoryLookup description="Inventory" attrs={attrs} />
     )
     fireEvent.click(getByText('Inventory'))
+    const overlay = container.querySelector('.overlay') as HTMLDivElement
     fireEvent.mouseDown(document.body)
-    expect(queryByText('Sword')).toBeNull()
+    expect(overlay.classList.contains('show')).toBe(false)
   })
 })
 

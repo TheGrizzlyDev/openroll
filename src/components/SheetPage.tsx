@@ -5,7 +5,7 @@ import Inventory from '../morg_borg/Inventory'
 import CharacterSheet from '../morg_borg/CharacterSheet'
 import LogView from './LogView'
 import Notes from './Notes'
-import Overlay from './Overlay'
+import Popup from './Popup'
 import { useGameContext } from '../GameContext'
 import { Button } from '../ui'
 
@@ -71,15 +71,16 @@ export default function SheetPage() {
 
       {activeTab === 'log' && <LogView />}
 
-      <Overlay
-        message={overlay.message}
+      <Popup
         visible={overlay.visible}
         onClose={() => {
           if (overlayTimeout) clearTimeout(overlayTimeout)
           setOverlayTimeout(null)
           dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } })
         }}
-      />
+      >
+        <span>{overlay.message}</span>
+      </Popup>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGameContext } from '../GameContext'
-import Overlay from './Overlay'
+import Popup from './Popup'
 import { FileInput } from '../ui/FileInput'
 import { Button } from '../ui'
 
@@ -92,15 +92,16 @@ export default function CharacterSelect() {
       <Button onClick={handleCreate}>Create New</Button>
       <Button onClick={handleExport}>Export</Button>
       <FileInput accept="application/json" onFileSelect={handleImport}>Import</FileInput>
-      <Overlay
-        message={overlay.message}
+      <Popup
         visible={overlay.visible}
         onClose={() => {
           if (overlayTimeout) clearTimeout(overlayTimeout)
           setOverlayTimeout(null)
           dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } })
         }}
-      />
+      >
+        <span>{overlay.message}</span>
+      </Popup>
     </div>
   )
 }
