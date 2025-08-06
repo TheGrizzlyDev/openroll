@@ -235,7 +235,7 @@ h1, h2 {
   gap: 0.5rem;
 }
 
-.smart-text-editor .base-input {
+.smart-text-editor textarea {
   width: 100%;
 }
 

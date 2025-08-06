@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { renderOml } from '../oml/render'
 import { useGameContext } from '../GameContext'
+import { Textarea } from '../ui'
 
 interface SmartTextEditorProps {
   value: string
@@ -26,7 +27,7 @@ export default function SmartTextEditor({ value, onChange }: SmartTextEditorProp
   return (
     <div className="smart-text-editor">
       {editing ? (
-        <textarea className="base-input" value={draft} onChange={e => setDraft(e.target.value)} />
+        <Textarea value={draft} onChange={e => setDraft(e.target.value)} />
       ) : (
         <div>{renderOml(value, roll)}</div>
       )}
