@@ -20,10 +20,34 @@ export function renderNodes(nodes: OmlNode[], roll: (_notation: string) => unkno
       )
     }
     if (node.type === 'if') {
-      const branch = node.branches[0]
+      const { state } = useGameContext.getState()
+      let active = -1
+      for (let b = 0; b < node.branches.length; b++) {
+        const br = node.branches[b]
+        if (br.type === 'else') {
+          if (active === -1) active = b
+          break
+        }
+        if (br.predicate) {
+          try {
+            const fn = new Function('state', `with(state){with(state.sheet){return (${br.predicate});}}`)
+            if (fn(state)) {
+              active = b
+              break
+            }
+          } catch {
+            // ignore errors and treat as false
+          }
+        }
+      }
+      if (active === -1) active = node.branches.findIndex(br => br.type === 'else')
       return (
         <React.Fragment key={i}>
-          {branch ? renderNodes(branch.children, roll) : null}
+          {node.branches.map((br, idx) => (
+            <span key={idx} style={idx === active ? undefined : { opacity: 0.5 }}>
+              {renderNodes(br.children, roll)}
+            </span>
+          ))}
         </React.Fragment>
       )
     }

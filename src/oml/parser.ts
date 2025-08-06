@@ -8,6 +8,7 @@ export type OmlNode =
 export interface IfBranch {
   type: 'if' | 'elif' | 'else'
   description?: string
+  predicate?: string
   attrs: Record<string, string>
   children: OmlNode[]
 }
@@ -52,8 +53,8 @@ function tokenizeTag(content: string): ParsedTag {
   const args: string[] = []
   const attrs: Record<string, string> = {}
   for (const token of tokens) {
-    const eq = token.indexOf('=')
-    if (eq !== -1) {
+    if (/^[^=]+=[^=]+$/.test(token)) {
+      const eq = token.indexOf('=')
       const key = token.slice(0, eq)
       const value = token.slice(eq + 1)
       attrs[key] = value
@@ -125,6 +126,7 @@ export function parseOml(input: string): OmlNode[] {
       const branch: IfBranch = {
         type: currentTag.name as IfBranch['type'],
         description: currentTag.description,
+        predicate: currentTag.args[0],
         attrs: currentTag.attrs,
         children: []
       }

@@ -26,6 +26,20 @@ describe('oml parsing', () => {
       }
     ])
   })
+
+  it('captures predicates for conditional branches', () => {
+    const nodes = parseOml('[if hp>0]up[elif hp==0]even[else]down[fi]')
+    expect(nodes).toMatchObject([
+      {
+        type: 'if',
+        branches: [
+          { type: 'if', predicate: 'hp>0' },
+          { type: 'elif', predicate: 'hp==0' },
+          { type: 'else' }
+        ]
+      }
+    ])
+  })
 })
 
 describe('oml rendering', () => {
@@ -63,5 +77,47 @@ describe('oml rendering', () => {
     const { getByText } = render(<div>{renderNodes(nodes, vi.fn())}</div>)
     const link = getByText('An example link') as HTMLAnchorElement
     expect(link.getAttribute('href')).toBe('https://example.com')
+  })
+
+  it('renders active branch and fades inactive branch', () => {
+    const current = useGameContext.getState().state
+    useGameContext.setState({
+      state: { ...current, sheet: { ...current.sheet, hp: 5 } }
+    })
+    const Test = () => <div>{renderOml('[if hp>0]Alive[else]Dead[fi]')}</div>
+    const { container } = render(<Test />)
+    const styled = Array.from(container.querySelectorAll('span[style]'))
+    expect(styled).toHaveLength(1)
+    expect(styled[0].textContent).toBe('Dead')
+  })
+
+  it('renders else branch when predicate is false', () => {
+    const current = useGameContext.getState().state
+    useGameContext.setState({
+      state: { ...current, sheet: { ...current.sheet, hp: 0 } }
+    })
+    const Test = () => <div>{renderOml('[if hp>0]Alive[else]Dead[fi]')}</div>
+    const { container } = render(<Test />)
+    const styled = Array.from(container.querySelectorAll('span[style]'))
+    expect(styled).toHaveLength(1)
+    expect(styled[0].textContent).toBe('Alive')
+  })
+
+  it('handles nested conditionals', () => {
+    const current = useGameContext.getState().state
+    useGameContext.setState({
+      state: { ...current, sheet: { ...current.sheet, hp: 5, omens: 0 } }
+    })
+    const text =
+      '[if hp>0]live[if omens>0] omen [else] none [fi][else]dead[fi]'
+    const Test = () => <div>{renderOml(text)}</div>
+    const { container } = render(<Test />)
+    const styledTexts = Array.from(
+      container.querySelectorAll('span[style]')
+    ).map(s => s.textContent?.trim())
+    expect(styledTexts).toContain('omen')
+    expect(styledTexts).toContain('dead')
+    expect(styledTexts).not.toContain('live')
+    expect(styledTexts).not.toContain('none')
   })
 })
