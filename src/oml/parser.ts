@@ -1,30 +1,140 @@
 export type OmlNode =
-  | { type: 'text', text: string }
-  | { type: 'dice', notation: string }
+  | { type: 'text'; text: string }
+  | { type: 'dice'; notation: string; description?: string; attrs: Record<string, string> }
+  | { type: 'if'; branches: IfBranch[]; description?: string; attrs: Record<string, string> }
+
+export interface IfBranch {
+  type: 'if' | 'elif' | 'else'
+  description?: string
+  attrs: Record<string, string>
+  children: OmlNode[]
+}
+
+interface ParsedTag {
+  name: string
+  args: string[]
+  description?: string
+  attrs: Record<string, string>
+}
+
+function tokenizeTag(content: string): ParsedTag {
+  const tokens: string[] = []
+  let current = ''
+  let quote: string | null = null
+  for (let i = 0; i < content.length; i++) {
+    const ch = content[i]
+    if (quote) {
+      if (ch === quote) {
+        quote = null
+      } else {
+        current += ch
+      }
+      continue
+    }
+    if (ch === '"' || ch === "'") {
+      quote = ch
+      continue
+    }
+    if (/\s/.test(ch)) {
+      if (current) {
+        tokens.push(current)
+        current = ''
+      }
+      continue
+    }
+    current += ch
+  }
+  if (current) tokens.push(current)
+
+  const name = tokens.shift()?.toLowerCase() ?? ''
+  const args: string[] = []
+  const attrs: Record<string, string> = {}
+  for (const token of tokens) {
+    const eq = token.indexOf('=')
+    if (eq !== -1) {
+      const key = token.slice(0, eq)
+      const value = token.slice(eq + 1)
+      attrs[key] = value
+    } else {
+      args.push(token)
+    }
+  }
+
+  const description = args[1]
+  return { name, args, description, attrs }
+}
 
 export function parseOml(input: string): OmlNode[] {
-  const nodes: OmlNode[] = []
-  const regex = /\[([^\]]+)\]/g
-  let lastIndex = 0
-  let match: RegExpExecArray | null
-
-  while ((match = regex.exec(input)) !== null) {
-    if (match.index > lastIndex) {
-      nodes.push({ type: 'text', text: input.slice(lastIndex, match.index) })
+  function parseSequence(pos: number, stop: string[] = []): {
+    nodes: OmlNode[]
+    pos: number
+    nextTag?: ParsedTag
+  } {
+    const nodes: OmlNode[] = []
+    let i = pos
+    while (i < input.length) {
+      if (input[i] === '[') {
+        const start = i
+        const end = input.indexOf(']', i)
+        if (end === -1) {
+          nodes.push({ type: 'text', text: input.slice(i) })
+          return { nodes, pos: input.length }
+        }
+        const tag = tokenizeTag(input.slice(i + 1, end))
+        if (stop.includes(tag.name)) {
+          return { nodes, pos: end + 1, nextTag: tag }
+        }
+        i = end + 1
+        if (tag.name === 'dice') {
+          nodes.push({
+            type: 'dice',
+            notation: tag.args[0] ?? '',
+            description: tag.description,
+            attrs: tag.attrs
+          })
+        } else if (tag.name === 'if') {
+          const result = parseIf(tag, i)
+          nodes.push(result.node)
+          i = result.pos
+        } else {
+          nodes.push({ type: 'text', text: input.slice(start, end + 1) })
+        }
+      } else {
+        const next = input.indexOf('[', i)
+        const text = next === -1 ? input.slice(i) : input.slice(i, next)
+        nodes.push({ type: 'text', text })
+        i = next === -1 ? input.length : next
+      }
     }
-    const content = match[1].trim()
-    if (content.startsWith('dice ')) {
-      const notation = content.slice(5).trim()
-      nodes.push({ type: 'dice', notation })
-    } else {
-      nodes.push({ type: 'text', text: match[0] })
-    }
-    lastIndex = regex.lastIndex
+    return { nodes, pos: i }
   }
 
-  if (lastIndex < input.length) {
-    nodes.push({ type: 'text', text: input.slice(lastIndex) })
+  function parseIf(tag: ParsedTag, pos: number): { node: OmlNode; pos: number } {
+    const branches: IfBranch[] = []
+    let currentTag: ParsedTag | undefined = tag
+    let i = pos
+    while (currentTag) {
+      const branch: IfBranch = {
+        type: currentTag.name as IfBranch['type'],
+        description: currentTag.description,
+        attrs: currentTag.attrs,
+        children: []
+      }
+      const result = parseSequence(i, ['elif', 'else', 'fi'])
+      branch.children = result.nodes
+      branches.push(branch)
+      i = result.pos
+      currentTag = result.nextTag
+      if (!currentTag || currentTag.name === 'fi') {
+        break
+      }
+    }
+    return {
+      node: { type: 'if', branches, description: tag.description, attrs: tag.attrs },
+      pos: i
+    }
   }
 
-  return nodes
+  return parseSequence(0).nodes
 }
+

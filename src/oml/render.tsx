@@ -17,6 +17,14 @@ function renderNodes(nodes: OmlNode[], roll: (_notation: string) => unknown) {
         </button>
       )
     }
+    if (node.type === 'if') {
+      const branch = node.branches[0]
+      return (
+        <React.Fragment key={i}>
+          {branch ? renderNodes(branch.children, roll) : null}
+        </React.Fragment>
+      )
+    }
     return <span key={i}>{node.text}</span>
   })
 }
