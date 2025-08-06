@@ -3,9 +3,10 @@ import { useGameContext } from '../GameContext'
 import { parseOml, type OmlNode } from './parser'
 import React from 'react'
 
-function renderNodes(nodes: OmlNode[], roll: (_notation: string) => unknown) {
+export function renderNodes(nodes: OmlNode[], roll: (_notation: string) => unknown) {
   return nodes.map((node, i) => {
     if (node.type === 'dice') {
+      const label = node.description ?? node.notation
       return (
         <button
           type="button"
@@ -13,7 +14,7 @@ function renderNodes(nodes: OmlNode[], roll: (_notation: string) => unknown) {
           className="badge base-button"
           onClick={() => roll(node.notation)}
         >
-          {node.notation}
+          {label}
         </button>
       )
     }
@@ -23,6 +24,14 @@ function renderNodes(nodes: OmlNode[], roll: (_notation: string) => unknown) {
         <React.Fragment key={i}>
           {branch ? renderNodes(branch.children, roll) : null}
         </React.Fragment>
+      )
+    }
+    if (node.type === 'link') {
+      const label = node.description ?? node.text
+      return (
+        <a key={i} href={node.url}>
+          {label}
+        </a>
       )
     }
     return <span key={i}>{node.text}</span>

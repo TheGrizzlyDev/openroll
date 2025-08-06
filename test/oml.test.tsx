@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import { parseOml, renderOml } from '../src/oml/render'
+import { parseOml, renderOml, renderNodes, type OmlNode } from '../src/oml/render'
 import { useGameContext } from '../src/GameContext'
 
 describe('oml parsing', () => {
@@ -38,5 +38,28 @@ describe('oml rendering', () => {
     fireEvent.click(badge)
     expect(roll).toHaveBeenCalledWith('1d4')
     expect(container.textContent).toBe('Roll 1d4 now')
+  })
+
+  it('replaces button label with description when provided', () => {
+    const roll = vi.fn()
+    const nodes: OmlNode[] = [{ type: 'dice', notation: '1d4', description: 'a d4' }]
+    const { getByText } = render(<div>{renderNodes(nodes, roll)}</div>)
+    const badge = getByText('a d4')
+    fireEvent.click(badge)
+    expect(roll).toHaveBeenCalledWith('1d4')
+  })
+
+  it('replaces link label with description when provided', () => {
+    const nodes: OmlNode[] = [
+      {
+        type: 'link',
+        url: 'https://example.com',
+        text: 'Example',
+        description: 'An example link'
+      }
+    ]
+    const { getByText } = render(<div>{renderNodes(nodes, vi.fn())}</div>)
+    const link = getByText('An example link') as HTMLAnchorElement
+    expect(link.getAttribute('href')).toBe('https://example.com')
   })
 })

@@ -1,5 +1,6 @@
 export type OmlNode =
   | { type: 'text'; text: string }
+  | { type: 'link'; url: string; text: string; description?: string }
   | { type: 'dice'; notation: string; description?: string; attrs: Record<string, string> }
   | { type: 'if'; branches: IfBranch[]; description?: string; attrs: Record<string, string> }
 
