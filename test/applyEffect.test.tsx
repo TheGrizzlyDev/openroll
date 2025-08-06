@@ -1,6 +1,6 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { render, fireEvent, cleanup } from '@testing-library/react'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { renderOml } from '../src/oml/render'
 import { useGameContext, type GameState } from '../src/GameContext'
 import { createSheet } from '../src/morg_borg/sheet'
@@ -21,6 +21,7 @@ const setup = (state?: Partial<GameState>) => {
 
 describe('apply effect handler', () => {
   beforeEach(() => setup())
+  afterEach(() => cleanup())
 
   it('applies hp changes', () => {
     setup({ sheet: { ...createSheet(), hp: 10 } })
@@ -56,5 +57,56 @@ describe('apply effect handler', () => {
     fireEvent.click(getByText('Poison'))
     const { state } = useGameContext.getState()
     expect(state.sheet.conditions).toContain('poisoned')
+  })
+
+  describe('with current character', () => {
+    it('persists stat changes', () => {
+      const sheet = { ...createSheet(), str: 0 }
+      setup({
+        characters: [{ name: '', sheet, inventory: [], scrolls: [] }],
+        current: 0,
+        sheet
+      })
+      const Test = () => <div>{renderOml('[apply "Buff" str +2]')}</div>
+      const { getByText } = render(<Test />)
+      fireEvent.click(getByText('Buff'))
+      const { state } = useGameContext.getState()
+      expect(state.sheet.str).toBe(2)
+      expect(state.characters[0].sheet.str).toBe(2)
+    })
+
+    it('persists inventory changes', () => {
+      const sheet = createSheet()
+      const inventory = [{ id: 1, name: 'Potion', qty: 1, notes: '' }]
+      setup({
+        characters: [{ name: '', sheet, inventory, scrolls: [] }],
+        current: 0,
+        sheet,
+        inventory
+      })
+      const Test = () => <div>{renderOml('[apply "Drink" item Potion -1]')}</div>
+      const { getByText } = render(<Test />)
+      fireEvent.click(getByText('Drink'))
+      const { state } = useGameContext.getState()
+      expect(state.inventory.find(i => i.name === 'Potion')?.qty).toBe(0)
+      expect(state.characters[0].inventory.find(i => i.name === 'Potion')?.qty).toBe(0)
+    })
+
+    it('persists condition changes', () => {
+      const sheet = createSheet()
+      setup({
+        characters: [{ name: '', sheet, inventory: [], scrolls: [] }],
+        current: 0,
+        sheet
+      })
+      const Test = () => (
+        <div>{renderOml('[apply "Poison" condition poisoned add]')}</div>
+      )
+      const { getByText } = render(<Test />)
+      fireEvent.click(getByText('Poison'))
+      const { state } = useGameContext.getState()
+      expect(state.sheet.conditions).toContain('poisoned')
+      expect(state.characters[0].sheet.conditions).toContain('poisoned')
+    })
   })
 })

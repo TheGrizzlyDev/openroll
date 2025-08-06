@@ -328,6 +328,25 @@ const storeCreator: StateCreator<
         }
         newState.sheet = { ...newState.sheet, conditions: conds }
       }
+
+      if (newState.current !== null) {
+        const updated = [...newState.characters]
+        const existing =
+          updated[newState.current] || {
+            name: '',
+            sheet: createSheet(),
+            inventory: [],
+            scrolls: []
+          }
+        updated[newState.current] = {
+          ...existing,
+          sheet: newState.sheet,
+          inventory: newState.inventory,
+          scrolls: newState.scrolls
+        }
+        newState.characters = updated
+      }
+
       newState.log = [
         { label, notation: value, output, total: amount },
         ...newState.log
