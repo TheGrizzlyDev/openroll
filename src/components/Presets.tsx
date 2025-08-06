@@ -74,17 +74,17 @@ export default function Presets() {
               value={preset.notation}
               onChange={(e: ChangeEvent<HTMLInputElement>) => updatePreset(preset.id, e.target.value)}
               placeholder="1d20"
-              className={preset.error ? 'error' : ''}
+              className={preset.error ? 'base-input error' : 'base-input'}
             />
             <div className="preset-buttons">
-              <button onClick={() => handleRoll(preset)}>Roll</button>
-              <button onClick={() => removePreset(preset.id)}>Remove</button>
+              <button className="base-button" onClick={() => handleRoll(preset)}>Roll</button>
+              <button className="base-button" onClick={() => removePreset(preset.id)}>Remove</button>
             </div>
             {preset.error && <span className="error-message">{preset.error}</span>}
           </li>
         ))}
       </ul>
-      <button onClick={addPreset}>Add preset</button>
+      <button className="base-button" onClick={addPreset}>Add preset</button>
     </div>
   )
 }

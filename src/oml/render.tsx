@@ -10,7 +10,7 @@ function renderNodes(nodes: OmlNode[], roll: (_notation: string) => unknown) {
         <button
           type="button"
           key={i}
-          className="badge"
+          className="badge base-button"
           onClick={() => roll(node.notation)}
         >
           {node.notation}

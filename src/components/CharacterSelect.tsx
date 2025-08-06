@@ -85,14 +85,14 @@ export default function CharacterSelect() {
       <ul className="character-list">
         {characters.map((c, idx) => (
           <li key={idx}>
-            <button onClick={() => handleLoad(idx)}>{c.name || `Character ${idx + 1}`}</button>
-            <button onClick={() => confirmDelete(idx)}>Delete</button>
+            <button className="base-button" onClick={() => handleLoad(idx)}>{c.name || `Character ${idx + 1}`}</button>
+            <button className="base-button" onClick={() => confirmDelete(idx)}>Delete</button>
           </li>
         ))}
       </ul>
-      <button onClick={handleCreate}>Create New</button>
-      <button onClick={handleExport}>Export</button>
-      <input type="file" accept="application/json" onChange={handleImport} />
+      <button className="base-button" onClick={handleCreate}>Create New</button>
+      <button className="base-button" onClick={handleExport}>Export</button>
+      <input className="base-input" type="file" accept="application/json" onChange={handleImport} />
       <Overlay
         message={overlay.message}
         visible={overlay.visible}

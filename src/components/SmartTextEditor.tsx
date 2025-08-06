@@ -26,12 +26,12 @@ export default function SmartTextEditor({ value, onChange }: SmartTextEditorProp
   return (
     <div className="smart-text-editor">
       {editing ? (
-        <textarea value={draft} onChange={e => setDraft(e.target.value)} />
+        <textarea className="base-input" value={draft} onChange={e => setDraft(e.target.value)} />
       ) : (
         <div>{renderOml(value, roll)}</div>
       )}
       <div className="editor-controls">
-        <button type="button" onClick={handleToggle}>
+        <button className="base-button" type="button" onClick={handleToggle}>
           {editing ? 'Save' : 'Edit'}
         </button>
       </div>

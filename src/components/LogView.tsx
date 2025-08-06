@@ -8,7 +8,7 @@ export default function LogView() {
   } = useGameContext()
   return (
     <div className="log">
-      <button onClick={() => dispatch({ type: 'SET_LOG', log: [] })}>
+      <button className="base-button" onClick={() => dispatch({ type: 'SET_LOG', log: [] })}>
         Clear Log
       </button>
       <ul>

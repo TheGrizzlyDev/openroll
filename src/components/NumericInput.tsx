@@ -36,7 +36,7 @@ export default function NumericInput({
         type="button"
         aria-label="Decrease value"
         onClick={() => handleButton(-step)}
-        className="numeric-input-button"
+        className="numeric-input-button base-button"
       >
         −
       </button>
@@ -47,14 +47,14 @@ export default function NumericInput({
         min={min}
         max={max}
         step={step}
-        className={`numeric-input-field${className ? ` ${className}` : ''}`}
+        className={`numeric-input-field base-input${className ? ` ${className}` : ''}`}
         {...props}
       />
       <button
         type="button"
         aria-label="Increase value"
         onClick={() => handleButton(step)}
-        className="numeric-input-button"
+        className="numeric-input-button base-button"
       >
         +
       </button>

@@ -10,30 +10,28 @@ h1, h2 {
   color: #f5f5f5;
 }
 
+.base-input,
+.base-button {
+  background: #111;
+  color: #ffff00;
+  border: 1px solid #ffff00;
+  padding: 0.4rem;
+  font-family: inherit;
+}
+
 .sheet label {
   display: block;
   margin-bottom: 0.5rem;
 }
 
-.sheet input,
-.sheet textarea,
-.dice-roller input,
-.dice-roller button {
+.sheet .base-input,
+.dice-roller .base-input,
+.dice-roller .base-button {
   width: 100%;
-  background: #111;
-  color: #ffff00;
-  border: 1px solid #ffff00;
-  padding: 0.4rem;
-  font-family: inherit;
 }
 
 .styled-select {
   width: 100%;
-  background: #111;
-  color: #ffff00;
-  border: 1px solid #ffff00;
-  padding: 0.4rem;
-  font-family: inherit;
 }
 
 .error {
@@ -57,17 +55,13 @@ h1, h2 {
   margin-bottom: 1rem;
 }
 
-.tabs button {
+.tabs .base-button {
   flex: 1;
-  background: #111;
-  color: #ffff00;
-  border: 1px solid #ffff00;
   padding: 0.5rem;
-  font-family: inherit;
   cursor: pointer;
 }
 
-.tabs button.active {
+.tabs .base-button.active {
   background: #ffff00;
   color: #111;
 }
@@ -83,7 +77,7 @@ h1, h2 {
   flex-direction: column;
 }
 
-.stat button {
+.stat .base-button {
   margin-top: 0.25rem;
 }
 
@@ -96,19 +90,14 @@ h1, h2 {
   margin-bottom: 0.25rem;
 }
 
-.log button {
-  background: #111;
-  color: #ffff00;
-  border: 1px solid #ffff00;
-  padding: 0.4rem;
-  font-family: inherit;
+.log .base-button {
   width: auto;
   margin-bottom: 0.5rem;
 }
 
 @media (min-width: 768px) {
-  .dice-roller input,
-  .dice-roller button {
+  .dice-roller .base-input,
+  .dice-roller .base-button {
     width: auto;
   }
 }
@@ -143,12 +132,12 @@ h1, h2 {
   gap: 0.5rem;
 }
 
-.inventory-form input {
+.inventory-form .base-input {
   flex: 1;
 }
 
-.inventory-form button,
-.inventory li button {
+.inventory-form .base-button,
+.inventory li .base-button {
   width: auto;
 }
 
@@ -179,11 +168,11 @@ h1, h2 {
   margin-bottom: 0.25rem;
 }
 
-.presets li input {
+.presets li .base-input {
   flex: 1;
 }
 
-.presets button {
+.presets .base-button {
   width: auto;
 }
 
@@ -192,7 +181,7 @@ h1, h2 {
   gap: 0.25rem;
 }
 
-.preset-buttons button {
+.preset-buttons .base-button {
   flex: 1;
 }
 
@@ -220,7 +209,7 @@ h1, h2 {
   pointer-events: auto;
 }
 
-.overlay button {
+.overlay .base-button {
   width: auto;
 }
 
@@ -236,7 +225,7 @@ h1, h2 {
   margin-bottom: 0.5rem;
 }
 
-.start-screen button {
+.start-screen .base-button {
   width: auto;
 }
 
@@ -246,16 +235,7 @@ h1, h2 {
   gap: 0.5rem;
 }
 
-.smart-text-editor textarea,
-.smart-text-editor button {
-  background: #111;
-  color: #ffff00;
-  border: 1px solid #ffff00;
-  padding: 0.4rem;
-  font-family: inherit;
-}
-
-.smart-text-editor textarea {
+.smart-text-editor .base-input {
   width: 100%;
 }
 
@@ -264,16 +244,13 @@ h1, h2 {
   gap: 0.5rem;
 }
 
-.smart-text-editor .editor-controls button {
+.smart-text-editor .editor-controls .base-button {
   width: auto;
   cursor: pointer;
 }
 
 .badge {
   display: inline-block;
-  background: #111;
-  color: #ffff00;
-  border: 1px solid #ffff00;
   padding: 0.1rem 0.4rem;
   border-radius: 9999px;
   cursor: pointer;
@@ -292,9 +269,6 @@ h1, h2 {
 }
 
 .numeric-input-button {
-  background: #111;
-  color: #ffff00;
-  border: 1px solid #ffff00;
   border-radius: 20px;
   padding: 0.25rem;
   width: 1.5rem;

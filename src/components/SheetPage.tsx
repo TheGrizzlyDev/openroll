@@ -33,25 +33,25 @@ export default function SheetPage() {
 
       <div className="tabs">
         <button
-          className={activeTab === 'character' ? 'active' : ''}
+          className={`base-button${activeTab === 'character' ? ' active' : ''}`}
           onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'character' })}
         >
           Character
         </button>
         <button
-          className={activeTab === 'inventory' ? 'active' : ''}
+          className={`base-button${activeTab === 'inventory' ? ' active' : ''}`}
           onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'inventory' })}
         >
           Inventory
         </button>
         <button
-          className={activeTab === 'presets' ? 'active' : ''}
+          className={`base-button${activeTab === 'presets' ? ' active' : ''}`}
           onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'presets' })}
         >
           Presets
         </button>
         <button
-          className={activeTab === 'log' ? 'active' : ''}
+          className={`base-button${activeTab === 'log' ? ' active' : ''}`}
           onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'log' })}
         >
           Log

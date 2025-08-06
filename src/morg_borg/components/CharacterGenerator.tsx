@@ -39,7 +39,7 @@ export default function CharacterGenerator() {
         <label>
           Class
           <select
-            className="styled-select"
+            className="styled-select base-input"
             value={sheet.class}
             onChange={handleClassChange}
           >
@@ -51,7 +51,7 @@ export default function CharacterGenerator() {
             ))}
           </select>
         </label>
-        <button onClick={handleRollClass}>Roll Class</button>
+        <button className="base-button" onClick={handleRollClass}>Roll Class</button>
       </div>
       <div className="generated-results">
         <p>Class: {sheet.class}</p>
@@ -95,11 +95,11 @@ export default function CharacterGenerator() {
         )}
       </div>
       <div className="actions">
-        <button onClick={() => createCharacter(sheet.class || undefined)}>
+        <button className="base-button" onClick={() => createCharacter(sheet.class || undefined)}>
           Reroll
         </button>
-        <button onClick={handleConfirm}>Confirm</button>
-        <button onClick={handleCancel}>Cancel</button>
+        <button className="base-button" onClick={handleConfirm}>Confirm</button>
+        <button className="base-button" onClick={handleCancel}>Cancel</button>
       </div>
     </div>
   )

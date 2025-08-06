@@ -33,9 +33,9 @@ export default function DiceRoller() {
           }
         }}
         placeholder="1d20"
-        className={error ? 'error' : ''}
+        className={error ? 'base-input error' : 'base-input'}
       />
-      <button onClick={handleRoll}>Roll</button>
+      <button className="base-button" onClick={handleRoll}>Roll</button>
       {error && <span className="error-message">{error}</span>}
     </div>
   )

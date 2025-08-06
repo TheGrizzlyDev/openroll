@@ -4,7 +4,7 @@ export default function Overlay({ message, visible, onClose }: { message: string
   return (
     <div className={`overlay${visible ? ' show' : ''}`}>
       <span>{message}</span>
-      <button onClick={onClose}>×</button>
+      <button className="base-button" onClick={onClose}>×</button>
     </div>
   )
 }

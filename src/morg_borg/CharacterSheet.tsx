@@ -49,12 +49,12 @@ export default function CharacterSheet() {
     <div className="sheet">
       <label>
         Character
-        <input value={sheet.name} onChange={(e: ChangeEvent<HTMLInputElement>) => updateField('name', e.target.value)} />
+        <input className="base-input" value={sheet.name} onChange={(e: ChangeEvent<HTMLInputElement>) => updateField('name', e.target.value)} />
       </label>
       <label>
         Class
         <select
-          className="styled-select"
+          className="styled-select base-input"
           value={sheet.class}
           onChange={(e: ChangeEvent<HTMLSelectElement>) =>
             updateField('class', e.target.value)
@@ -70,6 +70,7 @@ export default function CharacterSheet() {
       <label>
         Trait
         <input
+          className="base-input"
           value={sheet.trait}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             updateField('trait', e.target.value)
@@ -79,6 +80,7 @@ export default function CharacterSheet() {
       <label>
         Background
         <input
+          className="base-input"
           value={sheet.background}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             updateField('background', e.target.value)
@@ -99,18 +101,18 @@ export default function CharacterSheet() {
               />
             </label>
             <input
+              className={statDiceErrors[stat] ? 'base-input error' : 'base-input'}
               value={sheet.statDice[stat]}
               onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 updateStatDice(stat, e.target.value)
                 setStatDiceErrors(prev => ({ ...prev, [stat]: '' }))
               }}
               placeholder="1d20"
-              className={statDiceErrors[stat] ? 'error' : ''}
             />
             {statDiceErrors[stat] && (
               <span className="error-message">{statDiceErrors[stat]}</span>
             )}
-            <button onClick={() => rollStat(stat)}>Roll</button>
+            <button className="base-button" onClick={() => rollStat(stat)}>Roll</button>
           </div>
         ))}
       </div>

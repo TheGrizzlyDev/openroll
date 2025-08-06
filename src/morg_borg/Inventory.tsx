@@ -40,8 +40,8 @@ function SortableItem({ item, startEdit, handleDelete }: SortableItemProps) {
           {item.name} ({item.qty})
           {item.notes ? <> - {renderOml(item.notes, roll)}</> : ''}
         </span>
-        <button onClick={() => startEdit(item.id)}>Edit</button>
-        <button onClick={() => handleDelete(item.id)}>Delete</button>
+        <button className="base-button" onClick={() => startEdit(item.id)}>Edit</button>
+        <button className="base-button" onClick={() => handleDelete(item.id)}>Delete</button>
       </div>
     </li>
   )
@@ -100,9 +100,9 @@ function SortableScroll({
           {scroll.name} [{scroll.type}] ({scroll.casts})
           {scroll.notes ? <> - {renderOml(scroll.notes, roll)}</> : ''}
         </span>
-        <button onClick={() => handleCast(scroll.id)}>Cast</button>
-        <button onClick={() => startEdit(scroll.id)}>Edit</button>
-        <button onClick={() => handleDelete(scroll.id)}>Delete</button>
+        <button className="base-button" onClick={() => handleCast(scroll.id)}>Cast</button>
+        <button className="base-button" onClick={() => startEdit(scroll.id)}>Edit</button>
+        <button className="base-button" onClick={() => handleDelete(scroll.id)}>Delete</button>
       </div>
     </li>
   )
@@ -290,6 +290,7 @@ export default function Inventory() {
       </DndContext>
       <div className="inventory-form">
         <input
+          className="base-input"
           placeholder="Name"
           value={form.name}
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleFormChange('name', e.target.value)}
@@ -306,11 +307,11 @@ export default function Inventory() {
         />
         {editingId ? (
           <>
-            <button onClick={handleSave}>Save</button>
-            <button onClick={resetForm}>Cancel</button>
+            <button className="base-button" onClick={handleSave}>Save</button>
+            <button className="base-button" onClick={resetForm}>Cancel</button>
           </>
         ) : (
-          <button onClick={handleAdd}>Add</button>
+          <button className="base-button" onClick={handleAdd}>Add</button>
         )}
       </div>
       <h2>Scrolls</h2>
@@ -331,7 +332,7 @@ export default function Inventory() {
       </DndContext>
       <div className="inventory-form">
         <select
-          className="styled-select"
+          className="styled-select base-input"
           value={scrollForm.type}
           onChange={(e: ChangeEvent<HTMLSelectElement>) =>
             handleScrollFormChange('type', e.target.value as ScrollForm['type'])
@@ -341,11 +342,13 @@ export default function Inventory() {
           <option value="sacred">Sacred</option>
         </select>
         <input
+          className="base-input"
           placeholder="Name"
           value={scrollForm.name}
           onChange={(e: ChangeEvent<HTMLInputElement>) => handleScrollFormChange('name', e.target.value)}
         />
         <input
+          className="base-input"
           type="number"
           placeholder="Casts"
           value={scrollForm.casts}
@@ -357,11 +360,11 @@ export default function Inventory() {
         />
         {editingScrollId ? (
           <>
-            <button onClick={handleSaveScroll}>Save</button>
-            <button onClick={resetScrollForm}>Cancel</button>
+            <button className="base-button" onClick={handleSaveScroll}>Save</button>
+            <button className="base-button" onClick={resetScrollForm}>Cancel</button>
           </>
         ) : (
-          <button onClick={handleAddScroll}>Add</button>
+          <button className="base-button" onClick={handleAddScroll}>Add</button>
         )}
       </div>
     </div>
