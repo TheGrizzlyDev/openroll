@@ -3,5 +3,6 @@
   --color-bg-alt: #f4f4f4;
   --color-text: #000000;
   --color-accent: #0066cc;
+  --color-error: #ff0000;
   --font-body: system-ui, sans-serif;
 }
