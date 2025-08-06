@@ -87,7 +87,7 @@ export function renderNodes(
     }
     const parts = node.text.split(/(\r?\n)/)
     return (
-      <span key={i}>
+      <span key={i} style={{ whiteSpace: 'break-spaces' }}>
         {parts.map((part, idx) =>
           /\r?\n/.test(part) ? <br key={idx} /> : <React.Fragment key={idx}>{part}</React.Fragment>
         )}
@@ -99,7 +99,7 @@ export function renderNodes(
 export function renderOml(text: string, rollFn?: (_notation: string) => unknown) {
   const { roll, applyEffect } = useGameContext.getState()
   const doRoll = rollFn ?? roll
-  const nodes = parseOml(text)
+  const nodes = parseOml(text.trim())
   return <>{renderNodes(nodes, { roll: doRoll, applyEffect })}</>
 }
 

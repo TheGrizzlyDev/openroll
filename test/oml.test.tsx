@@ -117,7 +117,7 @@ describe('oml rendering', () => {
     })
     const Test = () => <div>{renderOml('[if hp>0]Alive[else]Dead[fi]')}</div>
     const { container } = render(<Test />)
-    const styled = Array.from(container.querySelectorAll('span[style]'))
+    const styled = Array.from(container.querySelectorAll('span[style*="opacity"]'))
     expect(styled).toHaveLength(1)
     expect(styled[0].textContent).toBe('Dead')
   })
@@ -129,7 +129,7 @@ describe('oml rendering', () => {
     })
     const Test = () => <div>{renderOml('[if hp>0]Alive[else]Dead[fi]')}</div>
     const { container } = render(<Test />)
-    const styled = Array.from(container.querySelectorAll('span[style]'))
+    const styled = Array.from(container.querySelectorAll('span[style*="opacity"]'))
     expect(styled).toHaveLength(1)
     expect(styled[0].textContent).toBe('Alive')
   })
@@ -144,7 +144,7 @@ describe('oml rendering', () => {
     const Test = () => <div>{renderOml(text)}</div>
     const { container } = render(<Test />)
     const styledTexts = Array.from(
-      container.querySelectorAll('span[style]')
+      container.querySelectorAll('span[style*="opacity"]')
     ).map(s => s.textContent?.trim())
     expect(styledTexts).toContain('omen')
     expect(styledTexts).toContain('dead')
@@ -152,9 +152,17 @@ describe('oml rendering', () => {
     expect(styledTexts).not.toContain('none')
   })
 
-  it('preserves newline characters in text', () => {
-    const Test = () => <div>{renderOml('line1\nline2\n')}</div>
+  it('preserves newline characters within text but trims those at the edges', () => {
+    const Test = () => <div>{renderOml('\nline1\nline2\n')}</div>
     const { container } = render(<Test />)
-    expect(container.querySelectorAll('br')).toHaveLength(2)
+    expect(container.querySelectorAll('br')).toHaveLength(1)
+  })
+
+  it('trims edge whitespace while preserving internal spaces', () => {
+    const Test = () => <div>{renderOml('  foo   bar  ')}</div>
+    const { container } = render(<Test />)
+    expect(container.textContent).toBe('foo   bar')
+    const span = container.querySelector('span') as HTMLSpanElement | null
+    expect(span?.style.whiteSpace).toBe('break-spaces')
   })
 })
