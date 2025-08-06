@@ -139,6 +139,13 @@ export function parseOml(input: string): OmlNode[] {
             description: tag.description,
             attrs: tag.attrs
           })
+        } else if (tag.name === 'link') {
+          nodes.push({
+            type: 'link',
+            url: tag.args[0] ?? '',
+            text: tag.args[1] ?? '',
+            description: tag.description
+          })
         } else {
           nodes.push({ type: 'text', text: input.slice(start, end + 1) })
         }

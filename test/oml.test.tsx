@@ -27,6 +27,20 @@ describe('oml parsing', () => {
     ])
   })
 
+  it('parses link tags with url, text, and description', () => {
+    const nodes = parseOml('See [link "Example site" https://example.com Example] now')
+    expect(nodes).toEqual([
+      { type: 'text', text: 'See ' },
+      {
+        type: 'link',
+        url: 'https://example.com',
+        text: 'Example',
+        description: 'Example site'
+      },
+      { type: 'text', text: ' now' }
+    ])
+  })
+
   it('parses if blocks terminated by fi', () => {
     const nodes = parseOml('[if]hit[else]miss[fi]')
     expect(nodes).toMatchObject([
