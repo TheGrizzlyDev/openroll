@@ -136,36 +136,38 @@ export default function CharacterSheet() {
           min={0}
         />
       </label>
-      <label>
-        Armor
-        <NumericInput
-          value={sheet.armor}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            updateField('armor', Number(e.target.value))
-          }
-          min={0}
-        />
-      </label>
-      <label>
-        Omens
-        <NumericInput
-          value={sheet.omens}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            updateField('omens', Number(e.target.value))
-          }
-          min={0}
-        />
-      </label>
-      <label>
-        Silver
-        <NumericInput
-          value={sheet.silver}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            updateField('silver', Number(e.target.value))
-          }
-          min={0}
-        />
-      </label>
+      <div className="secondary-stats">
+        <label>
+          Armor
+          <NumericInput
+            value={sheet.armor}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              updateField('armor', Number(e.target.value))
+            }
+            min={0}
+          />
+        </label>
+        <label>
+          Omens
+          <NumericInput
+            value={sheet.omens}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              updateField('omens', Number(e.target.value))
+            }
+            min={0}
+          />
+        </label>
+        <label>
+          Silver
+          <NumericInput
+            value={sheet.silver}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              updateField('silver', Number(e.target.value))
+            }
+            min={0}
+          />
+        </label>
+      </div>
     </div>
   )
 }

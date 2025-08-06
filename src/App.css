@@ -76,6 +76,16 @@ h1, h2 {
   gap: 0.5rem;
 }
 
+.secondary-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.5rem;
+}
+
+.secondary-stats label {
+  margin-bottom: 0;
+}
+
 .stat {
   display: flex;
   flex-direction: column;
