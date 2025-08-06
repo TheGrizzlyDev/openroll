@@ -1,6 +1,6 @@
 import { render, fireEvent, cleanup } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import CharacterSheet from '../src/morg_borg/CharacterSheet'
+import Notes from '../src/components/Notes'
 import { useGameContext, type GameState } from '../src/GameContext'
 import { createSheet } from '../src/morg_borg/sheet'
 
@@ -23,12 +23,12 @@ afterEach(() => {
   resetStore()
 })
 
-describe('CharacterSheet notes', () => {
+describe('Notes tab', () => {
   it('renders dice in notes and persists', () => {
     resetStore()
     const roll = vi.fn()
     useGameContext.setState({ roll })
-    const { getByText, container } = render(<CharacterSheet />)
+    const { getByText, container } = render(<Notes />)
     fireEvent.click(getByText('Edit'))
     const textarea = container.querySelector('textarea') as HTMLTextAreaElement
     fireEvent.change(textarea, { target: { value: 'Test [dice "1d4" 1d4]' } })

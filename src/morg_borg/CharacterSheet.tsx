@@ -2,7 +2,6 @@ import { useState, type ChangeEvent } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
 import NumericInput from '../components/NumericInput'
-import SmartTextEditor from '../components/SmartTextEditor'
 import { Input } from '../ui/Input'
 import { Select } from '../ui/Select'
 import { Button } from '../ui'
@@ -165,13 +164,6 @@ export default function CharacterSheet() {
             updateField('silver', Number(e.target.value))
           }
           min={0}
-        />
-      </label>
-      <label>
-        Notes
-        <SmartTextEditor
-          value={sheet.notes}
-          onChange={value => updateField('notes', value)}
         />
       </label>
     </div>
