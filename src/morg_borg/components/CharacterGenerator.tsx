@@ -72,6 +72,7 @@ export default function CharacterGenerator() {
           {inventory.map((item: InventoryItem) => (
             <li key={item.id}>
               {item.name}
+              {item.qty > 1 ? ` x${item.qty}` : ''}
               {item.notes ? ` (${item.notes})` : ''}
             </li>
           ))}

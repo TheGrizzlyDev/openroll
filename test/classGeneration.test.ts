@@ -12,4 +12,14 @@ describe('class generation', () => {
       expect(names).toContain(item)
     })
   })
+
+  it('includes default rations and waterskin', () => {
+    const { inventory } = generateCharacter()
+    const rations = inventory.find(i => i.name === 'Rations')
+    const waterskin = inventory.find(i => i.name === 'Waterskin')
+    expect(rations).toBeDefined()
+    expect(waterskin).toBeDefined()
+    expect(rations?.qty).toBeGreaterThanOrEqual(1)
+    expect(rations?.qty).toBeLessThanOrEqual(4)
+  })
 })

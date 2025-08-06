@@ -83,16 +83,19 @@ export function generateCharacter(clsName?: string): GeneratedCharacter {
   })
 
   const baseId = Date.now()
+  const rationsQty = rollTotal('1d4')
   const inventory = [
     { id: baseId, name: weaponResult.name, qty: 1, notes: weaponResult.notes },
-    { id: baseId + 1, name: gearResult, qty: 1, notes: '' }
+    { id: baseId + 1, name: gearResult, qty: 1, notes: '' },
+    { id: baseId + 2, name: 'Rations', qty: rationsQty, notes: '' },
+    { id: baseId + 3, name: 'Waterskin', qty: 1, notes: '' }
   ]
 
+  let nextId = baseId + inventory.length
   if (armorResult.armor > 0) {
-    inventory.push({ id: baseId + 2, name: armorResult.name, qty: 1, notes: '' })
+    inventory.push({ id: nextId++, name: armorResult.name, qty: 1, notes: '' })
   }
 
-  let nextId = baseId + inventory.length
   classData.gear.forEach(name => {
     inventory.push({ id: nextId++, name, qty: 1, notes: '' })
   })
