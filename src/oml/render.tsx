@@ -2,6 +2,7 @@
 import { useGameContext } from '../GameContext'
 import { parseOml, type OmlNode } from './parser'
 import React from 'react'
+import InventoryLookup from '../components/InventoryLookup'
 
 export function renderNodes(nodes: OmlNode[], roll: (_notation: string) => unknown) {
   return nodes.map((node, i) => {
@@ -24,6 +25,15 @@ export function renderNodes(nodes: OmlNode[], roll: (_notation: string) => unkno
         <React.Fragment key={i}>
           {branch ? renderNodes(branch.children, roll) : null}
         </React.Fragment>
+      )
+    }
+    if (node.type === 'inventory') {
+      return (
+        <InventoryLookup
+          key={i}
+          description={node.description}
+          attrs={node.attrs}
+        />
       )
     }
     if (node.type === 'link') {

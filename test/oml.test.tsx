@@ -42,7 +42,9 @@ describe('oml rendering', () => {
 
   it('replaces button label with description when provided', () => {
     const roll = vi.fn()
-    const nodes: OmlNode[] = [{ type: 'dice', notation: '1d4', description: 'a d4' }]
+    const nodes: OmlNode[] = [
+      { type: 'dice', notation: '1d4', description: 'a d4', attrs: {} }
+    ]
     const { getByText } = render(<div>{renderNodes(nodes, roll)}</div>)
     const badge = getByText('a d4')
     fireEvent.click(badge)

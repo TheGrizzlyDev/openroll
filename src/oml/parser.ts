@@ -3,6 +3,7 @@ export type OmlNode =
   | { type: 'link'; url: string; text: string; description?: string }
   | { type: 'dice'; notation: string; description?: string; attrs: Record<string, string> }
   | { type: 'if'; branches: IfBranch[]; description?: string; attrs: Record<string, string> }
+  | { type: 'inventory'; description?: string; attrs: Record<string, string> }
 
 export interface IfBranch {
   type: 'if' | 'elif' | 'else'
@@ -97,6 +98,12 @@ export function parseOml(input: string): OmlNode[] {
           const result = parseIf(tag, i)
           nodes.push(result.node)
           i = result.pos
+        } else if (tag.name === 'inventory') {
+          nodes.push({
+            type: 'inventory',
+            description: tag.args[0],
+            attrs: tag.attrs
+          })
         } else {
           nodes.push({ type: 'text', text: input.slice(start, end + 1) })
         }

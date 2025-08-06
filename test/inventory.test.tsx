@@ -9,6 +9,7 @@ import {
   type GameContextValue
 } from '../src/GameContext'
 import { Sheet } from '../src/morg_borg/sheet'
+import { renderOml } from '../src/oml/render'
 
 const createSimpleSheet = (): Sheet => ({
   name: '',
@@ -248,6 +249,38 @@ describe('Inventory handlers', () => {
     await waitFor(() =>
       expect(firstScroll.classList.contains('dragging')).toBe(false)
     )
+  })
+})
+
+describe('Inventory lookup component', () => {
+  it('filters items by type', () => {
+    const inventory: InventoryItem[] = [
+      { id: 1, name: 'Sword', qty: 1, notes: '' }
+    ]
+    const scrolls: Scroll[] = [
+      { id: 1, type: 'unclean', name: 'Fireball', casts: 1, notes: '' }
+    ]
+    resetStore({ inventory, scrolls })
+    const { getByText, queryByText } = render(
+      <div>{renderOml('[inventory "Show" owned=true type="weapon"]', vi.fn())}</div>
+    )
+    fireEvent.click(getByText('Show'))
+    expect(getByText('Sword')).toBeTruthy()
+    expect(queryByText('Fireball')).toBeNull()
+  })
+
+  it('toggles popup visibility', () => {
+    const inventory: InventoryItem[] = [
+      { id: 1, name: 'Shield', qty: 1, notes: '' }
+    ]
+    resetStore({ inventory })
+    const { getByText, queryByText } = render(
+      <div>{renderOml('[inventory "Open" owned=true type="weapon"]', vi.fn())}</div>
+    )
+    fireEvent.click(getByText('Open'))
+    expect(getByText('Shield')).toBeTruthy()
+    fireEvent.click(getByText('×'))
+    expect(queryByText('Shield')).toBeNull()
   })
 })
 
