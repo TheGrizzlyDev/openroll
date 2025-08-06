@@ -22,7 +22,7 @@ body {
     font-size: 1.25rem;
   }
 
-  body .tabs .base-button {
+  body .tabs button {
     padding: 0.25rem;
     font-size: 0.875rem;
   }
@@ -34,7 +34,7 @@ body {
   }
 
   body .base-input,
-  body .base-button {
+  body button {
     font-size: 0.875rem;
     padding: 0.25rem;
   }

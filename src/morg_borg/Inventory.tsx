@@ -6,6 +6,7 @@ import NumericInput from '../components/NumericInput'
 import SmartTextEditor from '../components/SmartTextEditor'
 import { Input } from '../ui/Input'
 import { Select } from '../ui/Select'
+import { Button } from '../ui'
 import { renderOml } from '../oml/render'
 
 interface SortableItemProps {
@@ -42,8 +43,8 @@ function SortableItem({ item, startEdit, handleDelete }: SortableItemProps) {
           {item.name} ({item.qty})
           {item.notes ? <> - {renderOml(item.notes, roll)}</> : ''}
         </span>
-        <button className="base-button" onClick={() => startEdit(item.id)}>Edit</button>
-        <button className="base-button" onClick={() => handleDelete(item.id)}>Delete</button>
+        <Button onClick={() => startEdit(item.id)}>Edit</Button>
+        <Button onClick={() => handleDelete(item.id)}>Delete</Button>
       </div>
     </li>
   )
@@ -102,9 +103,9 @@ function SortableScroll({
           {scroll.name} [{scroll.type}] ({scroll.casts})
           {scroll.notes ? <> - {renderOml(scroll.notes, roll)}</> : ''}
         </span>
-        <button className="base-button" onClick={() => handleCast(scroll.id)}>Cast</button>
-        <button className="base-button" onClick={() => startEdit(scroll.id)}>Edit</button>
-        <button className="base-button" onClick={() => handleDelete(scroll.id)}>Delete</button>
+        <Button onClick={() => handleCast(scroll.id)}>Cast</Button>
+        <Button onClick={() => startEdit(scroll.id)}>Edit</Button>
+        <Button onClick={() => handleDelete(scroll.id)}>Delete</Button>
       </div>
     </li>
   )
@@ -310,11 +311,11 @@ export default function Inventory() {
         />
         {editingId ? (
           <>
-            <button className="base-button" onClick={handleSave}>Save</button>
-            <button className="base-button" onClick={resetForm}>Cancel</button>
+            <Button onClick={handleSave}>Save</Button>
+            <Button onClick={resetForm}>Cancel</Button>
           </>
         ) : (
-          <button className="base-button" onClick={handleAdd}>Add</button>
+          <Button onClick={handleAdd}>Add</Button>
         )}
       </div>
       <h2>Scrolls</h2>
@@ -364,11 +365,11 @@ export default function Inventory() {
         />
         {editingScrollId ? (
           <>
-            <button className="base-button" onClick={handleSaveScroll}>Save</button>
-            <button className="base-button" onClick={resetScrollForm}>Cancel</button>
+            <Button onClick={handleSaveScroll}>Save</Button>
+            <Button onClick={resetScrollForm}>Cancel</Button>
           </>
         ) : (
-          <button className="base-button" onClick={handleAddScroll}>Add</button>
+          <Button onClick={handleAddScroll}>Add</Button>
         )}
       </div>
     </div>

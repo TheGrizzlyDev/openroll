@@ -3,20 +3,21 @@ import { useGameContext } from '../GameContext'
 import { parseOml, type OmlNode } from './parser'
 import React from 'react'
 import InventoryLookup from '../components/InventoryLookup'
+import { Button } from '../ui'
 
 export function renderNodes(nodes: OmlNode[], roll: (_notation: string) => unknown) {
   return nodes.map((node, i) => {
     if (node.type === 'dice') {
       const label = node.description ?? node.notation
       return (
-        <button
+        <Button
           type="button"
           key={i}
-          className="badge base-button"
+          className="badge"
           onClick={() => roll(node.notation)}
         >
           {label}
-        </button>
+        </Button>
       )
     }
     if (node.type === 'if') {

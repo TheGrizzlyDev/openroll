@@ -1,10 +1,11 @@
 import React from 'react'
+import { Button } from '../ui'
 
 export default function Overlay({ message, visible, onClose }: { message: string; visible: boolean; onClose: () => void }) {
   return (
     <div className={`overlay${visible ? ' show' : ''}`}>
       <span>{message}</span>
-      <button className="base-button" onClick={onClose}>×</button>
+      <Button onClick={onClose}>×</Button>
     </div>
   )
 }

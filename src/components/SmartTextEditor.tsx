@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { renderOml } from '../oml/render'
 import { useGameContext } from '../GameContext'
 import { Textarea } from '../ui'
+import { Button } from '../ui'
 
 interface SmartTextEditorProps {
   value: string
@@ -32,9 +33,9 @@ export default function SmartTextEditor({ value, onChange }: SmartTextEditorProp
         <div>{renderOml(value, roll)}</div>
       )}
       <div className="editor-controls">
-        <button className="base-button" type="button" onClick={handleToggle}>
+        <Button type="button" onClick={handleToggle}>
           {editing ? 'Save' : 'Edit'}
-        </button>
+        </Button>
       </div>
     </div>
   )

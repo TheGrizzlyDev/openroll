@@ -2,6 +2,7 @@ import { useEffect, useState, type ChangeEvent } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
 import { Input } from '../ui/Input'
+import { Button } from '../ui'
 
 interface Preset {
   id: number
@@ -80,14 +81,14 @@ export default function Presets() {
               />
             </div>
             <div className="preset-buttons">
-              <button className="base-button" onClick={() => handleRoll(preset)}>Roll</button>
-              <button className="base-button" onClick={() => removePreset(preset.id)}>Remove</button>
+              <Button onClick={() => handleRoll(preset)}>Roll</Button>
+              <Button onClick={() => removePreset(preset.id)}>Remove</Button>
             </div>
             {preset.error && <span className="error-message">{preset.error}</span>}
           </li>
         ))}
       </ul>
-      <button className="base-button" onClick={addPreset}>Add preset</button>
+      <Button onClick={addPreset}>Add preset</Button>
     </div>
   )
 }

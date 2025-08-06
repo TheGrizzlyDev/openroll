@@ -5,6 +5,7 @@ import NumericInput from '../components/NumericInput'
 import SmartTextEditor from '../components/SmartTextEditor'
 import { Input } from '../ui/Input'
 import { Select } from '../ui/Select'
+import { Button } from '../ui'
 import classes from './classes'
 import type { Sheet } from './sheet'
 
@@ -111,7 +112,7 @@ export default function CharacterSheet() {
             {statDiceErrors[stat] && (
               <span className="error-message">{statDiceErrors[stat]}</span>
             )}
-            <button className="base-button" onClick={() => rollStat(stat)}>Roll</button>
+            <Button onClick={() => rollStat(stat)}>Roll</Button>
           </div>
         ))}
       </div>

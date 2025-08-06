@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useGameContext } from '../GameContext'
 import Overlay from './Overlay'
 import { FileInput } from '../ui/FileInput'
+import { Button } from '../ui'
 
 export default function CharacterSelect() {
   const {
@@ -83,13 +84,13 @@ export default function CharacterSelect() {
       <ul className="character-list">
         {characters.map((c, idx) => (
           <li key={idx}>
-            <button className="base-button" onClick={() => handleLoad(idx)}>{c.name || `Character ${idx + 1}`}</button>
-            <button className="base-button" onClick={() => confirmDelete(idx)}>Delete</button>
+            <Button onClick={() => handleLoad(idx)}>{c.name || `Character ${idx + 1}`}</Button>
+            <Button onClick={() => confirmDelete(idx)}>Delete</Button>
           </li>
         ))}
       </ul>
-      <button className="base-button" onClick={handleCreate}>Create New</button>
-      <button className="base-button" onClick={handleExport}>Export</button>
+      <Button onClick={handleCreate}>Create New</Button>
+      <Button onClick={handleExport}>Export</Button>
       <FileInput accept="application/json" onFileSelect={handleImport}>Import</FileInput>
       <Overlay
         message={overlay.message}

@@ -1,5 +1,6 @@
 import React from 'react'
 import { useGameContext } from '../GameContext'
+import { Button } from '../ui'
 
 export default function LogView() {
   const {
@@ -8,9 +9,9 @@ export default function LogView() {
   } = useGameContext()
   return (
     <div className="log">
-      <button className="base-button" onClick={() => dispatch({ type: 'SET_LOG', log: [] })}>
+      <Button onClick={() => dispatch({ type: 'SET_LOG', log: [] })}>
         Clear Log
-      </button>
+      </Button>
       <ul>
         {log.map((entry, idx) => (
           <li key={idx}>

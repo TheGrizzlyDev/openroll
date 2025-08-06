@@ -7,6 +7,7 @@ import LogView from './LogView'
 import Presets from './Presets'
 import Overlay from './Overlay'
 import { useGameContext } from '../GameContext'
+import { Button } from '../ui'
 
 export default function SheetPage() {
   const {
@@ -32,30 +33,30 @@ export default function SheetPage() {
       <DiceRoller />
 
       <div className="tabs">
-        <button
-          className={`base-button${activeTab === 'character' ? ' active' : ''}`}
+        <Button
+          className={activeTab === 'character' ? 'active' : ''}
           onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'character' })}
         >
           Character
-        </button>
-        <button
-          className={`base-button${activeTab === 'inventory' ? ' active' : ''}`}
+        </Button>
+        <Button
+          className={activeTab === 'inventory' ? 'active' : ''}
           onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'inventory' })}
         >
           Inventory
-        </button>
-        <button
-          className={`base-button${activeTab === 'presets' ? ' active' : ''}`}
+        </Button>
+        <Button
+          className={activeTab === 'presets' ? 'active' : ''}
           onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'presets' })}
         >
           Presets
-        </button>
-        <button
-          className={`base-button${activeTab === 'log' ? ' active' : ''}`}
+        </Button>
+        <Button
+          className={activeTab === 'log' ? 'active' : ''}
           onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'log' })}
         >
           Log
-        </button>
+        </Button>
       </div>
 
       {activeTab === 'character' && (

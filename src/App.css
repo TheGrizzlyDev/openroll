@@ -10,8 +10,7 @@ h1, h2 {
   color: var(--color-text);
 }
 
-.base-input,
-.base-button {
+.base-input {
   background: var(--color-bg-alt);
   color: var(--color-text);
   border: 1px solid var(--color-accent);
@@ -24,7 +23,7 @@ h1, h2 {
   margin-bottom: 0.5rem;
 }
 
-.dice-roller .base-button {
+.dice-roller button {
   width: 100%;
 }
 
@@ -53,13 +52,13 @@ h1, h2 {
   margin-bottom: 1rem;
 }
 
-.tabs .base-button {
+.tabs button {
   flex: 1;
   padding: 0.5rem;
   cursor: pointer;
 }
 
-.tabs .base-button.active {
+.tabs button.active {
   background: var(--color-accent);
   color: var(--color-bg-alt);
 }
@@ -75,7 +74,7 @@ h1, h2 {
   flex-direction: column;
 }
 
-.stat .base-button {
+.stat button {
   margin-top: 0.25rem;
 }
 
@@ -88,13 +87,13 @@ h1, h2 {
   margin-bottom: 0.25rem;
 }
 
-.log .base-button {
+.log button {
   width: auto;
   margin-bottom: 0.5rem;
 }
 
 @media (min-width: 768px) {
-  .dice-roller .base-button {
+  .dice-roller button {
     width: auto;
   }
 }
@@ -129,8 +128,8 @@ h1, h2 {
   gap: 0.5rem;
 }
 
-.inventory-form .base-button,
-.inventory li .base-button {
+.inventory-form button,
+.inventory li button {
   width: auto;
 }
 
@@ -161,7 +160,7 @@ h1, h2 {
   margin-bottom: 0.25rem;
 }
 
-.presets .base-button {
+.presets button {
   width: auto;
 }
 
@@ -170,7 +169,7 @@ h1, h2 {
   gap: 0.25rem;
 }
 
-.preset-buttons .base-button {
+.preset-buttons button {
   flex: 1;
 }
 
@@ -198,7 +197,7 @@ h1, h2 {
   pointer-events: auto;
 }
 
-.overlay .base-button {
+.overlay button {
   width: auto;
 }
 
@@ -214,7 +213,7 @@ h1, h2 {
   margin-bottom: 0.5rem;
 }
 
-.start-screen .base-button {
+.start-screen button {
   width: auto;
 }
 
@@ -233,7 +232,7 @@ h1, h2 {
   gap: 0.5rem;
 }
 
-.smart-text-editor .editor-controls .base-button {
+.smart-text-editor .editor-controls button {
   width: auto;
   cursor: pointer;
 }

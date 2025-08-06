@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useGameContext } from '../GameContext'
+import { Button } from '../ui'
 
 interface InventoryLookupProps {
   description?: string
@@ -26,9 +27,9 @@ export default function InventoryLookup({ description, attrs }: InventoryLookupP
 
   return (
     <>
-      <button type="button" className="badge base-button" onClick={() => setOpen(true)}>
+      <Button type="button" className="badge" onClick={() => setOpen(true)}>
         {description || 'Inventory'}
-      </button>
+      </Button>
       {open && (
         <div className="overlay show">
           <ul>
@@ -36,9 +37,9 @@ export default function InventoryLookup({ description, attrs }: InventoryLookupP
               <li key={item.id}>{item.name}</li>
             ))}
           </ul>
-          <button className="base-button" onClick={() => setOpen(false)}>
+          <Button onClick={() => setOpen(false)}>
             ×
-          </button>
+          </Button>
         </div>
       )}
     </>

@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import type { ChangeEvent } from 'react'
 import { useGameContext } from '../../GameContext'
 import { Select } from '../../ui/Select'
+import { Button } from '../../ui'
 import classes from '../classes'
 import type { InventoryItem, Scroll } from '../generateCharacter'
 
@@ -51,7 +52,7 @@ export default function CharacterGenerator() {
             ))}
           </Select>
         </label>
-        <button className="base-button" onClick={handleRollClass}>Roll Class</button>
+        <Button onClick={handleRollClass}>Roll Class</Button>
       </div>
       <div className="generated-results">
         <p>Class: {sheet.class}</p>
@@ -95,11 +96,11 @@ export default function CharacterGenerator() {
         )}
       </div>
       <div className="actions">
-        <button className="base-button" onClick={() => createCharacter(sheet.class || undefined)}>
+        <Button onClick={() => createCharacter(sheet.class || undefined)}>
           Reroll
-        </button>
-        <button className="base-button" onClick={handleConfirm}>Confirm</button>
-        <button className="base-button" onClick={handleCancel}>Cancel</button>
+        </Button>
+        <Button onClick={handleConfirm}>Confirm</Button>
+        <Button onClick={handleCancel}>Cancel</Button>
       </div>
     </div>
   )
