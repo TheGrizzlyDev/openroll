@@ -13,7 +13,7 @@ describe('SmartTextEditor', () => {
     const roll = vi.fn()
     const onChange = vi.fn()
     useGameContext.setState({ roll })
-    const initial = 'Roll [dice 1d4] now'
+    const initial = 'Roll [dice "1d4" 1d4] now'
     const { getByText, getByRole, queryByRole } = render(
       <SmartTextEditor value={initial} onChange={onChange} />
     )
@@ -22,9 +22,9 @@ describe('SmartTextEditor', () => {
     fireEvent.click(toggle)
     const textarea = getByRole('textbox') as HTMLTextAreaElement
     expect(textarea.value).toBe(initial)
-    fireEvent.change(textarea, { target: { value: 'Say [dice 2d6]' } })
+    fireEvent.change(textarea, { target: { value: 'Say [dice "2d6" 2d6]' } })
     fireEvent.click(getByText('Save'))
-    expect(onChange).toHaveBeenCalledWith('Say [dice 2d6]')
+    expect(onChange).toHaveBeenCalledWith('Say [dice "2d6" 2d6]')
     expect(queryByRole('textbox')).toBeNull()
     getByText('Edit')
   })
@@ -33,7 +33,7 @@ describe('SmartTextEditor', () => {
     const roll = vi.fn()
     useGameContext.setState({ roll })
     const { getByText } = render(
-      <SmartTextEditor value={'Roll [dice 1d4]'} onChange={() => {}} />
+      <SmartTextEditor value={'Roll [dice "1d4" 1d4]'} onChange={() => {}} />
     )
     const badge = getByText('1d4')
     fireEvent.click(badge)

@@ -134,7 +134,7 @@ describe('Inventory handlers', () => {
   it('renders existing scroll notes and rolls dice', () => {
     const roll = vi.fn()
     const scrolls: Scroll[] = [
-      { id: 1, type: 'unclean', name: 'Zap', casts: 1, notes: 'Power [dice 1d6]' }
+      { id: 1, type: 'unclean', name: 'Zap', casts: 1, notes: 'Power [dice "1d6" 1d6]' }
     ]
     resetStore({ scrolls }, { roll })
     const { getByText } = render(<Inventory />)
@@ -160,7 +160,7 @@ describe('Inventory handlers', () => {
     fireEvent.change(getByPlaceholderText('Qty'), { target: { value: '1' } })
     fireEvent.click(getAllByText('Edit')[0])
     const itemTextarea = container.querySelector('textarea') as HTMLTextAreaElement
-    fireEvent.change(itemTextarea, { target: { value: '[dice 1d4] damage' } })
+    fireEvent.change(itemTextarea, { target: { value: '[dice "1d4" 1d4] damage' } })
     fireEvent.click(getAllByText('Save')[0])
     fireEvent.click(getAllByText('Add')[0])
 
@@ -174,7 +174,7 @@ describe('Inventory handlers', () => {
     fireEvent.change(getByPlaceholderText('Casts'), { target: { value: '2' } })
     fireEvent.click(getAllByText('Edit')[1])
     const scrollTextarea = container.querySelector('textarea') as HTMLTextAreaElement
-    fireEvent.change(scrollTextarea, { target: { value: '[dice 1d6] damage' } })
+    fireEvent.change(scrollTextarea, { target: { value: '[dice "1d6" 1d6] damage' } })
     fireEvent.click(getByText('Save'))
     fireEvent.click(getAllByText('Add')[1])
 
@@ -186,7 +186,7 @@ describe('Inventory handlers', () => {
   it('renders dice badges for preloaded item notes', () => {
     const roll = vi.fn()
     const items: InventoryItem[] = [
-      { id: 1, name: 'Sword', qty: 1, notes: '[dice 1d6] damage' }
+      { id: 1, name: 'Sword', qty: 1, notes: '[dice "1d6" 1d6] damage' }
     ]
     resetStore({ inventory: items }, { roll })
     const { getByText } = render(<Inventory />)

@@ -31,7 +31,7 @@ describe('CharacterSheet notes', () => {
     const { getByText, container } = render(<CharacterSheet />)
     fireEvent.click(getByText('Edit'))
     const textarea = container.querySelector('textarea') as HTMLTextAreaElement
-    fireEvent.change(textarea, { target: { value: 'Test [dice 1d4]' } })
+    fireEvent.change(textarea, { target: { value: 'Test [dice "1d4" 1d4]' } })
     fireEvent.click(getByText('Save'))
     const diceBtn = getByText('1d4')
     fireEvent.click(diceBtn)

@@ -21,13 +21,15 @@ interface ParsedTag {
 }
 
 function tokenizeTag(content: string): ParsedTag {
-  const tokens: string[] = []
+  const tokens: { text: string; quoted: boolean }[] = []
   let current = ''
   let quote: string | null = null
   for (let i = 0; i < content.length; i++) {
     const ch = content[i]
     if (quote) {
       if (ch === quote) {
+        tokens.push({ text: current, quoted: true })
+        current = ''
         quote = null
       } else {
         current += ch
@@ -40,30 +42,34 @@ function tokenizeTag(content: string): ParsedTag {
     }
     if (/\s/.test(ch)) {
       if (current) {
-        tokens.push(current)
+        tokens.push({ text: current, quoted: false })
         current = ''
       }
       continue
     }
     current += ch
   }
-  if (current) tokens.push(current)
+  if (current) tokens.push({ text: current, quoted: false })
 
-  const name = tokens.shift()?.toLowerCase() ?? ''
+  const name = tokens.shift()?.text.toLowerCase() ?? ''
+  let description: string | undefined
+  if (tokens[0]?.quoted) {
+    description = tokens.shift()!.text
+  }
+
   const args: string[] = []
   const attrs: Record<string, string> = {}
   for (const token of tokens) {
-    if (/^[^=]+=[^=]+$/.test(token)) {
-      const eq = token.indexOf('=')
-      const key = token.slice(0, eq)
-      const value = token.slice(eq + 1)
+    if (!token.quoted && /^[^=]+=[^=]+$/.test(token.text)) {
+      const eq = token.text.indexOf('=')
+      const key = token.text.slice(0, eq)
+      const value = token.text.slice(eq + 1)
       attrs[key] = value
     } else {
-      args.push(token)
+      args.push(token.text)
     }
   }
 
-  const description = args[1]
   return { name, args, description, attrs }
 }
 
@@ -102,7 +108,7 @@ export function parseOml(input: string): OmlNode[] {
         } else if (tag.name === 'inventory') {
           nodes.push({
             type: 'inventory',
-            description: tag.args[0],
+            description: tag.description,
             attrs: tag.attrs
           })
         } else {

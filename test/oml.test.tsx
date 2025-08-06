@@ -6,7 +6,7 @@ import { useGameContext } from '../src/GameContext'
 
 describe('oml parsing', () => {
   it('tokenizes text and dice tags with descriptions and attrs', () => {
-    const nodes = parseOml('Deal [dice 2d6+3 "fire" kind=burn] damage')
+    const nodes = parseOml('Deal [dice "fire" 2d6+3 kind=burn] damage')
     expect(nodes).toEqual([
       { type: 'text', text: 'Deal ' },
       { type: 'dice', notation: '2d6+3', description: 'fire', attrs: { kind: 'burn' } },
@@ -46,7 +46,7 @@ describe('oml rendering', () => {
   it('renders spans and clickable dice badges', () => {
     const roll = vi.fn()
     useGameContext.setState({ roll })
-    const Test = () => <div>{renderOml('Roll [dice 1d4] now')}</div>
+    const Test = () => <div>{renderOml('Roll [dice "1d4" 1d4] now')}</div>
     const { getByText, container } = render(<Test />)
     const badge = getByText('1d4')
     fireEvent.click(badge)

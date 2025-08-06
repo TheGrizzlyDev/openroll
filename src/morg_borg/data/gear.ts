@@ -18,16 +18,16 @@ export const armor: ArmorEntry[] = [
 ]
 
 export const weapons: WeaponEntry[] = [
-  { name: 'Staff', notes: '[dice 1d4] damage' },
-  { name: 'Dagger', notes: '[dice 1d4] damage' },
-  { name: 'Club', notes: '[dice 1d4] damage' },
-  { name: 'Sword', notes: '[dice 1d6] damage' },
-  { name: 'Axe', notes: '[dice 1d6] damage' },
-  { name: 'Mace', notes: '[dice 1d6] damage' },
-  { name: 'Flail', notes: '[dice 1d8] damage' },
-  { name: 'Polearm', notes: '[dice 1d8] damage' },
-  { name: 'Bow', notes: '[dice 1d6] damage' },
-  { name: 'Crossbow', notes: '[dice 1d8] damage' }
+  { name: 'Staff', notes: '[dice "1d4" 1d4] damage' },
+  { name: 'Dagger', notes: '[dice "1d4" 1d4] damage' },
+  { name: 'Club', notes: '[dice "1d4" 1d4] damage' },
+  { name: 'Sword', notes: '[dice "1d6" 1d6] damage' },
+  { name: 'Axe', notes: '[dice "1d6" 1d6] damage' },
+  { name: 'Mace', notes: '[dice "1d6" 1d6] damage' },
+  { name: 'Flail', notes: '[dice "1d8" 1d8] damage' },
+  { name: 'Polearm', notes: '[dice "1d8" 1d8] damage' },
+  { name: 'Bow', notes: '[dice "1d6" 1d6] damage' },
+  { name: 'Crossbow', notes: '[dice "1d8" 1d8] damage' }
 ]
 
 export const gear = [
@@ -39,7 +39,7 @@ export const gear = [
   'Lantern & oil',
   'Lockpicks',
   'Mirror',
-  'Rations ([dice 1d4] days)',
+  'Rations ([dice "1d4" 1d4] days)',
   'Rope (30ft)',
   'Shovel',
   'Torch'
