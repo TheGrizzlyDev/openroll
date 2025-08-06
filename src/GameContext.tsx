@@ -192,11 +192,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   const createCharacter = () => {
     skipSave.current = true
-    const { sheet: newSheet, inventory: newInv } = generateCharacter()
+    const {
+      sheet: newSheet,
+      inventory: newInv,
+      scrolls: newScrolls
+    } = generateCharacter()
     const index = state.characters.length
     dispatch({ type: 'SET_SHEET', sheet: newSheet })
     dispatch({ type: 'SET_INVENTORY', inventory: newInv })
-    dispatch({ type: 'SET_SCROLLS', scrolls: [] })
+    dispatch({ type: 'SET_SCROLLS', scrolls: newScrolls })
     dispatch({ type: 'SET_CURRENT', current: index })
     navigate('/generator')
   }

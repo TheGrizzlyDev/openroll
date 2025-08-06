@@ -2,6 +2,7 @@ import { DiceRoller, type DiceRoll } from '@dice-roller/rpg-dice-roller'
 import { createSheet } from './sheet'
 import { rollArmor, rollWeapon, rollGear, rollSilver } from './data/gear'
 import { rollTrait, rollBackground } from './data/traits'
+import { rollUncleanScroll, rollSacredScroll } from './data/scrolls'
 
 export interface InventoryItem {
   id: number
@@ -10,9 +11,18 @@ export interface InventoryItem {
   notes: string
 }
 
+export interface Scroll {
+  id: number
+  type: 'unclean' | 'sacred'
+  name: string
+  casts: number
+  notes: string
+}
+
 export interface GeneratedCharacter {
   sheet: ReturnType<typeof createSheet>
   inventory: InventoryItem[]
+  scrolls: Scroll[]
 }
 
 const abilityScoreToModifier = (score: number): number => {
@@ -61,15 +71,25 @@ export function generateCharacter(): GeneratedCharacter {
     background
   }
 
+  const baseId = Date.now()
   const inventory = [
-    { id: Date.now(), name: weaponResult.name, qty: 1, notes: weaponResult.notes },
-    { id: Date.now() + 1, name: gearResult, qty: 1, notes: '' }
+    { id: baseId, name: weaponResult.name, qty: 1, notes: weaponResult.notes },
+    { id: baseId + 1, name: gearResult, qty: 1, notes: '' }
   ]
 
   if (armorResult.armor > 0) {
-    inventory.push({ id: Date.now() + 2, name: armorResult.name, qty: 1, notes: '' })
+    inventory.push({ id: baseId + 2, name: armorResult.name, qty: 1, notes: '' })
   }
 
-  return { sheet, inventory }
+  const scrolls: Scroll[] = []
+  if (stats.pre >= 0) {
+    const scrollType = rollTotal('1d2') === 1 ? 'unclean' : 'sacred'
+    const scrollName =
+      scrollType === 'unclean' ? rollUncleanScroll() : rollSacredScroll()
+    const casts = rollTotal('1d4')
+    scrolls.push({ id: baseId + 3, type: scrollType, name: scrollName, casts, notes: '' })
+  }
+
+  return { sheet, inventory, scrolls }
 }
 

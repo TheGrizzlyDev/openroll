@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom'
 import { useGameContext } from '../../GameContext'
-import type { InventoryItem } from '../generateCharacter'
+import type { InventoryItem, Scroll } from '../generateCharacter'
 
 export default function CharacterGenerator() {
   const {
-    state: { sheet, inventory },
+    state: { sheet, inventory, scrolls },
     createCharacter,
     finalizeCharacter,
     cancelCreation
@@ -32,9 +32,24 @@ export default function CharacterGenerator() {
         <h3>Inventory</h3>
         <ul>
           {inventory.map((item: InventoryItem) => (
-            <li key={item.id}>{item.name}{item.notes ? ` (${item.notes})` : ''}</li>
+            <li key={item.id}>
+              {item.name}
+              {item.notes ? ` (${item.notes})` : ''}
+            </li>
           ))}
         </ul>
+        {scrolls.length > 0 && (
+          <>
+            <h3>Scrolls</h3>
+            <ul>
+              {scrolls.map((scroll: Scroll) => (
+                <li key={scroll.id}>
+                  {scroll.name} [{scroll.type}] ({scroll.casts})
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </div>
       <div className="actions">
         <button onClick={createCharacter}>Reroll</button>

@@ -184,14 +184,14 @@ const storeCreator: StateCreator<
     }), false, 'loadCharacter')
   },
   createCharacter: () => {
-    const { sheet, inventory } = generateCharacter()
+    const { sheet, inventory, scrolls } = generateCharacter()
     const index = get().state.characters.length
     set(({ state }) => ({
       state: {
         ...state,
         sheet,
         inventory,
-        scrolls: [],
+        scrolls,
         current: index
       }
     }), false, 'createCharacter')
