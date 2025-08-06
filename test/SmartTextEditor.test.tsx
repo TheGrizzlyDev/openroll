@@ -18,7 +18,7 @@ vi.mock('@uiw/react-codemirror', () => ({
 afterEach(() => {
   cleanup()
   useGameContext.setState({ roll: vi.fn() })
-  autocompletion.mockClear()
+  vi.mocked(autocompletion).mockClear()
 })
 
 describe('SmartTextEditor', () => {
