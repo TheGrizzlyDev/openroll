@@ -31,7 +31,8 @@ const createSimpleSheet = (): Sheet => ({
   silver: 0,
   trait: '',
   background: '',
-  notes: ''
+  notes: '',
+  conditions: []
 })
 
 const resetStore = (

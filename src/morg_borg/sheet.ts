@@ -19,6 +19,7 @@ export interface Sheet {
   trait: string
   background: string
   notes: string
+  conditions: string[]
 }
 
 export const createSheet = (): Sheet => ({
@@ -41,5 +42,6 @@ export const createSheet = (): Sheet => ({
   silver: 0,
   trait: '',
   background: '',
-  notes: ''
+  notes: '',
+  conditions: []
 })

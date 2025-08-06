@@ -14,6 +14,19 @@ describe('oml parsing', () => {
     ])
   })
 
+  it('parses apply tags with target and attrs', () => {
+    const nodes = parseOml('[apply "fall" hp -1d6 reason=trip]')
+    expect(nodes).toMatchObject([
+      {
+        type: 'apply',
+        description: 'fall',
+        target: 'hp',
+        value: '-1d6',
+        attrs: { reason: 'trip' }
+      }
+    ])
+  })
+
   it('parses if blocks terminated by fi', () => {
     const nodes = parseOml('[if]hit[else]miss[fi]')
     expect(nodes).toMatchObject([
@@ -59,7 +72,9 @@ describe('oml rendering', () => {
     const nodes: OmlNode[] = [
       { type: 'dice', notation: '1d4', description: 'a d4', attrs: {} }
     ]
-    const { getByText } = render(<div>{renderNodes(nodes, roll)}</div>)
+    const { getByText } = render(
+      <div>{renderNodes(nodes, { roll, applyEffect: vi.fn() })}</div>
+    )
     const badge = getByText('a d4')
     fireEvent.click(badge)
     expect(roll).toHaveBeenCalledWith('1d4')
@@ -74,7 +89,9 @@ describe('oml rendering', () => {
         description: 'An example link'
       }
     ]
-    const { getByText } = render(<div>{renderNodes(nodes, vi.fn())}</div>)
+    const { getByText } = render(
+      <div>{renderNodes(nodes, { roll: vi.fn(), applyEffect: vi.fn() })}</div>
+    )
     const link = getByText('An example link') as HTMLAnchorElement
     expect(link.getAttribute('href')).toBe('https://example.com')
   })

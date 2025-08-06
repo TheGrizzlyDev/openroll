@@ -1,11 +1,14 @@
 /* eslint react-refresh/only-export-components: off, react-hooks/rules-of-hooks: off */
 import { useGameContext } from '../GameContext'
-import { parseOml, type OmlNode } from './parser'
+import { parseOml, type OmlNode, type ApplyNode } from './parser'
 import React from 'react'
 import InventoryLookup from '../components/InventoryLookup'
 import { Button } from '../ui'
 
-export function renderNodes(nodes: OmlNode[], roll: (_notation: string) => unknown) {
+export function renderNodes(
+  nodes: OmlNode[],
+  ctx: { roll: (_notation: string) => unknown; applyEffect: (_node: ApplyNode) => unknown }
+) {
   return nodes.map((node, i) => {
     if (node.type === 'dice') {
       const label = node.description ?? node.notation
@@ -14,7 +17,20 @@ export function renderNodes(nodes: OmlNode[], roll: (_notation: string) => unkno
           type="button"
           key={i}
           className="badge"
-          onClick={() => roll(node.notation)}
+          onClick={() => ctx.roll(node.notation)}
+        >
+          {label}
+        </Button>
+      )
+    }
+    if (node.type === 'apply') {
+      const label = node.description ?? `${node.target} ${node.value}`
+      return (
+        <Button
+          type="button"
+          key={i}
+          className="badge"
+          onClick={() => ctx.applyEffect(node)}
         >
           {label}
         </Button>
@@ -46,7 +62,7 @@ export function renderNodes(nodes: OmlNode[], roll: (_notation: string) => unkno
         <React.Fragment key={i}>
           {node.branches.map((br, idx) => (
             <span key={idx} style={idx === active ? undefined : { opacity: 0.5 }}>
-              {renderNodes(br.children, roll)}
+              {renderNodes(br.children, ctx)}
             </span>
           ))}
         </React.Fragment>
@@ -74,9 +90,10 @@ export function renderNodes(nodes: OmlNode[], roll: (_notation: string) => unkno
 }
 
 export function renderOml(text: string, rollFn?: (_notation: string) => unknown) {
-  const doRoll = rollFn ?? useGameContext().roll
+  const { roll, applyEffect } = useGameContext.getState()
+  const doRoll = rollFn ?? roll
   const nodes = parseOml(text)
-  return <>{renderNodes(nodes, doRoll)}</>
+  return <>{renderNodes(nodes, { roll: doRoll, applyEffect })}</>
 }
 
 export { parseOml, type OmlNode } from './parser'

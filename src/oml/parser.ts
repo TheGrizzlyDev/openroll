@@ -4,6 +4,16 @@ export type OmlNode =
   | { type: 'dice'; notation: string; description?: string; attrs: Record<string, string> }
   | { type: 'if'; branches: IfBranch[]; description?: string; attrs: Record<string, string> }
   | { type: 'inventory'; description?: string; attrs: Record<string, string> }
+  | ApplyNode
+
+export interface ApplyNode {
+  type: 'apply'
+  description?: string
+  target: string
+  value: string
+  subject?: string
+  attrs: Record<string, string>
+}
 
 export interface IfBranch {
   type: 'if' | 'elif' | 'else'
@@ -99,6 +109,24 @@ export function parseOml(input: string): OmlNode[] {
             type: 'dice',
             notation: tag.args[0] ?? '',
             description: tag.description,
+            attrs: tag.attrs
+          })
+        } else if (tag.name === 'apply') {
+          const description = tag.args[0]
+          const target = tag.args[1] || ''
+          const rest = tag.args.slice(2)
+          let value = rest[0] || ''
+          let subject: string | undefined
+          if (target === 'item' || target === 'condition') {
+            subject = rest[0]
+            value = rest[1] || ''
+          }
+          nodes.push({
+            type: 'apply',
+            description,
+            target,
+            subject,
+            value,
             attrs: tag.attrs
           })
         } else if (tag.name === 'if') {

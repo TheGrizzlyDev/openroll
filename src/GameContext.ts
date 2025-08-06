@@ -3,6 +3,7 @@ import { devtools, persist, createJSONStorage, type NamedSet } from 'zustand/mid
 import { DiceRoller as DiceParser, type DiceRoll } from '@dice-roller/rpg-dice-roller'
 import { createSheet, type Sheet } from './morg_borg/sheet'
 import { generateCharacter } from './morg_borg/generateCharacter'
+import type { ApplyNode } from './oml/parser'
 
 export interface InventoryItem {
   id: number
@@ -74,6 +75,7 @@ export interface GameContextValue {
   importCharacters: (_data: unknown) => boolean
   roll: (_notation: string, _label?: string) => number
   logInventory: (_message: string) => void
+  applyEffect: (_effect: ApplyNode) => number
 }
 
 const initialState: GameState = {
@@ -272,7 +274,69 @@ const storeCreator: StateCreator<
         ...state,
         log: [{ label: 'Inventory', output: message }, ...state.log]
       }
-    }), false, 'logInventory')
+    }), false, 'logInventory'),
+  applyEffect: effect => {
+    const { target, value, subject, description } = effect
+    const roller = new DiceParser()
+    let amount = 0
+    let output = value
+    if (target !== 'condition') {
+      try {
+        const result = roller.roll(value) as DiceRoll
+        amount = result.total as number
+        output = result.output
+      } catch {
+        amount = Number(value) || 0
+      }
+    }
+    const label = description || subject || target
+    const message = `${label}: ${target === 'condition' ? value : output}`
+    const { overlayTimeout } = get()
+    if (overlayTimeout) clearTimeout(overlayTimeout)
+    const timeout = setTimeout(() => {
+      set(({ state }) => ({
+        state: { ...state, overlay: { ...state.overlay, visible: false } },
+        overlayTimeout: null
+      }), false, 'hideOverlay')
+    }, 10000)
+    set(({ state }) => {
+      const newState = { ...state }
+      if (target === 'hp') {
+        newState.sheet = { ...newState.sheet, hp: newState.sheet.hp + amount }
+      } else if (['str', 'agi', 'pre', 'tou'].includes(target)) {
+        const key = target as 'str' | 'agi' | 'pre' | 'tou'
+        newState.sheet = {
+          ...newState.sheet,
+          [key]: newState.sheet[key] + amount
+        }
+      } else if (target === 'item' && subject) {
+        const items = [...newState.inventory]
+        const idx = items.findIndex(i => i.name === subject)
+        if (idx !== -1) {
+          items[idx] = { ...items[idx], qty: items[idx].qty + amount }
+        } else if (amount > 0) {
+          items.push({ id: Date.now(), name: subject, qty: amount, notes: '' })
+        }
+        newState.inventory = items
+      } else if (target === 'condition' && subject) {
+        const conds = [...(newState.sheet.conditions || [])]
+        if (value === 'remove' || value.startsWith('-')) {
+          const idx = conds.indexOf(subject)
+          if (idx !== -1) conds.splice(idx, 1)
+        } else {
+          if (!conds.includes(subject)) conds.push(subject)
+        }
+        newState.sheet = { ...newState.sheet, conditions: conds }
+      }
+      newState.log = [
+        { label, notation: value, output, total: amount },
+        ...newState.log
+      ]
+      newState.overlay = { message, visible: true }
+      return { state: newState, overlayTimeout: timeout }
+    }, false, 'applyEffect')
+    return amount
+  }
 })
 
 type PersistedState = { state: { characters: Character[]; log: LogEntry[] } }
