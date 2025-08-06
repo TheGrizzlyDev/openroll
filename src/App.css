@@ -1,28 +1,28 @@
 .container {
-  max-width: 800px;
   margin: 0 auto;
+  max-width: 800px;
   padding: 1rem;
 }
 
 h1, h2 {
-  text-align: center;
-  margin: 0.5rem 0;
   color: var(--color-text);
+  margin: 0.5rem 0;
+  text-align: center;
 }
 
 .base-input {
   background: var(--color-bg-alt);
-  color: var(--color-text);
   border: var(--border-width, 1px) solid var(--color-accent);
-  padding: 0.4rem;
-  font-family: inherit;
   border-radius: var(--border-radius, 0);
+  color: var(--color-text);
+  font-family: inherit;
+  padding: 0.4rem;
   transition: box-shadow 0.2s;
 }
 
 .base-input:focus {
-  outline: none;
   box-shadow: 0 0 5px var(--color-accent);
+  outline: none;
 }
 
 .sheet label {
@@ -48,9 +48,9 @@ h1, h2 {
 }
 
 .dice-roller {
+  align-items: center;
   display: flex;
   gap: 0.5rem;
-  align-items: center;
   margin-bottom: 1rem;
 }
 
@@ -60,9 +60,9 @@ h1, h2 {
 }
 
 .tabs button {
+  cursor: pointer;
   flex: 1;
   padding: 0.5rem;
-  cursor: pointer;
 }
 
 .tabs button.active {
@@ -72,14 +72,14 @@ h1, h2 {
 
 .stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
 .secondary-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
 .secondary-stats label {
@@ -105,11 +105,11 @@ h1, h2 {
 }
 
 .log button {
-  width: auto;
   margin-bottom: 0.5rem;
+  width: auto;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .dice-roller button {
     width: auto;
   }
@@ -117,22 +117,22 @@ h1, h2 {
 
 .inventory ul {
   list-style: none;
+  margin: 0 0 0.5rem;
   padding: 0;
-  margin: 0 0 0.5rem 0;
 }
 
 .inventory li {
-  display: flex;
   align-items: center;
+  display: flex;
   gap: 0.5rem;
   margin-bottom: 0.25rem;
 }
 
 .inventory li > div {
-  display: flex;
   align-items: center;
-  gap: 0.5rem;
+  display: flex;
   flex: 1;
+  gap: 0.5rem;
 }
 
 .inventory li > div span {
@@ -159,9 +159,9 @@ h1, h2 {
 
 .drag-handle {
   cursor: grab;
-  width: 1em;
   flex: none;
   touch-action: none;
+  width: 1em;
 }
 
 .inventory li.dragging {
@@ -174,13 +174,13 @@ h1, h2 {
 
 .presets ul {
   list-style: none;
+  margin: 0 0 0.5rem;
   padding: 0;
-  margin: 0 0 0.5rem 0;
 }
 
 .presets li {
-  display: flex;
   align-items: center;
+  display: flex;
   gap: 0.5rem;
   margin-bottom: 0.25rem;
 }
@@ -199,36 +199,33 @@ h1, h2 {
 }
 
 .overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
   align-items: center;
+  animation: overlay-backdrop-hide 0.3s forwards;
+  background: rgb(0 0 0 / 50%);
+  display: flex;
+  inset: 0;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
   opacity: 0;
   pointer-events: none;
+  position: fixed;
   z-index: 10000;
-  animation: overlay-backdrop-hide 0.3s forwards;
 }
 
 .overlay.show {
-  pointer-events: auto;
   animation: overlay-backdrop-show 0.3s forwards;
+  pointer-events: auto;
 }
 
 .overlay-content {
+  align-items: flex-start;
+  animation: overlay-hide 0.3s forwards;
   background: var(--color-bg-alt);
-  color: var(--color-accent);
   border: 1px solid var(--color-accent);
-  padding: 0.5rem 1rem;
+  color: var(--color-accent);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 0.5rem;
-  animation: overlay-hide 0.3s forwards;
+  padding: 0.5rem 1rem;
 }
 
 .overlay.show .overlay-content {
@@ -244,6 +241,7 @@ h1, h2 {
     opacity: 0;
     transform: scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -255,6 +253,7 @@ h1, h2 {
     opacity: 1;
     transform: scale(1);
   }
+
   to {
     opacity: 0;
     transform: scale(0.95);
@@ -265,6 +264,7 @@ h1, h2 {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -274,6 +274,7 @@ h1, h2 {
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
   }
@@ -281,8 +282,8 @@ h1, h2 {
 
 .start-screen ul {
   list-style: none;
+  margin: 0 0 1rem;
   padding: 0;
-  margin: 0 0 1rem 0;
 }
 
 .start-screen li {
@@ -296,10 +297,10 @@ h1, h2 {
 }
 
 .badge {
-  display: inline-block;
-  padding: 0.1rem 0.4rem;
   border-radius: 9999px;
   cursor: pointer;
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
   transition: background 0.2s, color 0.2s;
 }
 
@@ -309,21 +310,21 @@ h1, h2 {
 }
 
 .numeric-input {
-  display: flex;
   align-items: center;
+  display: flex;
   max-width: 5rem;
 }
 
 .numeric-input-button {
   border-radius: 20px;
+  line-height: 1;
   padding: 0.25rem;
   width: 1.5rem;
-  line-height: 1;
 }
 
 .numeric-input-field {
   flex: 1;
-  text-align: center;
   margin: 0 4px;
   max-width: 5rem;
+  text-align: center;
 }

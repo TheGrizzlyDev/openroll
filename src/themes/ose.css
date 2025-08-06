@@ -1,8 +1,8 @@
 :root {
   --color-bg: #f5f5f5;
-  --color-bg-alt: #ffffff;
-  --color-text: #000000;
-  --color-accent: #cc0000;
-  --color-error: #ff0000;
+  --color-bg-alt: #fff;
+  --color-text: #000;
+  --color-accent: #c00;
+  --color-error: #f00;
   --font-body: 'Times New Roman', serif;
 }

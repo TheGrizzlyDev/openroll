@@ -1,14 +1,14 @@
 .button {
   background: var(--color-bg-alt);
-  color: var(--color-accent);
   border: var(--border-width, 1px) solid var(--color-accent);
-  padding: 0.5rem 1rem;
-  font-family: var(--font-body);
+  border-radius: var(--border-radius, 0);
+  color: var(--color-accent);
   cursor: pointer;
-  text-transform: uppercase;
+  font-family: var(--font-body);
   font-weight: 700;
   letter-spacing: 0.05em;
-  border-radius: var(--border-radius, 0);
+  padding: 0.5rem 1rem;
+  text-transform: uppercase;
   transition: background 0.2s, color 0.2s;
 }
 

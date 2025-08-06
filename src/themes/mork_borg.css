@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap');
 
 :root {
-  --color-bg: #000000;
+  --color-bg: #000;
   --color-bg-alt: #1a1a1a;
   --color-text: #f8f003;
-  --color-accent: #ff0066;
-  --color-error: #ff0000;
+  --color-accent: #f06;
+  --color-error: #f00;
   --font-body: 'Metal Mania', cursive;
   --border-width: 2px;
 }
