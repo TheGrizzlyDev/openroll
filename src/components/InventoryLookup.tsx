@@ -31,15 +31,17 @@ export default function InventoryLookup({ description, attrs }: InventoryLookupP
       <Button type="button" className="badge" onClick={() => setOpen(true)}>
         {description || 'Inventory'}
       </Button>
-      <Popup visible={open} onClose={() => setOpen(false)}>
-        <ul>
-          {items.map(item => (
-            <li key={item.id}>
-              <button type="button" onClick={() => setOpen(false)}>{item.name}</button>
-            </li>
-          ))}
-        </ul>
-      </Popup>
+      {open && (
+        <Popup visible={open} onClose={() => setOpen(false)}>
+          <ul>
+            {items.map(item => (
+              <li key={item.id}>
+                <button type="button" onClick={() => setOpen(false)}>{item.name}</button>
+              </li>
+            ))}
+          </ul>
+        </Popup>
+      )}
     </>
   )
 }

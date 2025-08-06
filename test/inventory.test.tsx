@@ -126,13 +126,13 @@ describe('Inventory handlers', () => {
   it('adds scrolls', () => {
     const logInventory = vi.fn()
     resetStore({}, { logInventory })
-    const { getAllByPlaceholderText, getByPlaceholderText, getAllByText, container } = render(<Inventory />)
+    const { getByPlaceholderText, getAllByText, container } = render(<Inventory />)
     fireEvent.click(getAllByText('Add')[1])
-    fireEvent.change(getAllByPlaceholderText('Name')[1], {
+    fireEvent.change(getByPlaceholderText('Name'), {
       target: { value: 'Fireball' }
     })
     fireEvent.change(getByPlaceholderText('Casts'), { target: { value: '3' } })
-    const scrollPopup = container.querySelectorAll('.overlay')[1] as HTMLElement
+    const scrollPopup = container.querySelector('.overlay') as HTMLElement
     const addScrollBtn = within(scrollPopup).getByText('Add')
     fireEvent.click(addScrollBtn)
     const scrolls = useGameContext.getState().state.scrolls
@@ -181,7 +181,7 @@ describe('Inventory handlers', () => {
     expect(roll).toHaveBeenCalledWith('1d4')
 
     fireEvent.click(getAllByText('Add')[1])
-    fireEvent.change(getAllByPlaceholderText('Name')[1], {
+    fireEvent.change(getByPlaceholderText('Name'), {
       target: { value: 'Zap' }
     })
     fireEvent.change(getByPlaceholderText('Casts'), { target: { value: '2' } })
@@ -189,7 +189,7 @@ describe('Inventory handlers', () => {
     const scrollTextarea = container.querySelector('textarea') as HTMLTextAreaElement
     fireEvent.change(scrollTextarea, { target: { value: '[dice "1d6" 1d6] damage' } })
     fireEvent.click(getByText('Save'))
-    const scrollPopup = container.querySelectorAll('.overlay')[1] as HTMLElement
+    const scrollPopup = container.querySelector('.overlay') as HTMLElement
     const addScrollBtn = within(scrollPopup).getByText('Add')
     fireEvent.click(addScrollBtn)
 
@@ -277,10 +277,9 @@ describe('Inventory lookup component', () => {
       <div>{renderOml('[inventory "Open" owned=true type="weapon"]', vi.fn())}</div>
     )
     fireEvent.click(getByText('Open'))
-    const overlay = container.querySelector('.overlay') as HTMLDivElement
     expect(getByText('Shield')).toBeTruthy()
     fireEvent.click(getByText('×'))
-    expect(overlay.classList.contains('show')).toBe(false)
+    expect(container.querySelector('.overlay')).toBeNull()
   })
 })
 

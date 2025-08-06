@@ -92,16 +92,18 @@ export default function CharacterSelect() {
       <Button onClick={handleCreate}>Create New</Button>
       <Button onClick={handleExport}>Export</Button>
       <FileInput accept="application/json" onFileSelect={handleImport}>Import</FileInput>
-      <Popup
-        visible={overlay.visible}
-        onClose={() => {
-          if (overlayTimeout) clearTimeout(overlayTimeout)
-          setOverlayTimeout(null)
-          dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } })
-        }}
-      >
-        <span>{overlay.message}</span>
-      </Popup>
+      {overlay.visible && (
+        <Popup
+          visible={overlay.visible}
+          onClose={() => {
+            if (overlayTimeout) clearTimeout(overlayTimeout)
+            setOverlayTimeout(null)
+            dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } })
+          }}
+        >
+          <span>{overlay.message}</span>
+        </Popup>
+      )}
     </div>
   )
 }

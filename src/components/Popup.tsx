@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button } from '../ui'
 
 interface PopupProps {
@@ -9,6 +9,17 @@ interface PopupProps {
 
 export default function Popup({ visible, onClose, children }: PopupProps) {
   const contentRef = useRef<HTMLDivElement | null>(null)
+  const [show, setShow] = useState(visible)
+
+  useEffect(() => {
+    if (visible) {
+      setShow(true)
+      return
+    }
+
+    const timeout = setTimeout(() => setShow(false), 300)
+    return () => clearTimeout(timeout)
+  }, [visible])
 
   useEffect(() => {
     if (!visible) return
@@ -32,6 +43,8 @@ export default function Popup({ visible, onClose, children }: PopupProps) {
       document.removeEventListener('mousedown', onMouseDown)
     }
   }, [visible, onClose])
+
+  if (!show) return null
 
   return (
     <div className={`overlay${visible ? ' show' : ''}`}>

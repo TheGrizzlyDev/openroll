@@ -38,11 +38,10 @@ describe('InventoryLookup overlay', () => {
       <InventoryLookup description="Inventory" attrs={attrs} />
     )
     fireEvent.click(getByText('Inventory'))
-    const overlay = container.querySelector('.overlay') as HTMLDivElement
     const closeBtn = getByText('×') as HTMLButtonElement
     expect(closeBtn.getAttribute('type')).toBe('button')
     fireEvent.click(closeBtn)
-    expect(overlay.classList.contains('show')).toBe(false)
+    expect(container.querySelector('.overlay')).toBeNull()
   })
 
   it('closes when an item is selected', () => {
@@ -51,9 +50,8 @@ describe('InventoryLookup overlay', () => {
       <InventoryLookup description="Inventory" attrs={attrs} />
     )
     fireEvent.click(getByText('Inventory'))
-    const overlay = container.querySelector('.overlay') as HTMLDivElement
     fireEvent.click(getByText('Sword'))
-    expect(overlay.classList.contains('show')).toBe(false)
+    expect(container.querySelector('.overlay')).toBeNull()
   })
 
   it('closes on Escape key press', () => {
@@ -62,9 +60,8 @@ describe('InventoryLookup overlay', () => {
       <InventoryLookup description="Inventory" attrs={attrs} />
     )
     fireEvent.click(getByText('Inventory'))
-    const overlay = container.querySelector('.overlay') as HTMLDivElement
     fireEvent.keyDown(document, { key: 'Escape' })
-    expect(overlay.classList.contains('show')).toBe(false)
+    expect(container.querySelector('.overlay')).toBeNull()
   })
 
   it('closes on outside click', () => {
@@ -73,9 +70,8 @@ describe('InventoryLookup overlay', () => {
       <InventoryLookup description="Inventory" attrs={attrs} />
     )
     fireEvent.click(getByText('Inventory'))
-    const overlay = container.querySelector('.overlay') as HTMLDivElement
     fireEvent.mouseDown(document.body)
-    expect(overlay.classList.contains('show')).toBe(false)
+    expect(container.querySelector('.overlay')).toBeNull()
   })
 })
 
