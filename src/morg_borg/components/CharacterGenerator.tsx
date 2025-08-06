@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import type { ChangeEvent } from 'react'
 import { useGameContext } from '../../GameContext'
+import { Select } from '../../ui/Select'
 import classes from '../classes'
 import type { InventoryItem, Scroll } from '../generateCharacter'
 
@@ -38,8 +39,7 @@ export default function CharacterGenerator() {
       <div className="class-select">
         <label>
           Class
-          <select
-            className="styled-select base-input"
+          <Select
             value={sheet.class}
             onChange={handleClassChange}
           >
@@ -49,7 +49,7 @@ export default function CharacterGenerator() {
                 {cls}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
         <button className="base-button" onClick={handleRollClass}>Roll Class</button>
       </div>

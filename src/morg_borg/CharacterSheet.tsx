@@ -3,6 +3,7 @@ import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
 import NumericInput from '../components/NumericInput'
 import SmartTextEditor from '../components/SmartTextEditor'
+import { Select } from '../ui/Select'
 import classes from './classes'
 import type { Sheet } from './sheet'
 
@@ -53,8 +54,7 @@ export default function CharacterSheet() {
       </label>
       <label>
         Class
-        <select
-          className="styled-select base-input"
+        <Select
           value={sheet.class}
           onChange={(e: ChangeEvent<HTMLSelectElement>) =>
             updateField('class', e.target.value)
@@ -64,7 +64,7 @@ export default function CharacterSheet() {
           {classes.map(cls => (
             <option key={cls} value={cls}>{cls}</option>
           ))}
-        </select>
+        </Select>
       </label>
 
       <label>

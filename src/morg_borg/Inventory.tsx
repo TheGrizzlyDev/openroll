@@ -4,6 +4,7 @@ import { SortableContext, useSortable, arrayMove } from '@dnd-kit/sortable'
 import { useGameContext, type InventoryItem, type Scroll } from '../GameContext'
 import NumericInput from '../components/NumericInput'
 import SmartTextEditor from '../components/SmartTextEditor'
+import { Select } from '../ui/Select'
 import { renderOml } from '../oml/render'
 
 interface SortableItemProps {
@@ -331,8 +332,7 @@ export default function Inventory() {
         </SortableContext>
       </DndContext>
       <div className="inventory-form">
-        <select
-          className="styled-select base-input"
+        <Select
           value={scrollForm.type}
           onChange={(e: ChangeEvent<HTMLSelectElement>) =>
             handleScrollFormChange('type', e.target.value as ScrollForm['type'])
@@ -340,7 +340,7 @@ export default function Inventory() {
         >
           <option value="unclean">Unclean</option>
           <option value="sacred">Sacred</option>
-        </select>
+        </Select>
         <input
           className="base-input"
           placeholder="Name"
