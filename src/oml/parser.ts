@@ -112,9 +112,9 @@ export function parseOml(input: string): OmlNode[] {
             attrs: tag.attrs
           })
         } else if (tag.name === 'apply') {
-          const description = tag.args[0]
-          const target = tag.args[1] || ''
-          const rest = tag.args.slice(2)
+          const description = tag.description
+          const target = tag.args[0] || ''
+          const rest = tag.args.slice(1)
           let value = rest[0] || ''
           let subject: string | undefined
           if (target === 'item' || target === 'condition') {

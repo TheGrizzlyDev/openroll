@@ -11,7 +11,14 @@
   flex: 1;
   background: var(--color-bg-alt);
   color: var(--color-text);
-  border: 1px solid var(--color-accent);
+  border: var(--border-width, 1px) solid var(--color-accent);
   padding: 0.5rem;
   font-family: var(--font-body);
+  border-radius: var(--border-radius, 0);
+  transition: box-shadow 0.2s;
+}
+
+.select:focus {
+  outline: none;
+  box-shadow: 0 0 5px var(--color-accent);
 }

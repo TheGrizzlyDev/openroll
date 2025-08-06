@@ -1,8 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap');
+
 :root {
   --color-bg: #000000;
-  --color-bg-alt: #111111;
-  --color-text: #f5f5f5;
-  --color-accent: #ffff00;
+  --color-bg-alt: #1a1a1a;
+  --color-text: #f8f003;
+  --color-accent: #ff0066;
   --color-error: #ff0000;
-  --font-body: 'Cinzel', serif;
+  --font-body: 'Metal Mania', cursive;
+  --border-width: 2px;
+}
+
+body {
+  background: var(--color-bg);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--color-bg) 0,
+    var(--color-bg) 10px,
+    var(--color-bg-alt) 10px,
+    var(--color-bg-alt) 20px
+  );
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+body a {
+  color: var(--color-accent);
 }
