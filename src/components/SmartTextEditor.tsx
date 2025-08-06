@@ -17,6 +17,9 @@ export default function SmartTextEditor({ value, onChange }: SmartTextEditorProp
   const { roll } = useGameContext()
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(value)
+  const isMobile =
+    typeof navigator !== 'undefined' &&
+    /Mobi|Android|iP(ad|hone|od)/i.test(navigator.userAgent)
 
   const editorTheme = EditorView.theme({
     '&': {
@@ -52,7 +55,11 @@ export default function SmartTextEditor({ value, onChange }: SmartTextEditorProp
         <CodeMirror
           value={draft}
           height="200px"
-          extensions={[omlLanguage, autocompletion({ override: [omlCompletion] }), editorTheme]}
+          extensions={[
+            omlLanguage,
+            ...(isMobile ? [] : [autocompletion({ override: [omlCompletion] })]),
+            editorTheme
+          ]}
           onChange={value => setDraft(value)}
         />
       ) : (

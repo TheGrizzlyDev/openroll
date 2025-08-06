@@ -2,7 +2,9 @@ import { render, fireEvent, cleanup } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import SmartTextEditor from '../src/components/SmartTextEditor'
 import { useGameContext } from '../src/GameContext'
+import { autocompletion } from '@codemirror/autocomplete'
 
+vi.mock('@codemirror/autocomplete', () => ({ autocompletion: vi.fn(() => ({})) }))
 vi.mock('@uiw/react-codemirror', () => ({
   default: ({
     value,
@@ -16,6 +18,7 @@ vi.mock('@uiw/react-codemirror', () => ({
 afterEach(() => {
   cleanup()
   useGameContext.setState({ roll: vi.fn() })
+  autocompletion.mockClear()
 })
 
 describe('SmartTextEditor', () => {
@@ -48,6 +51,19 @@ describe('SmartTextEditor', () => {
     const badge = getByText('1d4')
     fireEvent.click(badge)
     expect(roll).toHaveBeenCalledWith('1d4')
+  })
+
+  it('disables autocompletion on mobile', () => {
+    const originalUa = navigator.userAgent
+    Object.defineProperty(navigator, 'userAgent', {
+      value: 'Android',
+      configurable: true
+    })
+    render(<SmartTextEditor value="" onChange={() => {}} />)
+    expect(autocompletion).not.toHaveBeenCalled()
+    Object.defineProperty(navigator, 'userAgent', {
+      value: originalUa
+    })
   })
 })
 
