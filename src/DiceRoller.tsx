@@ -1,6 +1,8 @@
 import { useState, type ChangeEvent, type KeyboardEvent } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from './GameContext'
+import { Input } from './ui/Input'
+import { Button } from './ui/Button'
 
 export default function DiceRoller() {
   const { roll } = useGameContext()
@@ -19,7 +21,7 @@ export default function DiceRoller() {
 
   return (
     <div className="dice-roller">
-      <input
+      <Input
         type="text"
         value={notation}
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -33,9 +35,9 @@ export default function DiceRoller() {
           }
         }}
         placeholder="1d20"
-        className={error ? 'base-input error' : 'base-input'}
+        className={error ? 'error' : undefined}
       />
-      <button className="base-button" onClick={handleRoll}>Roll</button>
+      <Button icon="roll" onClick={handleRoll}>Roll</Button>
       {error && <span className="error-message">{error}</span>}
     </div>
   )

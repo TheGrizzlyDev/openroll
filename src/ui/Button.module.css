@@ -1,0 +1,12 @@
+.button {
+  background: var(--color-bg-alt);
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  padding: 0.5rem 1rem;
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+.icon {
+  margin-right: 0.25rem;
+}
