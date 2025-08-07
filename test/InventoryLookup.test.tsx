@@ -32,6 +32,14 @@ describe('InventoryLookup overlay', () => {
   const item: InventoryItem = { id: 1, name: 'Sword', qty: 1, notes: '' }
   const attrs = { owned: 'true', type: 'inventory' }
 
+  it('renders correctly', () => {
+    resetStore()
+    const { container } = render(
+      <InventoryLookup description="Inventory" attrs={attrs} />
+    )
+    expect(container).toMatchSnapshot()
+  })
+
   it('closes when close button clicked', () => {
     resetStore({ inventory: [item] })
     const { getByText, container } = render(

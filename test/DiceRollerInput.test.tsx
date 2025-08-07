@@ -9,6 +9,12 @@ afterEach(() => {
 })
 
 describe('DiceRoller', () => {
+  it('renders correctly', () => {
+    useGameContext.setState({ roll: vi.fn() })
+    const { container } = render(<DiceRoller />)
+    expect(container).toMatchSnapshot()
+  })
+
   it('rolls dice on button click', () => {
     const roll = vi.fn()
     useGameContext.setState({ roll })

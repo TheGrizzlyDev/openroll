@@ -26,6 +26,18 @@ afterEach(() => {
 })
 
 describe('SheetPage navigation', () => {
+  it('renders correctly', () => {
+    setupStore()
+    const { container } = render(
+      <MemoryRouter initialEntries={['/sheet/0']}>
+        <Routes>
+          <Route path="/sheet/:id" element={<SheetPage />} />
+        </Routes>
+      </MemoryRouter>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
   it('switches to notes tab', () => {
     setupStore()
     const { getByText, queryByText } = render(

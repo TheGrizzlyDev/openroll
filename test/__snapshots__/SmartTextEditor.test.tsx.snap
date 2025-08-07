@@ -1,0 +1,21 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SmartTextEditor > renders correctly 1`] = `
+<div>
+  <div
+    class="_editor_1cc5ba"
+  >
+    <div />
+    <div
+      class="_editorControls_1cc5ba"
+    >
+      <button
+        class="_button_60b723 "
+        type="button"
+      >
+        Edit
+      </button>
+    </div>
+  </div>
+</div>
+`;

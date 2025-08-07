@@ -1,0 +1,14 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`apply effect handler > renders correctly 1`] = `
+<div>
+  <div>
+    <button
+      class="_button_60b723 badge"
+      type="button"
+    >
+      Buff
+    </button>
+  </div>
+</div>
+`;

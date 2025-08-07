@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DiceRoller > renders correctly 1`] = `
+<div>
+  <div
+    class="dice-roller"
+  >
+    <div
+      class="_wrapper_013038"
+    >
+      <input
+        class="_input_013038 "
+        placeholder="1d20"
+        type="text"
+        value="1d20"
+      />
+    </div>
+    <button
+      class="_button_60b723 "
+    >
+      Roll
+    </button>
+  </div>
+</div>
+`;

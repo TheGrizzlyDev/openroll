@@ -1,0 +1,472 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SheetPage navigation > renders correctly 1`] = `
+<div>
+  <div
+    class="container"
+  >
+    <h1>
+      Open Roll
+    </h1>
+    <a
+      href="/characters"
+    >
+      Characters
+    </a>
+    <div
+      class="dice-roller"
+    >
+      <div
+        class="_wrapper_013038"
+      >
+        <input
+          class="_input_013038 "
+          placeholder="1d20"
+          type="text"
+          value="1d20"
+        />
+      </div>
+      <button
+        class="_button_60b723 "
+      >
+        Roll
+      </button>
+    </div>
+    <div
+      class="tabs"
+    >
+      <button
+        class="_button_60b723 active"
+      >
+        Character
+      </button>
+      <button
+        class="_button_60b723 "
+      >
+        Inventory
+      </button>
+      <button
+        class="_button_60b723 "
+      >
+        Notes
+      </button>
+      <button
+        class="_button_60b723 "
+      >
+        Log
+      </button>
+    </div>
+    <div
+      class="sheet"
+    >
+      <label>
+        Character
+        <div
+          class="_wrapper_013038"
+        >
+          <input
+            class="_input_013038 "
+            value=""
+          />
+        </div>
+      </label>
+      <label>
+        Class
+        <div
+          class="_wrapper_16bd7a"
+        >
+          <select
+            class="_select_16bd7a "
+          >
+            <option
+              value=""
+            >
+              No class
+            </option>
+            <option
+              value="Fanged Deserter"
+            >
+              Fanged Deserter
+            </option>
+            <option
+              value="Gutterborn Scum"
+            >
+              Gutterborn Scum
+            </option>
+            <option
+              value="Esoteric Hermit"
+            >
+              Esoteric Hermit
+            </option>
+            <option
+              value="Heretical Priest"
+            >
+              Heretical Priest
+            </option>
+            <option
+              value="Occult Herbalist"
+            >
+              Occult Herbalist
+            </option>
+            <option
+              value="Wretched Royalty"
+            >
+              Wretched Royalty
+            </option>
+          </select>
+        </div>
+      </label>
+      <label>
+        Trait
+        <div
+          class="_wrapper_013038"
+        >
+          <input
+            class="_input_013038 "
+            value=""
+          />
+        </div>
+      </label>
+      <label>
+        Background
+        <div
+          class="_wrapper_013038"
+        >
+          <input
+            class="_input_013038 "
+            value=""
+          />
+        </div>
+      </label>
+      <div
+        class="stats"
+      >
+        <div
+          class="stat"
+        >
+          <label>
+            STR
+            <div
+              class="numeric-input"
+            >
+              <button
+                aria-label="Decrease value"
+                class="_button_60b723 numeric-input-button"
+                type="button"
+              >
+                −
+              </button>
+              <input
+                class="numeric-input-field base-input"
+                step="1"
+                type="number"
+                value="0"
+              />
+              <button
+                aria-label="Increase value"
+                class="_button_60b723 numeric-input-button"
+                type="button"
+              >
+                +
+              </button>
+            </div>
+          </label>
+          <div
+            class="_wrapper_013038"
+          >
+            <input
+              class="_input_013038 "
+              placeholder="1d20"
+              value="1d20"
+            />
+          </div>
+          <button
+            class="_button_60b723 "
+          >
+            Roll
+          </button>
+        </div>
+        <div
+          class="stat"
+        >
+          <label>
+            AGI
+            <div
+              class="numeric-input"
+            >
+              <button
+                aria-label="Decrease value"
+                class="_button_60b723 numeric-input-button"
+                type="button"
+              >
+                −
+              </button>
+              <input
+                class="numeric-input-field base-input"
+                step="1"
+                type="number"
+                value="0"
+              />
+              <button
+                aria-label="Increase value"
+                class="_button_60b723 numeric-input-button"
+                type="button"
+              >
+                +
+              </button>
+            </div>
+          </label>
+          <div
+            class="_wrapper_013038"
+          >
+            <input
+              class="_input_013038 "
+              placeholder="1d20"
+              value="1d20"
+            />
+          </div>
+          <button
+            class="_button_60b723 "
+          >
+            Roll
+          </button>
+        </div>
+        <div
+          class="stat"
+        >
+          <label>
+            PRE
+            <div
+              class="numeric-input"
+            >
+              <button
+                aria-label="Decrease value"
+                class="_button_60b723 numeric-input-button"
+                type="button"
+              >
+                −
+              </button>
+              <input
+                class="numeric-input-field base-input"
+                step="1"
+                type="number"
+                value="0"
+              />
+              <button
+                aria-label="Increase value"
+                class="_button_60b723 numeric-input-button"
+                type="button"
+              >
+                +
+              </button>
+            </div>
+          </label>
+          <div
+            class="_wrapper_013038"
+          >
+            <input
+              class="_input_013038 "
+              placeholder="1d20"
+              value="1d20"
+            />
+          </div>
+          <button
+            class="_button_60b723 "
+          >
+            Roll
+          </button>
+        </div>
+        <div
+          class="stat"
+        >
+          <label>
+            TOU
+            <div
+              class="numeric-input"
+            >
+              <button
+                aria-label="Decrease value"
+                class="_button_60b723 numeric-input-button"
+                type="button"
+              >
+                −
+              </button>
+              <input
+                class="numeric-input-field base-input"
+                step="1"
+                type="number"
+                value="0"
+              />
+              <button
+                aria-label="Increase value"
+                class="_button_60b723 numeric-input-button"
+                type="button"
+              >
+                +
+              </button>
+            </div>
+          </label>
+          <div
+            class="_wrapper_013038"
+          >
+            <input
+              class="_input_013038 "
+              placeholder="1d20"
+              value="1d20"
+            />
+          </div>
+          <button
+            class="_button_60b723 "
+          >
+            Roll
+          </button>
+        </div>
+      </div>
+      <label>
+        HP
+        <div
+          class="numeric-input"
+        >
+          <button
+            aria-label="Decrease value"
+            class="_button_60b723 numeric-input-button"
+            type="button"
+          >
+            −
+          </button>
+          <input
+            class="numeric-input-field base-input"
+            min="0"
+            step="1"
+            type="number"
+            value="0"
+          />
+          <button
+            aria-label="Increase value"
+            class="_button_60b723 numeric-input-button"
+            type="button"
+          >
+            +
+          </button>
+        </div>
+      </label>
+      <label>
+        Max HP
+        <div
+          class="numeric-input"
+        >
+          <button
+            aria-label="Decrease value"
+            class="_button_60b723 numeric-input-button"
+            type="button"
+          >
+            −
+          </button>
+          <input
+            class="numeric-input-field base-input"
+            min="0"
+            step="1"
+            type="number"
+            value="0"
+          />
+          <button
+            aria-label="Increase value"
+            class="_button_60b723 numeric-input-button"
+            type="button"
+          >
+            +
+          </button>
+        </div>
+      </label>
+      <div
+        class="secondary-stats"
+      >
+        <label>
+          Armor
+          <div
+            class="numeric-input"
+          >
+            <button
+              aria-label="Decrease value"
+              class="_button_60b723 numeric-input-button"
+              type="button"
+            >
+              −
+            </button>
+            <input
+              class="numeric-input-field base-input"
+              min="0"
+              step="1"
+              type="number"
+              value="0"
+            />
+            <button
+              aria-label="Increase value"
+              class="_button_60b723 numeric-input-button"
+              type="button"
+            >
+              +
+            </button>
+          </div>
+        </label>
+        <label>
+          Omens
+          <div
+            class="numeric-input"
+          >
+            <button
+              aria-label="Decrease value"
+              class="_button_60b723 numeric-input-button"
+              type="button"
+            >
+              −
+            </button>
+            <input
+              class="numeric-input-field base-input"
+              min="0"
+              step="1"
+              type="number"
+              value="0"
+            />
+            <button
+              aria-label="Increase value"
+              class="_button_60b723 numeric-input-button"
+              type="button"
+            >
+              +
+            </button>
+          </div>
+        </label>
+        <label>
+          Silver
+          <div
+            class="numeric-input"
+          >
+            <button
+              aria-label="Decrease value"
+              class="_button_60b723 numeric-input-button"
+              type="button"
+            >
+              −
+            </button>
+            <input
+              class="numeric-input-field base-input"
+              min="0"
+              step="1"
+              type="number"
+              value="0"
+            />
+            <button
+              aria-label="Increase value"
+              class="_button_60b723 numeric-input-button"
+              type="button"
+            >
+              +
+            </button>
+          </div>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;

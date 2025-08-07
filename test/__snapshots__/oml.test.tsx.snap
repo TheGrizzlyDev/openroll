@@ -1,0 +1,24 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`oml rendering > renders correctly 1`] = `
+<div>
+  <div>
+    <span
+      style="white-space: break-spaces;"
+    >
+      Roll 
+    </span>
+    <button
+      class="_button_60b723 badge"
+      type="button"
+    >
+      1d4
+    </button>
+    <span
+      style="white-space: break-spaces;"
+    >
+       now
+    </span>
+  </div>
+</div>
+`;

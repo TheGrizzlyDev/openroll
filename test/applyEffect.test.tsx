@@ -23,6 +23,12 @@ describe('apply effect handler', () => {
   beforeEach(() => setup())
   afterEach(() => cleanup())
 
+  it('renders correctly', () => {
+    const Test = () => <div>{renderOml('[apply "Buff" str +2]')}</div>
+    const { container } = render(<Test />)
+    expect(container).toMatchSnapshot()
+  })
+
   it('applies hp changes', () => {
     setup({ sheet: { ...createSheet(), hp: 10 } })
     const Test = () => <div>{renderOml('[apply "Fall" hp -1]')}</div>

@@ -34,6 +34,12 @@ afterEach(() => {
 })
 
 describe('Notes tab', () => {
+  it('renders correctly', () => {
+    resetStore()
+    const { container } = render(<Notes />)
+    expect(container).toMatchSnapshot()
+  })
+
   it('renders dice in notes and persists', () => {
     resetStore()
     const roll = vi.fn()

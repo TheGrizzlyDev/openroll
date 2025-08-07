@@ -22,6 +22,14 @@ afterEach(() => {
 })
 
 describe('SmartTextEditor', () => {
+  it('renders correctly', () => {
+    useGameContext.setState({ roll: vi.fn() })
+    const { container } = render(
+      <SmartTextEditor value="" onChange={() => {}} />
+    )
+    expect(container).toMatchSnapshot()
+  })
+
   it('switches between modes and saves changes', () => {
     const roll = vi.fn()
     const onChange = vi.fn()
