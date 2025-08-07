@@ -2,6 +2,7 @@ import { useState, type ChangeEvent } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
 import NumericInput from '../components/NumericInput'
+import Popup from '../components/Popup'
 import { Input } from '../ui/Input'
 import { Select } from '../ui/Select'
 import { Button } from '../ui'
@@ -24,19 +25,28 @@ export default function CharacterSheet() {
     pre: '',
     tou: ''
   })
+  const [statDiceValues, setStatDiceValues] = useState<Record<StatKey, string>>({
+    str: sheet.statDice.str || '1d20',
+    agi: sheet.statDice.agi || '1d20',
+    pre: sheet.statDice.pre || '1d20',
+    tou: sheet.statDice.tou || '1d20'
+  })
+  const [editingStat, setEditingStat] = useState<StatKey | null>(null)
 
   const updateField = <K extends keyof Sheet>(field: K, value: Sheet[K]) =>
     dispatch({ type: 'SET_SHEET', sheet: { ...sheet, [field]: value } })
 
-  const updateStatDice = (stat: StatKey, value: string) =>
+  const updateStatDice = (stat: StatKey, value: string) => {
+    setStatDiceValues(prev => ({ ...prev, [stat]: value }))
     dispatch({
       type: 'SET_SHEET',
       sheet: { ...sheet, statDice: { ...sheet.statDice, [stat]: value } }
     })
+  }
 
   const rollStat = (stat: StatKey) => {
     const mod = Number(sheet[stat]) || 0
-    const notation = sheet.statDice[stat] || '1d20'
+    const notation = statDiceValues[stat] || '1d20'
     const fullNotation = mod ? `${notation}${mod >= 0 ? `+${mod}` : mod}` : notation
     try {
       Parser.parse(fullNotation)
@@ -99,22 +109,43 @@ export default function CharacterSheet() {
                 }
               />
             </label>
-            <Input
-              className={statDiceErrors[stat] ? 'error' : undefined}
-              value={sheet.statDice[stat]}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                updateStatDice(stat, e.target.value)
-                setStatDiceErrors(prev => ({ ...prev, [stat]: '' }))
-              }}
-              placeholder="1d20"
+            <Button
+              type="button"
+              icon="dice"
+              onClick={() => rollStat(stat)}
+              aria-label="Roll"
+            />
+            <Button
+              type="button"
+              icon="edit"
+              onClick={() => setEditingStat(stat)}
+              aria-label="Edit notation"
             />
             {statDiceErrors[stat] && (
               <span className="error-message">{statDiceErrors[stat]}</span>
             )}
-            <Button onClick={() => rollStat(stat)}>Roll</Button>
           </div>
         ))}
       </div>
+
+      <Popup visible={editingStat !== null} onClose={() => setEditingStat(null)}>
+        {editingStat && (
+          <>
+            <Input
+              className={statDiceErrors[editingStat] ? 'error' : undefined}
+              value={statDiceValues[editingStat]}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                updateStatDice(editingStat, e.target.value)
+                setStatDiceErrors(prev => ({ ...prev, [editingStat]: '' }))
+              }}
+              placeholder="1d20"
+            />
+            {statDiceErrors[editingStat] && (
+              <span className="error-message">{statDiceErrors[editingStat]}</span>
+            )}
+          </>
+        )}
+      </Popup>
 
       <label>
         HP

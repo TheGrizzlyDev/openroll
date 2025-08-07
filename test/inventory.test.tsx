@@ -72,19 +72,18 @@ afterEach(() => {
 })
 
 describe('Inventory handlers', () => {
-<<<<<<< ours
   it('focuses first input when popup opens', () => {
     resetStore()
     const { getAllByText, getAllByPlaceholderText } = render(<Inventory />)
     fireEvent.click(getAllByText('Add')[0])
     const nameInput = getAllByPlaceholderText('Name')[0]
     expect(document.activeElement).toBe(nameInput)
-=======
+  })
+
   it('renders correctly', () => {
     resetStore()
     const { container } = render(<Inventory />)
     expect(container).toMatchSnapshot()
->>>>>>> theirs
   })
 
   it('adds items', () => {

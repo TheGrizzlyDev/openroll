@@ -9,9 +9,9 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue>({ game: 'default', icons: {} })
 
 const iconsByGame: Record<string, Record<string, ReactNode>> = {
-  default: { roll: '🎲' },
-  mork_borg: { roll: '☠️' },
-  ose: { roll: '⚔️' }
+  default: { roll: '🎲', dice: '🎲', edit: '✎' },
+  mork_borg: { roll: '☠️', dice: '☠️', edit: '✎' },
+  ose: { roll: '⚔️', dice: '⚔️', edit: '✎' }
 }
 
 export function ThemeProvider({ game = 'default', children }: { game?: string; children: ReactNode }) {

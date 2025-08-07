@@ -171,20 +171,16 @@ exports[`SheetPage navigation > renders correctly 1`] = `
               </button>
             </div>
           </label>
-          <div
-            class="_wrapper_013038"
-          >
-            <input
-              class="_input_013038 "
-              placeholder="1d20"
-              value="1d20"
-            />
-          </div>
           <button
+            aria-label="Roll"
             class="_button_60b723 "
-          >
-            Roll
-          </button>
+            type="button"
+          />
+          <button
+            aria-label="Edit notation"
+            class="_button_60b723 "
+            type="button"
+          />
         </div>
         <div
           class="stat"
@@ -216,20 +212,16 @@ exports[`SheetPage navigation > renders correctly 1`] = `
               </button>
             </div>
           </label>
-          <div
-            class="_wrapper_013038"
-          >
-            <input
-              class="_input_013038 "
-              placeholder="1d20"
-              value="1d20"
-            />
-          </div>
           <button
+            aria-label="Roll"
             class="_button_60b723 "
-          >
-            Roll
-          </button>
+            type="button"
+          />
+          <button
+            aria-label="Edit notation"
+            class="_button_60b723 "
+            type="button"
+          />
         </div>
         <div
           class="stat"
@@ -261,20 +253,16 @@ exports[`SheetPage navigation > renders correctly 1`] = `
               </button>
             </div>
           </label>
-          <div
-            class="_wrapper_013038"
-          >
-            <input
-              class="_input_013038 "
-              placeholder="1d20"
-              value="1d20"
-            />
-          </div>
           <button
+            aria-label="Roll"
             class="_button_60b723 "
-          >
-            Roll
-          </button>
+            type="button"
+          />
+          <button
+            aria-label="Edit notation"
+            class="_button_60b723 "
+            type="button"
+          />
         </div>
         <div
           class="stat"
@@ -306,20 +294,16 @@ exports[`SheetPage navigation > renders correctly 1`] = `
               </button>
             </div>
           </label>
-          <div
-            class="_wrapper_013038"
-          >
-            <input
-              class="_input_013038 "
-              placeholder="1d20"
-              value="1d20"
-            />
-          </div>
           <button
+            aria-label="Roll"
             class="_button_60b723 "
-          >
-            Roll
-          </button>
+            type="button"
+          />
+          <button
+            aria-label="Edit notation"
+            class="_button_60b723 "
+            type="button"
+          />
         </div>
       </div>
       <label>

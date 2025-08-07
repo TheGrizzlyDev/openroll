@@ -15,7 +15,7 @@ exports[`Inventory handlers > renders correctly 1`] = `
     </h2>
     <ul />
     <div
-      id="DndDescribedBy-0"
+      id="DndDescribedBy-2"
       style="display: none;"
     >
       
@@ -27,7 +27,7 @@ exports[`Inventory handlers > renders correctly 1`] = `
     <div
       aria-atomic="true"
       aria-live="assertive"
-      id="DndLiveRegion-0"
+      id="DndLiveRegion-2"
       role="status"
       style="position: fixed; top: 0px; left: 0px; width: 1px; height: 1px; margin: -1px; border: 0px; padding: 0px; overflow: hidden; clip-path: inset(100%); white-space: nowrap;"
     />
@@ -43,7 +43,7 @@ exports[`Inventory handlers > renders correctly 1`] = `
       class="scrolls"
     />
     <div
-      id="DndDescribedBy-1"
+      id="DndDescribedBy-3"
       style="display: none;"
     >
       
@@ -55,7 +55,7 @@ exports[`Inventory handlers > renders correctly 1`] = `
     <div
       aria-atomic="true"
       aria-live="assertive"
-      id="DndLiveRegion-1"
+      id="DndLiveRegion-3"
       role="status"
       style="position: fixed; top: 0px; left: 0px; width: 1px; height: 1px; margin: -1px; border: 0px; padding: 0px; overflow: hidden; clip-path: inset(100%); white-space: nowrap;"
     />
