@@ -24,6 +24,11 @@ export default function Popup({ visible, onClose, children }: PopupProps) {
   useEffect(() => {
     if (!visible) return
 
+    const firstInput = contentRef.current?.querySelector<HTMLElement>(
+      'input, textarea, select'
+    )
+    firstInput?.focus()
+
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose()

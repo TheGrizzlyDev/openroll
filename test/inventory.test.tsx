@@ -72,6 +72,14 @@ afterEach(() => {
 })
 
 describe('Inventory handlers', () => {
+  it('focuses first input when popup opens', () => {
+    resetStore()
+    const { getAllByText, getAllByPlaceholderText } = render(<Inventory />)
+    fireEvent.click(getAllByText('Add')[0])
+    const nameInput = getAllByPlaceholderText('Name')[0]
+    expect(document.activeElement).toBe(nameInput)
+  })
+
   it('adds items', () => {
     const logInventory = vi.fn()
     resetStore({}, { logInventory })
