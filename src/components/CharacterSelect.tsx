@@ -39,7 +39,7 @@ export default function CharacterSelect() {
       if (!success) {
         dispatch({
           type: 'SET_OVERLAY',
-          overlay: { message: 'Failed to import characters', visible: true }
+          overlay: { message: 'Failed to import characters', roll: null, visible: true }
         })
       } else {
         let count = 0
@@ -53,6 +53,7 @@ export default function CharacterSelect() {
           type: 'SET_OVERLAY',
           overlay: {
             message: `${count} character${count === 1 ? '' : 's'} imported`,
+            roll: null,
             visible: true
           }
         })

@@ -14,7 +14,7 @@ const setup = (state?: Partial<GameState>) => {
     scrolls: [],
     log: [],
     activeTab: 'character',
-    overlay: { message: '', visible: false },
+    overlay: { message: '', roll: null, visible: false },
     diceStyle: { color: '#ffffff', edgeColor: '#000000', textureUrls: [] }
   }
   useGameContext.setState({ state: { ...base, ...state }, overlayTimeout: null })

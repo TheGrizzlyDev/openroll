@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { useFrame, useLoader } from '@react-three/fiber'
+import { useFrame } from '@react-three/fiber'
 import { Edges } from '@react-three/drei'
 import * as THREE from 'three'
 import { useTheme } from '../theme/ThemeProvider'
@@ -31,8 +31,9 @@ function createGeometry(type: Dice3DProps['type'], size: number) {
 
 function prepareGeometry(geometry: THREE.BufferGeometry) {
   const pos = geometry.attributes.position as THREE.BufferAttribute
-  const indexAttr = geometry.index as THREE.BufferAttribute
-  const index = indexAttr.array as ArrayLike<number>
+  const indexAttr = geometry.index as THREE.BufferAttribute | null
+  const index: ArrayLike<number> =
+    indexAttr?.array ?? Array.from({ length: pos.count }, (_, i) => i)
   const normals: THREE.Vector3[] = []
   const faceForTri: number[] = []
   const map = new Map<string, number>()
@@ -95,7 +96,37 @@ export default function Dice3D({
   const edgeColor = propEdgeColor ?? diceStyle.edgeColor
   const faceTextures = propTextures ?? diceStyle.textureUrls
   const mesh = useRef<THREE.Mesh>(null)
-  const externalTextures = useLoader(THREE.TextureLoader, faceTextures ?? [])
+  const [externalTextures, setExternalTextures] = useState<THREE.Texture[]>([])
+
+  useEffect(() => {
+    if (!faceTextures || faceTextures.length === 0) {
+      setExternalTextures([])
+      return
+    }
+    const loader = new THREE.TextureLoader()
+    loader.crossOrigin = 'anonymous'
+    let cancelled = false
+    Promise.all(
+      faceTextures.map(
+        url =>
+          new Promise<THREE.Texture | null>(resolve => {
+            loader.load(
+              url,
+              tex => resolve(tex),
+              undefined,
+              () => resolve(null)
+            )
+          })
+      )
+    ).then(textures => {
+      if (!cancelled) {
+        setExternalTextures(textures.filter((t): t is THREE.Texture => t !== null))
+      }
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [faceTextures])
 
   const { geometry, orientations, materials } = useMemo(() => {
     const geometry = createGeometry(type, size)

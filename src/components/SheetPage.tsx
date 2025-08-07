@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, type CSSProperties } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import DiceRoller from '../DiceRoller'
 import Inventory from '../morg_borg/Inventory'
@@ -8,6 +8,8 @@ import Notes from './Notes'
 import Popup from './Popup'
 import { useGameContext } from '../GameContext'
 import { Button } from '../ui'
+import { Canvas } from '@react-three/fiber'
+import Dice3D from './Dice3D'
 
 export default function SheetPage() {
   const {
@@ -77,12 +79,44 @@ export default function SheetPage() {
           onClose={() => {
             if (overlayTimeout) clearTimeout(overlayTimeout)
             setOverlayTimeout(null)
-            dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } })
+            dispatch({
+              type: 'SET_OVERLAY',
+              overlay: { ...overlay, visible: false, roll: null }
+            })
           }}
         >
-          <span>{overlay.message}</span>
+          {overlay.roll ? (
+            <>
+              <Canvas
+                style={{ width: 100, height: 100 }}
+                camera={{ position: [0, 0, 3] }}
+              >
+                <ambientLight intensity={0.5} />
+                <pointLight position={[10, 10, 10]} />
+                <Dice3D type={overlay.roll.type} rollResult={overlay.roll.result} />
+              </Canvas>
+              <div>{overlay.roll.result}</div>
+              <span style={srOnly} aria-live="polite">
+                {overlay.roll.result}
+              </span>
+            </>
+          ) : (
+            <span>{overlay.message}</span>
+          )}
         </Popup>
       )}
     </div>
   )
+}
+
+const srOnly: CSSProperties = {
+  position: 'absolute',
+  width: '1px',
+  height: '1px',
+  padding: 0,
+  margin: '-1px',
+  overflow: 'hidden',
+  clip: 'rect(0, 0, 0, 0)',
+  whiteSpace: 'nowrap',
+  border: 0
 }

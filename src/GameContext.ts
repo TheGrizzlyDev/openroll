@@ -34,8 +34,11 @@ export interface Character {
   scrolls: Scroll[]
 }
 
+export type DiceType = 'd4' | 'd6' | 'd8' | 'd12' | 'd20'
+
 export interface OverlayState {
   message: string
+  roll: { type: DiceType; result: number } | null
   visible: boolean
 }
 
@@ -95,7 +98,7 @@ const initialState: GameState = {
   scrolls: [],
   log: [],
   activeTab: 'character',
-  overlay: { message: '', visible: false },
+  overlay: { message: '', roll: null, visible: false },
   diceStyle: { color: '#ffffff', edgeColor: '#000000', textureUrls: [] }
 }
 
@@ -264,21 +267,27 @@ const storeCreator: StateCreator<
   roll: (notation: string, label = '') => {
     const roller = new DiceParser()
     const result = roller.roll(notation) as DiceRoll
-    const entry: LogEntry = { label, notation, output: result.output, total: result.total }
-    const message = `${label ? `${label}: ` : ''}${result.output}`
+    const total = result.total as number
+    const entry: LogEntry = { label, notation, output: result.output, total }
+    const match = notation.match(/d(4|6|8|12|20)/i)
+    const type = match ? (`d${match[1]}` as DiceType) : 'd20'
     const { overlayTimeout } = get()
     if (overlayTimeout) clearTimeout(overlayTimeout)
     const timeout = setTimeout(() => {
       set(({ state }) => ({
-        state: { ...state, overlay: { ...state.overlay, visible: false } },
+        state: { ...state, overlay: { ...state.overlay, visible: false, roll: null } },
         overlayTimeout: null
       }), false, 'hideOverlay')
     }, 10000)
     set(({ state }) => ({
-      state: { ...state, log: [entry, ...state.log], overlay: { message, visible: true } },
+      state: {
+        ...state,
+        log: [entry, ...state.log],
+        overlay: { message: '', roll: { type, result: total }, visible: true }
+      },
       overlayTimeout: timeout
     }), false, 'roll')
-    return result.total as number
+    return total
   },
   logInventory: message =>
     set(({ state }) => ({
@@ -307,7 +316,7 @@ const storeCreator: StateCreator<
     if (overlayTimeout) clearTimeout(overlayTimeout)
     const timeout = setTimeout(() => {
       set(({ state }) => ({
-        state: { ...state, overlay: { ...state.overlay, visible: false } },
+        state: { ...state, overlay: { ...state.overlay, visible: false, roll: null } },
         overlayTimeout: null
       }), false, 'hideOverlay')
     }, 10000)
@@ -363,7 +372,7 @@ const storeCreator: StateCreator<
         { label, notation: value, output, total: amount },
         ...newState.log
       ]
-      newState.overlay = { message, visible: true }
+      newState.overlay = { message, roll: null, visible: true }
       return { state: newState, overlayTimeout: timeout }
     }, false, 'applyEffect')
     return amount

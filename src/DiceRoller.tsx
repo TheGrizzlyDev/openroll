@@ -1,4 +1,9 @@
-import { useState, type ChangeEvent, type KeyboardEvent } from 'react'
+import {
+  useState,
+  type ChangeEvent,
+  type KeyboardEvent,
+  type CSSProperties
+} from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from './GameContext'
 import { Input } from './ui/Input'
@@ -8,11 +13,25 @@ export default function DiceRoller() {
   const { roll } = useGameContext()
   const [notation, setNotation] = useState('1d20')
   const [error, setError] = useState('')
+  const [result, setResult] = useState<number | null>(null)
+
+  const srOnly: CSSProperties = {
+    position: 'absolute',
+    width: '1px',
+    height: '1px',
+    padding: 0,
+    margin: '-1px',
+    overflow: 'hidden',
+    clip: 'rect(0, 0, 0, 0)',
+    whiteSpace: 'nowrap',
+    border: 0
+  }
 
   const handleRoll = () => {
     try {
       Parser.parse(notation)
-      roll(notation)
+      const total = roll(notation)
+      setResult(total)
       setError('')
     } catch {
       setError('Invalid notation')
@@ -35,10 +54,15 @@ export default function DiceRoller() {
           }
         }}
         placeholder="1d20"
-        className={error ? 'error' : undefined}
+      className={error ? 'error' : undefined}
       />
       <Button icon="roll" onClick={handleRoll}>Roll</Button>
       {error && <span className="error-message">{error}</span>}
+      {result !== null && (
+        <span style={srOnly} aria-live="polite">
+          {result}
+        </span>
+      )}
     </div>
   )
 }
