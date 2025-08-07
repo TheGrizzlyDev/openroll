@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame, useLoader } from '@react-three/fiber'
 import { Edges } from '@react-three/drei'
 import * as THREE from 'three'
+import { useTheme } from '../theme/ThemeProvider'
 
 export interface Dice3DProps {
   type?: 'd4' | 'd6' | 'd8' | 'd12' | 'd20'
@@ -84,11 +85,15 @@ function generateDefaultTextures(count: number, color: string) {
 export default function Dice3D({
   type = 'd6',
   rollResult = 1,
-  color = '#ffffff',
-  edgeColor = '#000000',
-  faceTextures,
+  color: propColor,
+  edgeColor: propEdgeColor,
+  faceTextures: propTextures,
   size = 1
 }: Dice3DProps) {
+  const { diceStyle } = useTheme()
+  const color = propColor ?? diceStyle.color
+  const edgeColor = propEdgeColor ?? diceStyle.edgeColor
+  const faceTextures = propTextures ?? diceStyle.textureUrls
   const mesh = useRef<THREE.Mesh>(null)
   const externalTextures = useLoader(THREE.TextureLoader, faceTextures ?? [])
 

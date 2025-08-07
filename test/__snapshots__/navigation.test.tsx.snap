@@ -139,171 +139,187 @@ exports[`SheetPage navigation > renders correctly 1`] = `
         </div>
       </label>
       <div
-        class="stats"
+        class="_grid_722138"
       >
         <div
-          class="stat"
+          class="_stat_722138"
         >
           <label>
             STR
             <div
-              class="numeric-input"
+              class="_controls_722138"
             >
-              <button
-                aria-label="Decrease value"
-                class="_button_60b723 numeric-input-button"
-                type="button"
+              <div
+                class="numeric-input"
               >
-                −
-              </button>
-              <input
-                class="numeric-input-field base-input"
-                step="1"
-                type="number"
-                value="0"
+                <button
+                  aria-label="Decrease value"
+                  class="_button_60b723 numeric-input-button"
+                  type="button"
+                >
+                  −
+                </button>
+                <input
+                  class="numeric-input-field base-input"
+                  step="1"
+                  type="number"
+                  value="0"
+                />
+                <button
+                  aria-label="Increase value"
+                  class="_button_60b723 numeric-input-button"
+                  type="button"
+                >
+                  +
+                </button>
+              </div>
+              <button
+                aria-label="Roll"
+                class="_button_60b723 _iconButton_722138"
+                type="button"
               />
               <button
-                aria-label="Increase value"
-                class="_button_60b723 numeric-input-button"
+                aria-label="Edit notation"
+                class="_button_60b723 _iconButton_722138 _edit_722138"
                 type="button"
-              >
-                +
-              </button>
+              />
             </div>
           </label>
-          <button
-            aria-label="Roll"
-            class="_button_60b723 "
-            type="button"
-          />
-          <button
-            aria-label="Edit notation"
-            class="_button_60b723 "
-            type="button"
-          />
         </div>
         <div
-          class="stat"
+          class="_stat_722138"
         >
           <label>
             AGI
             <div
-              class="numeric-input"
+              class="_controls_722138"
             >
-              <button
-                aria-label="Decrease value"
-                class="_button_60b723 numeric-input-button"
-                type="button"
+              <div
+                class="numeric-input"
               >
-                −
-              </button>
-              <input
-                class="numeric-input-field base-input"
-                step="1"
-                type="number"
-                value="0"
+                <button
+                  aria-label="Decrease value"
+                  class="_button_60b723 numeric-input-button"
+                  type="button"
+                >
+                  −
+                </button>
+                <input
+                  class="numeric-input-field base-input"
+                  step="1"
+                  type="number"
+                  value="0"
+                />
+                <button
+                  aria-label="Increase value"
+                  class="_button_60b723 numeric-input-button"
+                  type="button"
+                >
+                  +
+                </button>
+              </div>
+              <button
+                aria-label="Roll"
+                class="_button_60b723 _iconButton_722138"
+                type="button"
               />
               <button
-                aria-label="Increase value"
-                class="_button_60b723 numeric-input-button"
+                aria-label="Edit notation"
+                class="_button_60b723 _iconButton_722138 _edit_722138"
                 type="button"
-              >
-                +
-              </button>
+              />
             </div>
           </label>
-          <button
-            aria-label="Roll"
-            class="_button_60b723 "
-            type="button"
-          />
-          <button
-            aria-label="Edit notation"
-            class="_button_60b723 "
-            type="button"
-          />
         </div>
         <div
-          class="stat"
+          class="_stat_722138"
         >
           <label>
             PRE
             <div
-              class="numeric-input"
+              class="_controls_722138"
             >
-              <button
-                aria-label="Decrease value"
-                class="_button_60b723 numeric-input-button"
-                type="button"
+              <div
+                class="numeric-input"
               >
-                −
-              </button>
-              <input
-                class="numeric-input-field base-input"
-                step="1"
-                type="number"
-                value="0"
+                <button
+                  aria-label="Decrease value"
+                  class="_button_60b723 numeric-input-button"
+                  type="button"
+                >
+                  −
+                </button>
+                <input
+                  class="numeric-input-field base-input"
+                  step="1"
+                  type="number"
+                  value="0"
+                />
+                <button
+                  aria-label="Increase value"
+                  class="_button_60b723 numeric-input-button"
+                  type="button"
+                >
+                  +
+                </button>
+              </div>
+              <button
+                aria-label="Roll"
+                class="_button_60b723 _iconButton_722138"
+                type="button"
               />
               <button
-                aria-label="Increase value"
-                class="_button_60b723 numeric-input-button"
+                aria-label="Edit notation"
+                class="_button_60b723 _iconButton_722138 _edit_722138"
                 type="button"
-              >
-                +
-              </button>
+              />
             </div>
           </label>
-          <button
-            aria-label="Roll"
-            class="_button_60b723 "
-            type="button"
-          />
-          <button
-            aria-label="Edit notation"
-            class="_button_60b723 "
-            type="button"
-          />
         </div>
         <div
-          class="stat"
+          class="_stat_722138"
         >
           <label>
             TOU
             <div
-              class="numeric-input"
+              class="_controls_722138"
             >
-              <button
-                aria-label="Decrease value"
-                class="_button_60b723 numeric-input-button"
-                type="button"
+              <div
+                class="numeric-input"
               >
-                −
-              </button>
-              <input
-                class="numeric-input-field base-input"
-                step="1"
-                type="number"
-                value="0"
+                <button
+                  aria-label="Decrease value"
+                  class="_button_60b723 numeric-input-button"
+                  type="button"
+                >
+                  −
+                </button>
+                <input
+                  class="numeric-input-field base-input"
+                  step="1"
+                  type="number"
+                  value="0"
+                />
+                <button
+                  aria-label="Increase value"
+                  class="_button_60b723 numeric-input-button"
+                  type="button"
+                >
+                  +
+                </button>
+              </div>
+              <button
+                aria-label="Roll"
+                class="_button_60b723 _iconButton_722138"
+                type="button"
               />
               <button
-                aria-label="Increase value"
-                class="_button_60b723 numeric-input-button"
+                aria-label="Edit notation"
+                class="_button_60b723 _iconButton_722138 _edit_722138"
                 type="button"
-              >
-                +
-              </button>
+              />
             </div>
           </label>
-          <button
-            aria-label="Roll"
-            class="_button_60b723 "
-            type="button"
-          />
-          <button
-            aria-label="Edit notation"
-            class="_button_60b723 "
-            type="button"
-          />
         </div>
       </div>
       <label>

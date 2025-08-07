@@ -5,7 +5,7 @@ import NumericInput from '../components/NumericInput'
 import Popup from '../components/Popup'
 import { Input } from '../ui/Input'
 import { Select } from '../ui/Select'
-import { Button } from '../ui'
+import StatGrid from './StatGrid'
 import classes from './classes'
 import type { Sheet } from './sheet'
 
@@ -57,6 +57,8 @@ export default function CharacterSheet() {
     }
   }
 
+  const handleSetEditingStat = (stat: StatKey) => setEditingStat(stat)
+
   return (
     <div className="sheet">
       <label>
@@ -97,36 +99,13 @@ export default function CharacterSheet() {
         />
       </label>
 
-      <div className="stats">
-        {(['str', 'agi', 'pre', 'tou'] as Array<StatKey>).map(stat => (
-          <div key={stat} className="stat">
-            <label>
-              {stat.toUpperCase()}
-              <NumericInput
-                value={sheet[stat]}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  updateField(stat, Number(e.target.value))
-                }
-              />
-            </label>
-            <Button
-              type="button"
-              icon="dice"
-              onClick={() => rollStat(stat)}
-              aria-label="Roll"
-            />
-            <Button
-              type="button"
-              icon="edit"
-              onClick={() => setEditingStat(stat)}
-              aria-label="Edit notation"
-            />
-            {statDiceErrors[stat] && (
-              <span className="error-message">{statDiceErrors[stat]}</span>
-            )}
-          </div>
-        ))}
-      </div>
+      <StatGrid
+        sheet={sheet}
+        statDiceErrors={statDiceErrors}
+        updateField={updateField}
+        rollStat={rollStat}
+        setEditingStat={handleSetEditingStat}
+      />
 
       <Popup visible={editingStat !== null} onClose={() => setEditingStat(null)}>
         {editingStat && (

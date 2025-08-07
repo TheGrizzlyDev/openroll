@@ -4,6 +4,7 @@ import { useGameContext } from '../GameContext'
 import Popup from './Popup'
 import { FileInput } from '../ui/FileInput'
 import { Button } from '../ui'
+import DiceStyleSelector from './DiceStyleSelector'
 
 export default function CharacterSelect() {
   const {
@@ -92,6 +93,7 @@ export default function CharacterSelect() {
       <Button onClick={handleCreate}>Create New</Button>
       <Button onClick={handleExport}>Export</Button>
       <FileInput accept="application/json" onFileSelect={handleImport}>Import</FileInput>
+      <DiceStyleSelector />
       {overlay.visible && (
         <Popup
           visible={overlay.visible}

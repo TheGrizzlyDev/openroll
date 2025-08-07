@@ -39,6 +39,12 @@ export interface OverlayState {
   visible: boolean
 }
 
+export interface DiceStyle {
+  color: string
+  edgeColor: string
+  textureUrls: string[]
+}
+
 export interface GameState {
   characters: Character[]
   current: number | null
@@ -48,6 +54,7 @@ export interface GameState {
   log: LogEntry[]
   activeTab: string
   overlay: OverlayState
+  diceStyle: DiceStyle
 }
 
 export type GameAction =
@@ -60,6 +67,7 @@ export type GameAction =
   | { type: 'SET_LOG'; log: LogEntry[] }
   | { type: 'SET_ACTIVE_TAB'; tab: string }
   | { type: 'SET_OVERLAY'; overlay: OverlayState }
+  | { type: 'SET_DICE_STYLE'; diceStyle: DiceStyle }
 
 export interface GameContextValue {
   state: GameState
@@ -76,6 +84,7 @@ export interface GameContextValue {
   roll: (_notation: string, _label?: string) => number
   logInventory: (_message: string) => void
   applyEffect: (_effect: ApplyNode) => number
+  setDiceStyle: (_style: DiceStyle) => void
 }
 
 const initialState: GameState = {
@@ -86,7 +95,8 @@ const initialState: GameState = {
   scrolls: [],
   log: [],
   activeTab: 'character',
-  overlay: { message: '', visible: false }
+  overlay: { message: '', visible: false },
+  diceStyle: { color: '#ffffff', edgeColor: '#000000', textureUrls: [] }
 }
 
 const reducer = (state: GameState, action: GameAction): GameState => {
@@ -157,6 +167,8 @@ const reducer = (state: GameState, action: GameAction): GameState => {
       return { ...state, activeTab: action.tab }
     case 'SET_OVERLAY':
       return { ...state, overlay: action.overlay }
+    case 'SET_DICE_STYLE':
+      return { ...state, diceStyle: action.diceStyle }
     default:
       return state
   }
@@ -355,16 +367,24 @@ const storeCreator: StateCreator<
       return { state: newState, overlayTimeout: timeout }
     }, false, 'applyEffect')
     return amount
-  }
+  },
+  setDiceStyle: style =>
+    set(({ state }) => ({ state: { ...state, diceStyle: style } }), false, 'setDiceStyle')
 })
 
-type PersistedState = { state: { characters: Character[]; log: LogEntry[] } }
+type PersistedState = {
+  state: { characters: Character[]; log: LogEntry[]; diceStyle: DiceStyle }
+}
 
 const storeWithPersist = persist(storeCreator, {
   name: 'openroll-store',
   storage: createJSONStorage<PersistedState>(() => localStorage),
   partialize: state => ({
-    state: { characters: state.state.characters, log: state.state.log }
+    state: {
+      characters: state.state.characters,
+      log: state.state.log,
+      diceStyle: state.state.diceStyle
+    }
   }),
   merge: (persistedState, currentState) => ({
     ...currentState,
