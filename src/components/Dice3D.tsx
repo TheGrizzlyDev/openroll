@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Edges } from '@react-three/drei'
+import { Physics, useBox } from '@react-three/cannon/dist/index.js'
 import * as THREE from 'three'
 import { useTheme } from '../theme/ThemeProvider'
 
@@ -11,6 +12,7 @@ export interface Dice3DProps {
   edgeColor?: string
   faceTextures?: string[]
   size?: number
+  speed?: number
 }
 
 function createGeometry(type: Dice3DProps['type'], size: number) {
@@ -83,19 +85,94 @@ function generateDefaultTextures(count: number, color: string) {
   })
 }
 
+interface DiceBodyProps {
+  geometry: THREE.BufferGeometry
+  materials: THREE.Material[]
+  orientations: THREE.Quaternion[]
+  edgeColor: string
+  rollResult: number
+  speed: number
+  size: number
+}
+
+function DiceBody({ geometry, materials, orientations, edgeColor, rollResult, speed, size }: DiceBodyProps) {
+  const [mesh, api] = useBox<THREE.Mesh>(
+    () => ({
+      mass: 1,
+      args: [size, size, size],
+      angularDamping: 0.9,
+      linearDamping: 0.8
+    }),
+    undefined,
+    [size]
+  )
+  const [anim, setAnim] = useState<{
+    start: THREE.Quaternion
+    end: THREE.Quaternion
+    startTime: number
+    duration: number
+  } | null>(null)
+
+  useEffect(() => {
+    if (!orientations.length) return
+    const start = new THREE.Quaternion().setFromEuler(
+      new THREE.Euler(
+        Math.random() * Math.PI * 2,
+        Math.random() * Math.PI * 2,
+        Math.random() * Math.PI * 2
+      )
+    )
+    const end = orientations[(rollResult - 1) % orientations.length]
+    const duration = 0.4 / speed
+    setAnim({ start, end, startTime: performance.now(), duration })
+    api.quaternion.set(start.x, start.y, start.z, start.w)
+    api.applyImpulse(
+      [Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5] as [number, number, number],
+      [0, 0, 0] as [number, number, number]
+    )
+    api.applyTorque([
+      (Math.random() - 0.5) * 5,
+      (Math.random() - 0.5) * 5,
+      (Math.random() - 0.5) * 5
+    ] as [number, number, number])
+  }, [rollResult, orientations, speed, api])
+
+  useFrame(() => {
+    if (!anim) return
+    const elapsed = (performance.now() - anim.startTime) / 1000
+    if (elapsed < anim.duration) {
+      const t = elapsed / anim.duration
+      const q = new THREE.Quaternion()
+      q.slerpQuaternions(anim.start, anim.end, t)
+      api.quaternion.set(q.x, q.y, q.z, q.w)
+    } else {
+      api.quaternion.set(anim.end.x, anim.end.y, anim.end.z, anim.end.w)
+      api.velocity.set(0, 0, 0)
+      api.angularVelocity.set(0, 0, 0)
+      setAnim(null)
+    }
+  })
+
+  return (
+    <mesh ref={mesh} geometry={geometry} material={materials} castShadow receiveShadow>
+      <Edges color={edgeColor} />
+    </mesh>
+  )
+}
+
 export default function Dice3D({
   type = 'd6',
   rollResult = 1,
   color: propColor,
   edgeColor: propEdgeColor,
   faceTextures: propTextures,
-  size = 1
+  size = 1,
+  speed = 1
 }: Dice3DProps) {
   const { diceStyle } = useTheme()
   const color = propColor ?? diceStyle.color
   const edgeColor = propEdgeColor ?? diceStyle.edgeColor
   const faceTextures = propTextures ?? diceStyle.textureUrls
-  const mesh = useRef<THREE.Mesh>(null)
   const [externalTextures, setExternalTextures] = useState<THREE.Texture[]>([])
 
   useEffect(() => {
@@ -138,42 +215,17 @@ export default function Dice3D({
     return { geometry, orientations, materials }
   }, [type, size, color, externalTextures])
 
-  const [anim, setAnim] = useState<{
-    start: THREE.Quaternion
-    end: THREE.Quaternion
-    startTime: number
-  } | null>(null)
-
-  useEffect(() => {
-    if (!orientations.length) return
-    const start = new THREE.Quaternion().setFromEuler(
-      new THREE.Euler(
-        Math.random() * Math.PI * 2,
-        Math.random() * Math.PI * 2,
-        Math.random() * Math.PI * 2
-      )
-    )
-    const end = orientations[(rollResult - 1) % orientations.length]
-    setAnim({ start, end, startTime: performance.now() })
-    mesh.current?.quaternion.copy(start)
-  }, [rollResult, orientations])
-
-  useFrame(() => {
-    if (!anim || !mesh.current) return
-    const elapsed = (performance.now() - anim.startTime) / 1000
-    const duration = 1.2
-    if (elapsed < duration) {
-      const t = elapsed / duration
-      mesh.current.quaternion.slerpQuaternions(anim.start, anim.end, t)
-    } else {
-      mesh.current.quaternion.copy(anim.end)
-      setAnim(null)
-    }
-  })
-
   return (
-    <mesh ref={mesh} geometry={geometry} material={materials} castShadow receiveShadow>
-      <Edges color={edgeColor} />
-    </mesh>
+    <Physics gravity={[0, 0, 0]}>
+      <DiceBody
+        geometry={geometry}
+        materials={materials}
+        orientations={orientations}
+        edgeColor={edgeColor}
+        rollResult={rollResult}
+        speed={speed}
+        size={size}
+      />
+    </Physics>
   )
 }
