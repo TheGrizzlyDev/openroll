@@ -5,18 +5,18 @@ import { useGameContext } from '../src/GameContext'
 
 afterEach(() => {
   cleanup()
-  useGameContext.setState({ roll: vi.fn() })
+  useGameContext.setState({ roll: vi.fn(() => ({ total: 0, output: '' })) })
 })
 
 describe('DiceRoller', () => {
   it('renders correctly', () => {
-    useGameContext.setState({ roll: vi.fn() })
+    useGameContext.setState({ roll: vi.fn(() => ({ total: 0, output: '' })) })
     const { container } = render(<DiceRoller />)
     expect(container).toMatchSnapshot()
   })
 
   it('rolls dice on button click', () => {
-    const roll = vi.fn()
+    const roll = vi.fn(() => ({ total: 0, output: '' }))
     useGameContext.setState({ roll })
     const { getByRole, getByText } = render(<DiceRoller />)
     const input = getByRole('textbox') as HTMLInputElement
@@ -26,7 +26,7 @@ describe('DiceRoller', () => {
   })
 
   it('rolls dice on Enter key press and prevents default', () => {
-    const roll = vi.fn()
+    const roll = vi.fn(() => ({ total: 0, output: '' }))
     useGameContext.setState({ roll })
     const { getByRole } = render(<DiceRoller />)
     const input = getByRole('textbox') as HTMLInputElement

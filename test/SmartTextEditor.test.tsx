@@ -17,13 +17,13 @@ vi.mock('@uiw/react-codemirror', () => ({
 
 afterEach(() => {
   cleanup()
-  useGameContext.setState({ roll: vi.fn() })
+  useGameContext.setState({ roll: vi.fn(() => ({ total: 0, output: '' })) })
   vi.mocked(autocompletion).mockClear()
 })
 
 describe('SmartTextEditor', () => {
   it('renders correctly', () => {
-    useGameContext.setState({ roll: vi.fn() })
+    useGameContext.setState({ roll: vi.fn(() => ({ total: 0, output: '' })) })
     const { container } = render(
       <SmartTextEditor value="" onChange={() => {}} />
     )
@@ -31,7 +31,7 @@ describe('SmartTextEditor', () => {
   })
 
   it('switches between modes and saves changes', () => {
-    const roll = vi.fn()
+    const roll = vi.fn(() => ({ total: 0, output: '' }))
     const onChange = vi.fn()
     useGameContext.setState({ roll })
     const initial = 'Roll [dice "1d4" 1d4] now'
@@ -51,7 +51,7 @@ describe('SmartTextEditor', () => {
   })
 
   it('calls roll when dice badge clicked in visual mode', () => {
-    const roll = vi.fn()
+    const roll = vi.fn(() => ({ total: 0, output: '' }))
     useGameContext.setState({ roll })
     const { getByText } = render(
       <SmartTextEditor value={'Roll [dice "1d4" 1d4]'} onChange={() => {}} />

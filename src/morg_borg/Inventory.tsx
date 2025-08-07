@@ -308,7 +308,7 @@ export default function Inventory() {
   const handleCastScroll = (id: number) => {
     const scroll = scrolls.find(s => s.id === id)
     if (!scroll) return
-    const result = roll(`1d20+${sheet.pre}`, `Cast ${scroll.name}`)
+    const { total: result } = roll(`1d20+${sheet.pre}`, `Cast ${scroll.name}`)
     const success = result >= 12
     const remaining = scroll.casts - 1
     onLog?.(

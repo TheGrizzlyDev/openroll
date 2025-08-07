@@ -84,7 +84,7 @@ export interface GameContextValue {
   deleteCharacter: (_idx: number) => void
   exportCharacters: () => string
   importCharacters: (_data: unknown) => boolean
-  roll: (_notation: string, _label?: string) => number
+  roll: (_notation: string, _label?: string) => { total: number; output: string }
   logInventory: (_message: string) => void
   applyEffect: (_effect: ApplyNode) => number
   setDiceStyle: (_style: DiceStyle) => void
@@ -283,11 +283,11 @@ const storeCreator: StateCreator<
       state: {
         ...state,
         log: [entry, ...state.log],
-        overlay: { message: '', roll: { type, result: total }, visible: true }
+        overlay: { message: result.output, roll: { type, result: total }, visible: true }
       },
       overlayTimeout: timeout
     }), false, 'roll')
-    return total
+    return { total, output: result.output }
   },
   logInventory: message =>
     set(({ state }) => ({

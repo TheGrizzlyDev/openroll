@@ -95,9 +95,9 @@ export default function SheetPage() {
                 <pointLight position={[10, 10, 10]} />
                 <Dice3D type={overlay.roll.type} rollResult={overlay.roll.result} />
               </Canvas>
-              <div>{overlay.roll.result}</div>
+              <div>{overlay.message}</div>
               <span style={srOnly} aria-live="polite">
-                {overlay.roll.result}
+                {overlay.message}
               </span>
             </>
           ) : (

@@ -7,18 +7,19 @@ describe('Dice3D', () => {
   it('renders with provided style props', async () => {
     const fills: string[] = []
     const originalGetContext = HTMLCanvasElement.prototype.getContext
-    HTMLCanvasElement.prototype.getContext = function () {
-      return {
+    HTMLCanvasElement.prototype.getContext = (function (_id?: string) {
+      const ctx = {
         fillStyle: '#000000',
         font: '',
         textAlign: 'center',
         textBaseline: 'middle',
-        fillRect(this: any) { fills.push(this.fillStyle as string) },
+        fillRect() { fills.push(ctx.fillStyle as string) },
         fillText() {},
         clearRect() {},
         getImageData: () => ({ data: new Uint8ClampedArray(4) })
-      } as unknown as CanvasRenderingContext2D
-    }
+      }
+      return ctx as unknown as CanvasRenderingContext2D
+    }) as typeof HTMLCanvasElement.prototype.getContext
 
     const renderer = await ReactThreeTestRenderer.create(
       <Dice3D type="d6" rollResult={1} color="#ff0000" edgeColor="#00ff00" />

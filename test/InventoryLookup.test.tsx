@@ -20,7 +20,7 @@ const resetStore = (state: Partial<GameState> = {}) => {
     state: { ...base, ...state },
     overlayTimeout: null,
     logInventory: vi.fn(),
-    roll: vi.fn()
+    roll: vi.fn(() => ({ total: 0, output: '' }))
   })
 }
 

@@ -13,7 +13,7 @@ export default function DiceRoller() {
   const { roll } = useGameContext()
   const [notation, setNotation] = useState('1d20')
   const [error, setError] = useState('')
-  const [result, setResult] = useState<number | null>(null)
+  const [result, setResult] = useState<{ total: number; output: string } | null>(null)
 
   const srOnly: CSSProperties = {
     position: 'absolute',
@@ -30,8 +30,8 @@ export default function DiceRoller() {
   const handleRoll = () => {
     try {
       Parser.parse(notation)
-      const total = roll(notation)
-      setResult(total)
+      const { total, output } = roll(notation)
+      setResult({ total, output })
       setError('')
     } catch {
       setError('Invalid notation')
@@ -60,7 +60,7 @@ export default function DiceRoller() {
       {error && <span className="error-message">{error}</span>}
       {result !== null && (
         <span style={srOnly} aria-live="polite">
-          {result}
+          {result.output}
         </span>
       )}
     </div>
