@@ -12,26 +12,5 @@ utilities to help run sessions at the table or online.
 - Character generator for creating new heroes quickly.
 - Inventory management with drag and drop.
 - Persistent notes and character sheets.
+- Animated 3D dice rolls with customizable appearance.
 
-## Architecture
-
-OpenRoll is built with React and TypeScript, bundled by Vite. Game state is
-stored using Zustand to keep the UI responsive and predictable.
-
-## Development
-
-Install dependencies and start a local development server:
-
-```bash
-npm run update
-npm run dev
-```
-
-## Build
-
-For continuous integration or production builds:
-
-```bash
-npm run ci-update
-npm run build
-```
