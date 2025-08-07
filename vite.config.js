@@ -54,6 +54,9 @@ export default defineConfig(({ base = '/' }) => ({
       name: 'generate-icons',
       apply: 'build',
       async buildStart() {
+        if (process.env.SKIP_ICONS) {
+          return;
+        }
         console.log('🔧 Generating icons...');
         await generateIcons();
       },
