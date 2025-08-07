@@ -10,6 +10,7 @@ import { useGameContext } from '../GameContext'
 import { Button } from '../ui'
 import { Canvas } from '@react-three/fiber'
 import Dice3D from './Dice3D'
+import DiceTray from './DiceTray'
 
 export default function SheetPage() {
   const {
@@ -89,11 +90,18 @@ export default function SheetPage() {
             <>
               <Canvas
                 style={{ width: 100, height: 100 }}
-                camera={{ position: [0, 0, 3] }}
+                camera={{ position: [0, 5, 5], fov: 50 }}
+                shadows
               >
                 <ambientLight intensity={0.5} />
-                <pointLight position={[10, 10, 10]} />
-                <Dice3D type={overlay.roll.type} rollResult={overlay.roll.result} />
+                <directionalLight position={[5, 10, 5]} />
+                <DiceTray>
+                  <Dice3D
+                    type={overlay.roll.type}
+                    rollResult={overlay.roll.result}
+                    position={[0, 1, 0]}
+                  />
+                </DiceTray>
               </Canvas>
               <div>{overlay.message}</div>
               <span style={srOnly} aria-live="polite">

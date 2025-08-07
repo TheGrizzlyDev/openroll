@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Edges } from '@react-three/drei'
-import { Physics, useBox } from '@react-three/cannon/dist/index.js'
+import { useBox } from '@react-three/cannon/dist/index.js'
 import * as THREE from 'three'
 import { useTheme } from '../theme/ThemeProvider'
 
@@ -13,6 +13,7 @@ export interface Dice3DProps {
   faceTextures?: string[]
   size?: number
   speed?: number
+  position?: [number, number, number]
 }
 
 function createGeometry(type: Dice3DProps['type'], size: number) {
@@ -93,18 +94,20 @@ interface DiceBodyProps {
   rollResult: number
   speed: number
   size: number
+  position: [number, number, number]
 }
 
-function DiceBody({ geometry, materials, orientations, edgeColor, rollResult, speed, size }: DiceBodyProps) {
+function DiceBody({ geometry, materials, orientations, edgeColor, rollResult, speed, size, position }: DiceBodyProps) {
   const [mesh, api] = useBox<THREE.Mesh>(
     () => ({
       mass: 1,
       args: [size, size, size],
       angularDamping: 0.9,
-      linearDamping: 0.8
+      linearDamping: 0.8,
+      position
     }),
     undefined,
-    [size]
+    [size, position]
   )
   const [anim, setAnim] = useState<{
     start: THREE.Quaternion
@@ -167,7 +170,8 @@ export default function Dice3D({
   edgeColor: propEdgeColor,
   faceTextures: propTextures,
   size = 1,
-  speed = 1
+  speed = 1,
+  position = [0, 0, 0]
 }: Dice3DProps) {
   const { diceStyle } = useTheme()
   const color = propColor ?? diceStyle.color
@@ -216,16 +220,15 @@ export default function Dice3D({
   }, [type, size, color, externalTextures])
 
   return (
-    <Physics gravity={[0, 0, 0]}>
-      <DiceBody
-        geometry={geometry}
-        materials={materials}
-        orientations={orientations}
-        edgeColor={edgeColor}
-        rollResult={rollResult}
-        speed={speed}
-        size={size}
-      />
-    </Physics>
+    <DiceBody
+      geometry={geometry}
+      materials={materials}
+      orientations={orientations}
+      edgeColor={edgeColor}
+      rollResult={rollResult}
+      speed={speed}
+      size={size}
+      position={position}
+    />
   )
 }
