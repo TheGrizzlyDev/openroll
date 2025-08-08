@@ -1,7 +1,7 @@
 // Ensure React 18 testing utilities are aware of act environment before imports
 ;(globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true
 
-import ReactThreeTestRenderer from '@react-three/test-renderer'
+import ReactThreeTestRenderer, { ReactThreeTest } from '@react-three/test-renderer'
 import React from 'react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import * as THREE from 'three'
@@ -23,6 +23,15 @@ vi.mock('@react-three/cannon/dist/index.js', () => {
 })
 
 import Dice3D, { Dice3DProps } from '../src/components/Dice3D'
+
+async function createRenderer(el: React.ReactElement, ms = 5000): Promise<ReactThreeTest.Renderer> {
+  return await Promise.race([
+    ReactThreeTestRenderer.create(el),
+    new Promise<ReactThreeTest.Renderer>((_, reject) =>
+      setTimeout(() => reject(new Error('Renderer creation timed out')), ms)
+    ),
+  ])
+}
 
 describe('Dice3D', () => {
   let originalGetContext: typeof HTMLCanvasElement.prototype.getContext
@@ -62,7 +71,7 @@ describe('Dice3D', () => {
       return ctx
     } as unknown as typeof HTMLCanvasElement.prototype.getContext
 
-    const renderer = await ReactThreeTestRenderer.create(
+    const renderer = await createRenderer(
       <Dice3D type="d6" rollResult={1} color="#ff0000" edgeColor="#00ff00" />
     )
     const edges = renderer.scene.children[0].children[0].instance as THREE.LineSegments
@@ -76,7 +85,7 @@ describe('Dice3D', () => {
   it('completes roll within default duration', async () => {
     let now = 0
     const nowSpy = vi.spyOn(performance, 'now').mockImplementation(() => now)
-    const renderer = await ReactThreeTestRenderer.create(<Dice3D rollResult={2} />)
+    const renderer = await createRenderer(<Dice3D rollResult={2} />)
     const mesh = renderer.scene.children[0].instance as THREE.Mesh
     const step = 0.1
     for (let i = 0; i < 4; i++) {
@@ -95,7 +104,7 @@ describe('Dice3D', () => {
   it('respects speed prop', async () => {
     let now = 0
     const nowSpy = vi.spyOn(performance, 'now').mockImplementation(() => now)
-    const renderer = await ReactThreeTestRenderer.create(
+    const renderer = await createRenderer(
       <Dice3D rollResult={2} speed={0.5} />
     )
     const mesh = renderer.scene.children[0].instance as THREE.Mesh
@@ -144,7 +153,7 @@ describe('Dice3D', () => {
     ]
     for (const [type, count] of types) {
       captured.length = 0
-      const renderer = await ReactThreeTestRenderer.create(
+      const renderer = await createRenderer(
         <Dice3D type={type} rollResult={1} />
       )
       expect(captured).toEqual(
