@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react'
 import { useGameContext } from '../GameContext'
-import { Input } from '../design-system'
+import { Input, FormField } from '../design-system'
 
 export default function DiceStyleSelector() {
   const {
@@ -25,23 +25,21 @@ export default function DiceStyleSelector() {
 
   return (
     <div className="dice-style-selector">
-      <label>
-        Dice Color
-        <Input type="color" value={diceStyle.color} onChange={handleColor} />
-      </label>
-      <label>
-        Edge Color
-        <Input type="color" value={diceStyle.edgeColor} onChange={handleEdgeColor} />
-      </label>
-      <label>
-        Texture URLs
+      <FormField label="Dice Color" htmlFor="dice-color">
+        <Input id="dice-color" type="color" value={diceStyle.color} onChange={handleColor} />
+      </FormField>
+      <FormField label="Edge Color" htmlFor="edge-color">
+        <Input id="edge-color" type="color" value={diceStyle.edgeColor} onChange={handleEdgeColor} />
+      </FormField>
+      <FormField label="Texture URLs" htmlFor="texture-urls">
         <Input
+          id="texture-urls"
           type="text"
           value={diceStyle.textureUrls.join(',')}
           onChange={handleTextures}
           placeholder="comma-separated URLs"
         />
-      </label>
+      </FormField>
     </div>
   )
 }

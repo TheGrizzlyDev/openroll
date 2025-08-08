@@ -2,7 +2,7 @@ import { useState, type ChangeEvent } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
 import NumericInput from '../components/NumericInput'
-import { Input, Select, HpBar, Dialog } from '../design-system'
+import { Input, Select, HpBar, FormField, Dialog } from '../design-system'
 import StatGrid from './StatGrid'
 import classes from './classes'
 import type { Sheet } from './sheet'
@@ -59,13 +59,16 @@ export default function CharacterSheet() {
 
   return (
     <div className="sheet">
-      <label>
-        Character
-        <Input value={sheet.name} onChange={(e: ChangeEvent<HTMLInputElement>) => updateField('name', e.target.value)} />
-      </label>
-      <label>
-        Class
+      <FormField label="Character" htmlFor="character">
+        <Input
+          id="character"
+          value={sheet.name}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => updateField('name', e.target.value)}
+        />
+      </FormField>
+      <FormField label="Class" htmlFor="class">
         <Select
+          id="class"
           value={sheet.class}
           onChange={(e: ChangeEvent<HTMLSelectElement>) =>
             updateField('class', e.target.value)
@@ -76,26 +79,26 @@ export default function CharacterSheet() {
             <option key={cls} value={cls}>{cls}</option>
           ))}
         </Select>
-      </label>
+      </FormField>
 
-      <label>
-        Trait
+      <FormField label="Trait" htmlFor="trait">
         <Input
+          id="trait"
           value={sheet.trait}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             updateField('trait', e.target.value)
           }
         />
-      </label>
-      <label>
-        Background
+      </FormField>
+      <FormField label="Background" htmlFor="background">
         <Input
+          id="background"
           value={sheet.background}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             updateField('background', e.target.value)
           }
         />
-      </label>
+      </FormField>
 
       <StatGrid
         sheet={sheet}
@@ -108,18 +111,22 @@ export default function CharacterSheet() {
       <Dialog visible={editingStat !== null} onClose={() => setEditingStat(null)}>
         {editingStat && (
           <>
-            <Input
-              className={statDiceErrors[editingStat] ? 'error' : undefined}
-              value={statDiceValues[editingStat]}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                updateStatDice(editingStat, e.target.value)
-                setStatDiceErrors(prev => ({ ...prev, [editingStat]: '' }))
-              }}
-              placeholder="1d20"
-            />
-            {statDiceErrors[editingStat] && (
-              <span className="error-message">{statDiceErrors[editingStat]}</span>
-            )}
+            <FormField
+              label={`${editingStat.toUpperCase()} Dice`}
+              htmlFor="stat-dice"
+              error={statDiceErrors[editingStat]}
+            >
+              <Input
+                id="stat-dice"
+                className={statDiceErrors[editingStat] ? 'error' : undefined}
+                value={statDiceValues[editingStat]}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  updateStatDice(editingStat, e.target.value)
+                  setStatDiceErrors(prev => ({ ...prev, [editingStat]: '' }))
+                }}
+                placeholder="1d20"
+              />
+            </FormField>
           </>
         )}
       </Dialog>
@@ -131,36 +138,36 @@ export default function CharacterSheet() {
         onMaxHpChange={val => updateField('maxHp', val)}
       />
       <div className="secondary-stats">
-        <label>
-          Armor
+        <FormField label="Armor" htmlFor="armor">
           <NumericInput
+            id="armor"
             value={sheet.armor}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               updateField('armor', Number(e.target.value))
             }
             min={0}
           />
-        </label>
-        <label>
-          Omens
+        </FormField>
+        <FormField label="Omens" htmlFor="omens">
           <NumericInput
+            id="omens"
             value={sheet.omens}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               updateField('omens', Number(e.target.value))
             }
             min={0}
           />
-        </label>
-        <label>
-          Silver
+        </FormField>
+        <FormField label="Silver" htmlFor="silver">
           <NumericInput
+            id="silver"
             value={sheet.silver}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               updateField('silver', Number(e.target.value))
             }
             min={0}
           />
-        </label>
+        </FormField>
       </div>
     </div>
   )

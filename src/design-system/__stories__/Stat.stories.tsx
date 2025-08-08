@@ -6,7 +6,7 @@ const meta: Meta<typeof Stat> = {
   title: 'Design System/Stat',
   component: Stat,
   args: {
-    label: 'STR',
+    id: 'str',
     value: 10,
     onChange: () => {},
     onRoll: () => {},
