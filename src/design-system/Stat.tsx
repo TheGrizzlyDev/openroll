@@ -1,4 +1,4 @@
-import { type ChangeEvent, useRef } from 'react'
+import { type ChangeEvent, useEffect, useRef } from 'react'
 import { Button } from './Button'
 import { Input } from './Input'
 
@@ -12,8 +12,22 @@ interface StatProps {
   onInfo?: () => void
 }
 
-export function Stat({ id, value, onChange, onRoll, onEdit, onRollAdv, onInfo }: StatProps) {
+export function Stat({
+  id,
+  value,
+  onChange,
+  onRoll,
+  onEdit,
+  onRollAdv,
+  onInfo
+}: StatProps) {
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const liveRef = useRef<HTMLDivElement | null>(null)
+
+  // Announce value changes for SR users when using +/- buttons
+  useEffect(() => {
+    if (liveRef.current) liveRef.current.textContent = `${id.toUpperCase()} ${value}`
+  }, [value, id])
 
   const start = () => {
     if (onRollAdv) {
@@ -34,58 +48,123 @@ export function Stat({ id, value, onChange, onRoll, onEdit, onRollAdv, onInfo }:
     }
   }
 
+  const onRollKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    // Enter/Space activate buttons by default; we intercept Shift+Enter for advantage
+    if (e.key === 'Enter' && e.shiftKey && onRollAdv) {
+      e.preventDefault()
+      onRollAdv()
+    } else if (e.key === 'Enter' && !e.shiftKey) {
+      // Let default click happen (or call directly)
+      e.preventDefault()
+      onRoll()
+    }
+  }
+
+  const labelId = `${id}-label`
+  const hintId = `${id}-hint`
+
   return (
-    <div className="group flex items-center gap-1">
+    <div className="group inline-flex items-center gap-2" role="group" aria-labelledby={labelId}>
+      {/* Visual label is optional; we keep it screen-reader only by default */}
+      <span id={labelId} className="sr-only">{id.toUpperCase()} stat</span>
+
+      {/* Info (optional) */}
       {onInfo && (
         <Button
           type="button"
-          aria-label="Info"
+          aria-label={`${id.toUpperCase()} info`}
           onClick={onInfo}
-          className="h-8 w-8 p-1"
+          className="h-10 w-10 p-2 rounded border border-yellow-500 bg-black/70 hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
+          title="Info"
         >
           ℹ️
         </Button>
       )}
+
+      {/* Decrement */}
       <Button
         type="button"
-        aria-label="Decrement"
+        aria-label={`Decrease ${id.toUpperCase()}`}
         onClick={() => onChange(value - 1)}
-        className="h-8 w-8 p-1"
+        className="h-10 w-10 p-0 grid place-items-center rounded border border-yellow-500 bg-black/70 hover:bg-black/50 active:translate-y-px text-yellow-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
+        title={`Decrease ${id.toUpperCase()}`}
       >
         −
       </Button>
-      <Input
-        id={id}
-        type="number"
-        value={value}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(Number(e.target.value))}
-        className="w-16 text-center"
-      />
+
+      {/* Value input (type=number exposes native spinbutton semantics to SRs) */}
+      <div className="relative h-10 w-20 rounded grid place-items-center border-2 border-yellow-400 bg-[#0b1220] shadow-[inset_0_0_12px_rgba(0,0,0,.85)]">
+        <label htmlFor={id} className="sr-only">{id.toUpperCase()} value</label>
+        <Input
+          id={id}
+          type="number"
+          inputMode="numeric"
+          value={value}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onChange(Number(e.target.value))
+          }
+          className="absolute inset-0 w-full h-full bg-transparent border-0 text-center text-base font-extrabold text-yellow-50 font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
+          aria-describedby={hintId}
+        />
+        {/* decorative stitch */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -top-px left-0 right-0 h-px opacity-70"
+          style={{
+            background:
+              'repeating-linear-gradient(90deg, rgba(255,255,255,.12) 0 2px, transparent 2px 6px)'
+          }}
+        />
+      </div>
+
+      {/* Increment */}
       <Button
         type="button"
-        aria-label="Increment"
+        aria-label={`Increase ${id.toUpperCase()}`}
         onClick={() => onChange(value + 1)}
-        className="h-8 w-8 p-1"
+        className="h-10 w-10 p-0 grid place-items-center rounded border border-yellow-500 bg-black/70 hover:bg-black/50 active:translate-y-px text-yellow-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
+        title={`Increase ${id.toUpperCase()}`}
       >
         +
       </Button>
+
+      {/* Roll (click = normal; hold 500ms = adv; Shift+Enter = adv) */}
       <Button
         type="button"
         icon="dice"
-        aria-label="Roll"
+        aria-label={`Roll ${id.toUpperCase()}${onRollAdv ? ' (Shift+Enter for advantage or long-press)' : ''}`}
+        title={onRollAdv ? 'Enter: Roll • Shift+Enter: Advantage • Long-press: Advantage' : 'Enter: Roll'}
+        aria-keyshortcuts={onRollAdv ? 'Enter, Shift+Enter' : 'Enter'}
         onMouseDown={start}
         onMouseUp={end}
+        onMouseLeave={end}
         onTouchStart={start}
         onTouchEnd={end}
-        className="h-8 w-8 p-1"
+        onTouchCancel={end}
+        onKeyDown={onRollKeyDown}
+        className={`h-10 w-10 p-2 rounded border bg-black/70 hover:bg-black/50 active:translate-y-px focus-visible:outline-none focus-visible:ring-2 ${
+          onRollAdv
+            ? 'border-blue-400 focus-visible:ring-blue-400'
+            : 'border-yellow-500 focus-visible:ring-yellow-400'
+        }`}
       />
+
+      {/* Edit (always keyboard focusable; fades in visually on hover/focus of group) */}
       <Button
         type="button"
         icon="edit"
-        aria-label="Edit notation"
+        aria-label={`Edit ${id.toUpperCase()} notation`}
         onClick={onEdit}
-        className="h-8 w-8 p-1 invisible group-hover:visible group-focus-within:visible"
+        className="h-10 w-10 p-2 rounded border border-neutral-600 bg-black/70 hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity"
+        title="Edit notation"
       />
+
+      {/* SR-only hint + live region */}
+      <span id={hintId} className="sr-only">
+        Use minus and plus to change {id.toUpperCase()}. Type a number, or use arrow keys in the field.
+        Press Enter to roll. {onRollAdv ? 'Press Shift+Enter or long-press to roll with advantage.' : ''}
+      </span>
+      <div ref={liveRef} aria-live="polite" className="sr-only" />
     </div>
   )
 }

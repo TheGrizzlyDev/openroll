@@ -9,7 +9,7 @@ import { ThemeProvider } from './theme/ThemeProvider'
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
     <BrowserRouter basename={import.meta.env.BASE_URL || '/'}>
-      <ThemeProvider game="mork_borg">
+      <ThemeProvider game="default">
         <App />
       </ThemeProvider>
     </BrowserRouter>

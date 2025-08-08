@@ -10,18 +10,9 @@ h1, h2 {
   text-align: center;
 }
 
-
 .sheet label {
   display: block;
   margin-bottom: 0.5rem;
-}
-
-.dice-roller button {
-  width: 100%;
-}
-
-.styled-select {
-  width: 100%;
 }
 
 .error {
@@ -56,21 +47,6 @@ h1, h2 {
   color: var(--color-bg-alt);
 }
 
-.stats {
-  display: grid;
-  gap: 0.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-}
-
-.secondary-stats {
-  display: grid;
-  gap: 0.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-}
-
-.secondary-stats label {
-  margin-bottom: 0;
-}
 
 .stat {
   display: flex;

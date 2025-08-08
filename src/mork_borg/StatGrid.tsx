@@ -19,7 +19,7 @@ export default function StatGrid({
   setEditingStat
 }: StatGridProps) {
   return (
-    <div className="grid gap-2 [grid-template-columns:repeat(auto-fit,_minmax(160px,_1fr))]">
+    <div className="flex flew-row flex-wrap justify-between">
       {(['str', 'agi', 'pre', 'tou'] as Array<StatKey>).map(stat => {
         const id = `stat-${stat}`
         return (

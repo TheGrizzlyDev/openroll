@@ -66,6 +66,15 @@ export default function CharacterSheet() {
         onHpChange={val => updateField('hp', val)}
         onMaxHpChange={val => updateField('maxHp', val)}
       />
+
+      <StatGrid
+        sheet={sheet}
+        statDiceErrors={statDiceErrors}
+        updateField={updateField}
+        rollStat={rollStat}
+        setEditingStat={handleSetEditingStat}
+      />
+      
       <FormField label="Character" htmlFor="character">
         <Input
           id="character"
@@ -106,14 +115,6 @@ export default function CharacterSheet() {
           }
         />
       </FormField>
-
-      <StatGrid
-        sheet={sheet}
-        statDiceErrors={statDiceErrors}
-        updateField={updateField}
-        rollStat={rollStat}
-        setEditingStat={handleSetEditingStat}
-      />
 
       <Dialog visible={editingStat !== null} onClose={() => setEditingStat(null)}>
         {editingStat && (
