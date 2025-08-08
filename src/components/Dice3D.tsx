@@ -196,6 +196,7 @@ export default function Dice3D({
   const [externalTextures, setExternalTextures] = useState<THREE.Texture[]>([])
 
   useEffect(() => {
+    console.debug('Dice3D textures:', { mode: import.meta.env.MODE, faceTextures })
     if (
       import.meta.env.MODE === 'test' ||
       !faceTextures ||
@@ -203,6 +204,9 @@ export default function Dice3D({
     ) {
       setExternalTextures([])
       return
+    }
+    THREE.DefaultLoadingManager.onError = url => {
+      console.error('Dice3D failed to load texture:', url)
     }
     const loader = new THREE.TextureLoader()
     loader.crossOrigin = 'anonymous'
