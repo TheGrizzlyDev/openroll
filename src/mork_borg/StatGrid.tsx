@@ -1,8 +1,6 @@
 import { type ChangeEvent } from 'react'
-import NumericInput from '../components/NumericInput'
-import { Button } from '../design-system'
+import { Stat } from '../design-system'
 import type { Sheet } from './sheet'
-import styles from './StatGrid.module.css'
 
 type StatKey = keyof Sheet & keyof Sheet['statDice']
 
@@ -22,38 +20,19 @@ export default function StatGrid({
   setEditingStat
 }: StatGridProps) {
   return (
-    <div className={styles.grid}>
+    <div className="grid gap-2 [grid-template-columns:repeat(auto-fit,_minmax(160px,_1fr))]">
       {(['str', 'agi', 'pre', 'tou'] as Array<StatKey>).map(stat => (
-        <div key={stat} className={styles.stat}>
-          <label>
-            {stat.toUpperCase()}
-            <div className={styles.controls}>
-              <NumericInput
-                value={sheet[stat]}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  updateField(stat, Number(e.target.value))
-                }
-              />
-              <Button
-                type="button"
-                icon="dice"
-                onClick={() => rollStat(stat)}
-                aria-label="Roll"
-                className={styles.iconButton}
-              />
-              <Button
-                type="button"
-                icon="edit"
-                onClick={() => setEditingStat(stat)}
-                aria-label="Edit notation"
-                className={`${styles.iconButton} ${styles.edit}`}
-              />
-            </div>
-          </label>
-          {statDiceErrors[stat] && (
-            <span className="error-message">{statDiceErrors[stat]}</span>
-          )}
-        </div>
+        <Stat
+          key={stat}
+          label={stat.toUpperCase()}
+          value={sheet[stat]}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            updateField(stat, Number(e.target.value))
+          }
+          onRoll={() => rollStat(stat)}
+          onEdit={() => setEditingStat(stat)}
+          error={statDiceErrors[stat]}
+        />
       ))}
     </div>
   )
