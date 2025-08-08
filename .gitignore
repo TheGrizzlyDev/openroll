@@ -25,3 +25,6 @@ dist-ssr
 
 # Generated assets
 # (handled by dist ignore above)
+
+*storybook.log
+storybook-static
