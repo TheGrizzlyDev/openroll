@@ -5,9 +5,8 @@ import Inventory from '../mork_borg/Inventory'
 import CharacterSheet from '../mork_borg/CharacterSheet'
 import LogView from './LogView'
 import Notes from './Notes'
-import Popup from './Popup'
 import { useGameContext } from '../GameContext'
-import { Button } from '../design-system'
+import { Button, Dialog } from '../design-system'
 import { Canvas } from '@react-three/fiber'
 import Dice3D from './Dice3D'
 import DiceTray from './DiceTray'
@@ -75,7 +74,7 @@ export default function SheetPage() {
       {activeTab === 'log' && <LogView />}
 
       {overlay.visible && (
-        <Popup
+        <Dialog
           visible={overlay.visible}
           onClose={() => {
             if (overlayTimeout) clearTimeout(overlayTimeout)
@@ -118,7 +117,7 @@ export default function SheetPage() {
           ) : (
             <span>{overlay.message}</span>
           )}
-        </Popup>
+        </Dialog>
       )}
     </div>
   )

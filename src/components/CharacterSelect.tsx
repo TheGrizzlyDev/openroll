@@ -1,9 +1,8 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGameContext } from '../GameContext'
-import Popup from './Popup'
 import { FileInput } from './FileInput'
-import { Button } from '../design-system'
+import { Button, Dialog } from '../design-system'
 import DiceStyleSelector from './DiceStyleSelector'
 
 export default function CharacterSelect() {
@@ -96,7 +95,7 @@ export default function CharacterSelect() {
       <FileInput accept="application/json" onFileSelect={handleImport}>Import</FileInput>
       <DiceStyleSelector />
       {overlay.visible && (
-        <Popup
+        <Dialog
           visible={overlay.visible}
           onClose={() => {
             if (overlayTimeout) clearTimeout(overlayTimeout)
@@ -105,7 +104,7 @@ export default function CharacterSelect() {
           }}
         >
           <span>{overlay.message}</span>
-        </Popup>
+        </Dialog>
       )}
     </div>
   )

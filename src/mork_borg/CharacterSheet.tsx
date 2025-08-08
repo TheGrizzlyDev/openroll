@@ -2,8 +2,7 @@ import { useState, type ChangeEvent } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
 import NumericInput from '../components/NumericInput'
-import Popup from '../components/Popup'
-import { Input, Select, HpBar } from '../design-system'
+import { Input, Select, HpBar, Dialog } from '../design-system'
 import StatGrid from './StatGrid'
 import classes from './classes'
 import type { Sheet } from './sheet'
@@ -106,7 +105,7 @@ export default function CharacterSheet() {
         setEditingStat={handleSetEditingStat}
       />
 
-      <Popup visible={editingStat !== null} onClose={() => setEditingStat(null)}>
+      <Dialog visible={editingStat !== null} onClose={() => setEditingStat(null)}>
         {editingStat && (
           <>
             <Input
@@ -123,7 +122,7 @@ export default function CharacterSheet() {
             )}
           </>
         )}
-      </Popup>
+      </Dialog>
 
       <HpBar
         hp={sheet.hp}

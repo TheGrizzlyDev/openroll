@@ -5,8 +5,7 @@ import InventoryItem from '../components/InventoryItem'
 import { useGameContext, type Scroll } from '../GameContext'
 import NumericInput from '../components/NumericInput'
 import SmartTextEditor from '../components/SmartTextEditor'
-import { Input, Select, Button } from '../design-system'
-import Popup from '../components/Popup'
+import { Input, Select, Button, Dialog } from '../design-system'
 // eslint-disable-next-line react-refresh/only-export-components
 export function reorderScrolls(
   scrolls: Scroll[],
@@ -207,7 +206,7 @@ export default function Inventory() {
         className="scrolls"
       />
       {showItemPopup && (
-        <Popup
+        <Dialog
           visible={showItemPopup}
           onClose={() => {
             resetForm()
@@ -254,10 +253,10 @@ export default function Inventory() {
               )}
             </div>
           </div>
-        </Popup>
+        </Dialog>
       )}
       {showScrollPopup && (
-        <Popup
+        <Dialog
           visible={showScrollPopup}
           onClose={() => {
             resetScrollForm()
@@ -315,7 +314,7 @@ export default function Inventory() {
               )}
             </div>
           </div>
-        </Popup>
+        </Dialog>
       )}
     </div>
   )

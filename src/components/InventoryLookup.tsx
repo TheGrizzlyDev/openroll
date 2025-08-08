@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useGameContext } from '../GameContext'
-import { Button } from '../design-system'
-import Popup from './Popup'
+import { Button, Dialog } from '../design-system'
 
 interface InventoryLookupProps {
   description?: string
@@ -32,7 +31,7 @@ export default function InventoryLookup({ description, attrs }: InventoryLookupP
         {description || 'Inventory'}
       </Button>
       {open && (
-        <Popup visible={open} onClose={() => setOpen(false)}>
+        <Dialog visible={open} onClose={() => setOpen(false)}>
           <ul>
             {items.map(item => (
               <li key={item.id}>
@@ -40,7 +39,7 @@ export default function InventoryLookup({ description, attrs }: InventoryLookupP
               </li>
             ))}
           </ul>
-        </Popup>
+        </Dialog>
       )}
     </>
   )
