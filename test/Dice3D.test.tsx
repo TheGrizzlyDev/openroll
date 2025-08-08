@@ -22,7 +22,7 @@ vi.mock('@react-three/cannon/dist/index.js', () => {
   }
 })
 
-import Dice3D from '../src/components/Dice3D'
+import Dice3D, { Dice3DProps } from '../src/components/Dice3D'
 
 describe('Dice3D', () => {
   let originalGetContext: typeof HTMLCanvasElement.prototype.getContext
@@ -36,11 +36,12 @@ describe('Dice3D', () => {
         textAlign: 'center',
         textBaseline: 'middle',
         fillRect() {},
+        strokeText() {},
         fillText() {},
         clearRect() {},
         getImageData: () => ({ data: new Uint8ClampedArray(4) })
       } as unknown as CanvasRenderingContext2D
-    } as any
+    } as unknown as typeof HTMLCanvasElement.prototype.getContext
   })
 
   afterEach(() => {
@@ -50,16 +51,16 @@ describe('Dice3D', () => {
 
   it('renders with provided style props', async () => {
     const fills: string[] = []
-    const getContext = HTMLCanvasElement.prototype.getContext as any
+    const getContext = HTMLCanvasElement.prototype.getContext as typeof HTMLCanvasElement.prototype.getContext
     HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, _id?: string) {
-      const ctx = getContext.call(this, _id) as any
+      const ctx = getContext.call(this, _id ?? '2d') as unknown as CanvasRenderingContext2D
       const origFillRect = ctx.fillRect?.bind(ctx)
       ctx.fillRect = function () {
         fills.push(ctx.fillStyle as string)
         origFillRect?.(0, 0, 0, 0)
       }
       return ctx
-    } as any
+    } as unknown as typeof HTMLCanvasElement.prototype.getContext
 
     const renderer = await ReactThreeTestRenderer.create(
       <Dice3D type="d6" rollResult={1} color="#ff0000" edgeColor="#00ff00" />
@@ -116,6 +117,42 @@ describe('Dice3D', () => {
     expect(end.equals(after)).toBe(true)
     await renderer.unmount()
     nowSpy.mockRestore()
+  })
+
+  it('generates numbered textures for each die type', async () => {
+    const original = HTMLCanvasElement.prototype.getContext as typeof HTMLCanvasElement.prototype.getContext
+    const captured: string[] = []
+    HTMLCanvasElement.prototype.getContext = function () {
+      return {
+        fillStyle: '#000',
+        font: '',
+        textAlign: 'center',
+        textBaseline: 'middle',
+        fillRect() {},
+        strokeText() {},
+        fillText(text: string) {
+          captured.push(text)
+        }
+      } as unknown as CanvasRenderingContext2D
+    } as unknown as typeof HTMLCanvasElement.prototype.getContext
+    const types: Array<[Dice3DProps['type'], number]> = [
+      ['d4', 4],
+      ['d6', 6],
+      ['d8', 8],
+      ['d12', 12],
+      ['d20', 20]
+    ]
+    for (const [type, count] of types) {
+      captured.length = 0
+      const renderer = await ReactThreeTestRenderer.create(
+        <Dice3D type={type} rollResult={1} />
+      )
+      expect(captured).toEqual(
+        Array.from({ length: count }, (_, i) => String(i + 1))
+      )
+      await renderer.unmount()
+    }
+    HTMLCanvasElement.prototype.getContext = original
   })
 })
 

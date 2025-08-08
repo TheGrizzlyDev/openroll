@@ -69,18 +69,34 @@ function prepareGeometry(geometry: THREE.BufferGeometry) {
   return { geometry, orientations, faceCount: normals.length }
 }
 
-function generateDefaultTextures(count: number, color: string) {
+function generateDefaultTextures(
+  count: number,
+  color: string,
+  baseTextures?: THREE.Texture[]
+) {
   return Array.from({ length: count }, (_, i) => {
     const size = 256
     const canvas = document.createElement('canvas')
     canvas.width = canvas.height = size
     const ctx = canvas.getContext('2d')!
-    ctx.fillStyle = color
-    ctx.fillRect(0, 0, size, size)
-    ctx.fillStyle = '#000'
+    if (baseTextures?.[i]) {
+      const img = baseTextures[i].image as
+        | HTMLImageElement
+        | HTMLCanvasElement
+        | ImageBitmap
+        | SVGImageElement
+      ctx.drawImage(img, 0, 0, size, size)
+    } else {
+      ctx.fillStyle = color
+      ctx.fillRect(0, 0, size, size)
+    }
     ctx.font = `${size * 0.6}px sans-serif`
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
+    ctx.lineWidth = size * 0.1
+    ctx.strokeStyle = '#fff'
+    ctx.strokeText(String(i + 1), size / 2, size / 2)
+    ctx.fillStyle = '#000'
     ctx.fillText(String(i + 1), size / 2, size / 2)
     return new THREE.CanvasTexture(canvas)
   })
@@ -212,9 +228,8 @@ export default function Dice3D({
   const { geometry, orientations, materials } = useMemo(() => {
     const geometry = createGeometry(type, size)
     const { orientations, faceCount } = prepareGeometry(geometry)
-    const textures = externalTextures.length >= faceCount
-      ? externalTextures
-      : generateDefaultTextures(faceCount, color)
+    const baseTextures = externalTextures.length >= faceCount ? externalTextures : undefined
+    const textures = generateDefaultTextures(faceCount, color, baseTextures)
     const materials = textures.map(tex => new THREE.MeshStandardMaterial({ map: tex }))
     return { geometry, orientations, materials }
   }, [type, size, color, externalTextures])
