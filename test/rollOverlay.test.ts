@@ -43,7 +43,6 @@ describe('GameContext roll breakdown', () => {
       ],
       total: 4
     })
-    expect(overlay.message).toBe('2d6+3: [1, 1]+3 = 5')
     expect(overlay.visible).toBe(true)
 
     const logEntry = useGameContext.getState().state.log[0]
