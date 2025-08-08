@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useGameContext } from '../GameContext'
-import { Button } from '../ui'
+import { Button } from '../design-system'
 import Popup from './Popup'
 
 interface InventoryLookupProps {

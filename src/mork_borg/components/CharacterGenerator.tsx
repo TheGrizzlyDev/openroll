@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import type { ChangeEvent } from 'react'
 import { useGameContext } from '../../GameContext'
-import { Select } from '../../ui/Select'
-import { Button } from '../../ui'
+import { Select, Button } from '../../design-system'
 import classes from '../classes'
 import type { InventoryItem, Scroll } from '../generateCharacter'
 

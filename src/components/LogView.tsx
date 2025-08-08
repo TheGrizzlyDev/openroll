@@ -1,6 +1,6 @@
 import React from 'react'
 import { useGameContext } from '../GameContext'
-import { Button } from '../ui'
+import { Button } from '../design-system'
 
 export default function LogView() {
   const {

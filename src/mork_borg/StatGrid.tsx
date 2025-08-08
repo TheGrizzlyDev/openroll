@@ -1,6 +1,6 @@
 import { type ChangeEvent } from 'react'
 import NumericInput from '../components/NumericInput'
-import { Button } from '../ui'
+import { Button } from '../design-system'
 import type { Sheet } from './sheet'
 import styles from './StatGrid.module.css'
 

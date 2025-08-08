@@ -1,4 +1,4 @@
-import { Button } from '../ui'
+import { Button } from '../design-system'
 import { useTheme } from '../theme/ThemeProvider'
 import { useDiceStore, type Die } from '../diceStore'
 

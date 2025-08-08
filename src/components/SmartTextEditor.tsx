@@ -5,7 +5,7 @@ import CodeMirror from '@uiw/react-codemirror'
 import { autocompletion } from '@codemirror/autocomplete'
 import { EditorView } from '@codemirror/view'
 import { omlLanguage, omlCompletion } from '../oml/codemirror'
-import { Button } from '../ui'
+import { Button } from '../design-system'
 import styles from './SmartTextEditor.module.css'
 
 interface SmartTextEditorProps {

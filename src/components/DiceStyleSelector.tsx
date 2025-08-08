@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react'
 import { useGameContext } from '../GameContext'
-import { Input } from '../ui/Input'
+import { Input } from '../design-system'
 
 export default function DiceStyleSelector() {
   const {

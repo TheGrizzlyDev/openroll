@@ -1,5 +1,5 @@
 import { useRef, type ButtonHTMLAttributes } from 'react'
-import { Button } from './Button'
+import { Button } from '../design-system'
 
 interface FileInputProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> {
   accept?: string

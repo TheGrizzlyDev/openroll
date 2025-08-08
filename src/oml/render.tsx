@@ -3,7 +3,7 @@ import { useGameContext } from '../GameContext'
 import { parseOml, type OmlNode, type ApplyNode } from './parser'
 import React from 'react'
 import InventoryLookup from '../components/InventoryLookup'
-import { Button } from '../ui'
+import { Button } from '../design-system'
 
 export function renderNodes(
   nodes: OmlNode[],

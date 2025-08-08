@@ -6,8 +6,7 @@ import {
 } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from './GameContext'
-import { Input } from './ui/Input'
-import { Button } from './ui/Button'
+import { Input, Button } from './design-system'
 
 export default function DiceRoller() {
   const { roll } = useGameContext()

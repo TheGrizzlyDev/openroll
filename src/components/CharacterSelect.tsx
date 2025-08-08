@@ -2,8 +2,8 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGameContext } from '../GameContext'
 import Popup from './Popup'
-import { FileInput } from '../ui/FileInput'
-import { Button } from '../ui'
+import { FileInput } from './FileInput'
+import { Button } from '../design-system'
 import DiceStyleSelector from './DiceStyleSelector'
 
 export default function CharacterSelect() {

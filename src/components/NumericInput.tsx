@@ -1,5 +1,5 @@
 import type React from 'react'
-import { Button } from '../ui'
+import { Button } from '../design-system'
 
 interface NumericInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string | number
