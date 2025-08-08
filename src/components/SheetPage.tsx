@@ -89,7 +89,7 @@ export default function SheetPage() {
           {overlay.roll ? (
             <>
               <Canvas
-                style={{ width: 100, height: 100 }}
+                className="dice-preview"
                 camera={{ position: [0, 5, 5], fov: 50 }}
                 shadows
               >

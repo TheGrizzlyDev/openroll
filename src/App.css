@@ -217,7 +217,7 @@ h1, h2 {
 }
 
 .overlay-content {
-  align-items: flex-start;
+  align-items: center;
   animation: overlay-hide 0.3s forwards;
   background: var(--color-bg-alt);
   border: 1px solid var(--color-accent);
@@ -226,6 +226,11 @@ h1, h2 {
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
+}
+
+.dice-preview {
+  height: 300px;
+  width: 300px;
 }
 
 .overlay.show .overlay-content {

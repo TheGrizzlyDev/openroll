@@ -33,6 +33,7 @@ describe('GameContext roll breakdown', () => {
     expect(output).toBe('1d4+3d20: [1]+[1, 1, 1] = 4')
 
     const overlay = useGameContext.getState().state.overlay
+<<<<<<< ours
     expect(overlay.message).toBe('1d4+3d20: [1]+[1, 1, 1] = 4')
     expect(overlay.roll).toEqual({
       dice: [
@@ -43,6 +44,10 @@ describe('GameContext roll breakdown', () => {
       ],
       total: 4
     })
+=======
+    expect(overlay.message).toBe('2d6+3: [1, 1]+3 = 5')
+    expect(overlay.visible).toBe(true)
+>>>>>>> theirs
 
     const logEntry = useGameContext.getState().state.log[0]
     expect(logEntry.output).toBe('1d4+3d20: [1]+[1, 1, 1] = 4')
