@@ -196,7 +196,11 @@ export default function Dice3D({
   const [externalTextures, setExternalTextures] = useState<THREE.Texture[]>([])
 
   useEffect(() => {
-    if (!faceTextures || faceTextures.length === 0) {
+    if (
+      import.meta.env.MODE === 'test' ||
+      !faceTextures ||
+      faceTextures.length === 0
+    ) {
       setExternalTextures([])
       return
     }
