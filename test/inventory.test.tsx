@@ -14,6 +14,9 @@ import {
   type GameState,
   type GameContextValue
 } from '../src/GameContext'
+import InventoryItemComp from '../src/components/InventoryItem'
+import { DndContext } from '@dnd-kit/core'
+import { SortableContext } from '@dnd-kit/sortable'
 import { Sheet } from '../src/mork_borg/sheet'
 import { renderOml } from '../src/oml/render'
 
@@ -263,6 +266,36 @@ describe('Inventory handlers', () => {
     expect(firstScroll.getAttribute('role')).toBeNull()
     expect(handle.getAttribute('role')).toBe('button')
 
+  })
+})
+
+describe('InventoryItem component', () => {
+  it('renders custom action buttons', () => {
+    resetStore()
+    const item: InventoryItem = { id: 1, name: 'Sword', qty: 1, notes: '' }
+    const { getByText } = render(
+      <DndContext>
+        <SortableContext items={[item.id]}>
+          <InventoryItemComp item={item}>
+            <button>Use</button>
+          </InventoryItemComp>
+        </SortableContext>
+      </DndContext>
+    )
+    expect(getByText('Use')).toBeTruthy()
+  })
+
+  it('displays scroll information', () => {
+    resetStore()
+    const scroll: Scroll = { id: 1, type: 'unclean', name: 'Zap', casts: 2, notes: '' }
+    const { getByText } = render(
+      <DndContext>
+        <SortableContext items={[scroll.id]}>
+          <InventoryItemComp item={scroll} />
+        </SortableContext>
+      </DndContext>
+    )
+    expect(getByText('Zap [unclean] (2)')).toBeTruthy()
   })
 })
 

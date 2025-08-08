@@ -9,55 +9,13 @@ import {
   type DragMoveEvent,
   type DragEndEvent
 } from '@dnd-kit/core'
-import { SortableContext, useSortable, arrayMove } from '@dnd-kit/sortable'
-import { useGameContext, type InventoryItem, type Scroll } from '../GameContext'
+import { SortableContext, arrayMove } from '@dnd-kit/sortable'
+import InventoryItem from '../components/InventoryItem'
+import { useGameContext, type Scroll } from '../GameContext'
 import NumericInput from '../components/NumericInput'
 import SmartTextEditor from '../components/SmartTextEditor'
 import { Input, Select, Button } from '../design-system'
 import Popup from '../components/Popup'
-import { renderOml } from '../oml/render'
-
-interface SortableItemProps {
-  item: InventoryItem
-  startEdit: (_id: number) => void
-  handleDelete: (_id: number) => void
-}
-
-function SortableItem({ item, startEdit, handleDelete }: SortableItemProps) {
-  const { roll } = useGameContext()
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging
-  } = useSortable({ id: item.id })
-
-  const style = {
-    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
-    transition
-  }
-
-  return (
-    <li
-      ref={setNodeRef}
-      style={style}
-      className={isDragging ? 'dragging' : ''}
-    >
-      <span className="drag-handle" {...attributes} {...listeners}>::</span>
-      <div>
-        <span>
-          {item.name} ({item.qty})
-          {item.notes ? <> - {renderOml(item.notes, roll)}</> : ''}
-        </span>
-        <Button onClick={() => startEdit(item.id)}>Edit</Button>
-        <Button onClick={() => handleDelete(item.id)}>Delete</Button>
-      </div>
-    </li>
-  )
-}
-
 // eslint-disable-next-line react-refresh/only-export-components
 export function reorderScrolls(
   scrolls: Scroll[],
@@ -67,56 +25,6 @@ export function reorderScrolls(
   const oldIndex = scrolls.findIndex(s => s.id === activeId)
   const newIndex = scrolls.findIndex(s => s.id === overId)
   return arrayMove(scrolls, oldIndex, newIndex)
-}
-
-interface SortableScrollProps {
-  scroll: Scroll
-  startEdit: (_id: number) => void
-  handleDelete: (_id: number) => void
-  handleCast: (_id: number) => void
-}
-
-function SortableScroll({
-  scroll,
-  startEdit,
-  handleDelete,
-  handleCast
-}: SortableScrollProps) {
-  const { roll } = useGameContext()
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging
-  } = useSortable({ id: scroll.id })
-
-  const style = {
-    transform: transform
-      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
-      : undefined,
-    transition
-  }
-
-  return (
-    <li
-      ref={setNodeRef}
-      style={style}
-      className={isDragging ? 'dragging' : ''}
-    >
-      <span className="drag-handle" {...attributes} {...listeners}>::</span>
-      <div>
-        <span>
-          {scroll.name} [{scroll.type}] ({scroll.casts})
-          {scroll.notes ? <> - {renderOml(scroll.notes, roll)}</> : ''}
-        </span>
-        <Button onClick={() => handleCast(scroll.id)}>Cast</Button>
-        <Button onClick={() => startEdit(scroll.id)}>Edit</Button>
-        <Button onClick={() => handleDelete(scroll.id)}>Delete</Button>
-      </div>
-    </li>
-  )
 }
 
 export default function Inventory() {
@@ -337,12 +245,10 @@ export default function Inventory() {
         <SortableContext items={items.map(i => i.id)}>
           <ul>
             {items.map(item => (
-              <SortableItem
-                key={item.id}
-                item={item}
-                startEdit={startEdit}
-                handleDelete={handleDelete}
-              />
+              <InventoryItem key={item.id} item={item}>
+                <Button onClick={() => startEdit(item.id)}>Edit</Button>
+                <Button onClick={() => handleDelete(item.id)}>Delete</Button>
+              </InventoryItem>
             ))}
           </ul>
         </SortableContext>
@@ -359,13 +265,11 @@ export default function Inventory() {
         <SortableContext items={scrolls.map(s => s.id)}>
           <ul className="scrolls">
             {scrolls.map(scroll => (
-              <SortableScroll
-                key={scroll.id}
-                scroll={scroll}
-                startEdit={startScrollEdit}
-                handleDelete={handleDeleteScroll}
-                handleCast={handleCastScroll}
-              />
+              <InventoryItem key={scroll.id} item={scroll}>
+                <Button onClick={() => handleCastScroll(scroll.id)}>Cast</Button>
+                <Button onClick={() => startScrollEdit(scroll.id)}>Edit</Button>
+                <Button onClick={() => handleDeleteScroll(scroll.id)}>Delete</Button>
+              </InventoryItem>
             ))}
           </ul>
         </SortableContext>
