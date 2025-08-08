@@ -1,3 +1,287 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:b17991e374e320c1e10fe7a95d029ea6d343607c20dc6a885ed49c5ee8fa2993
-size 11669
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TTRPG UI Storybook</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      :root {
+        --hp-ok: #22c55e;
+        --hp-warn: #eab308;
+        --hp-danger: #ef4444;
+        --hp-bg: #0b1220;
+        --hp-temp: #3b82f6;
+        --hp-temp-overlay: #3b82f6aa;
+      }
+      html, body {
+        background: #0a0a0a;
+        color: #e5e5e5;
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      input[type=number]::-webkit-inner-spin-button {
+        margin: 0;
+        -webkit-appearance: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const { useState, useRef } = React;
+
+      function HPBar() {
+        const [hp, setHp] = useState({ current: 20, temp: 4, max: 30 });
+        const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+        const pct = clamp(hp.current / hp.max, 0, 1);
+        const tempPct = clamp((hp.current + hp.temp) / hp.max, 0, 1);
+        const state = pct <= 0.25 ? 'danger' : pct <= 0.5 ? 'warn' : 'ok';
+
+        return (
+          <div>
+            <h2 className="text-xl font-semibold mb-2">HP Bar</h2>
+            <div className="space-y-2">
+              <div className="relative w-full bg-[color:var(--hp-bg)] rounded-full overflow-hidden" style={{ height: 24 }}>
+                <div className="absolute top-0 left-0 h-full" style={{ width: `${tempPct * 100}%`, background: 'var(--hp-temp-overlay)' }} />
+                <div className="h-full transition-all" style={{ width: `${pct * 100}%`, background: `var(--hp-${state})` }} />
+                <div className="absolute inset-0 flex items-center justify-center text-xs font-bold">
+                  {hp.current}{hp.temp ? `+${hp.temp}` : ''} / {hp.max}
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2 text-xs">
+                <button onClick={() => setHp(p => ({ ...p, current: clamp(p.current - 1, 0, p.max) }))} className="px-2 py-1 rounded bg-white/10">-1</button>
+                <button onClick={() => setHp(p => ({ ...p, current: clamp(p.current + 1, 0, p.max) }))} className="px-2 py-1 rounded bg-white/10">+1</button>
+                <button onClick={() => setHp(p => ({ ...p, temp: Math.max((p.temp ?? 0) - 1, 0) }))} className="px-2 py-1 rounded bg-blue-500/20">- Temp</button>
+                <button onClick={() => setHp(p => ({ ...p, temp: (p.temp ?? 0) + 1 }))} className="px-2 py-1 rounded bg-blue-500/20">+ Temp</button>
+                <button onClick={() => setHp(p => ({ ...p, max: Math.max(p.max - 1, 1), current: clamp(p.current, 0, p.max - 1) }))} className="px-2 py-1 rounded bg-white/5">- Max</button>
+                <button onClick={() => setHp(p => ({ ...p, max: p.max + 1 }))} className="px-2 py-1 rounded bg-white/5">+ Max</button>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      function StatTracker() {
+        const [value, setValue] = useState(3);
+        const timeout = useRef();
+
+        const start = () => {
+          timeout.current = setTimeout(() => {
+            timeout.current = null;
+            alert(`Long press roll STR +${value} (advantage?)`);
+          }, 500);
+        };
+
+        const cancel = () => {
+          if (timeout.current) {
+            clearTimeout(timeout.current);
+            timeout.current = null;
+            alert(`Roll STR +${value}`);
+          }
+        };
+
+        return (
+          <div>
+            <h2 className="text-xl font-semibold mb-2">Stat Tracker</h2>
+            <div className="bg-white/5 rounded-md px-3 py-2 flex items-center justify-between text-sm w-full max-w-xs">
+              <div className="flex items-center gap-2 w-20">
+                <button
+                  onClick={() => alert('STR: Strength affects physical power, carrying capacity, and melee attack rolls.')}
+                  className="text-white/90 hover:text-white bg-white/10 hover:bg-white/20 rounded px-2 py-1 text-sm flex items-center justify-center"
+                  title="More info"
+                >
+                  ℹ️
+                </button>
+                <span className="uppercase text-white/70 font-medium tracking-wide">STR</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <button onClick={() => setValue(value - 1)} className="px-2 py-1 rounded bg-white/10">–</button>
+                <div className="w-14">
+                  <input
+                    type="number"
+                    value={value}
+                    onChange={(e) => setValue(parseInt(e.target.value, 10))}
+                    className="w-full text-center bg-black/20 rounded px-2 py-1 text-base font-bold appearance-none"
+                  />
+                </div>
+                <button onClick={() => setValue(value + 1)} className="px-2 py-1 rounded bg-white/10">+</button>
+              </div>
+              <button
+                onMouseDown={start}
+                onMouseUp={cancel}
+                onTouchStart={start}
+                onTouchEnd={cancel}
+                className="ml-2 px-3 py-1 rounded bg-white/10 hover:bg-white/20 flex items-center gap-1 relative"
+              >
+                🎲<span className="text-xs italic text-white/50">hold</span>
+              </button>
+            </div>
+          </div>
+        );
+      }
+
+      function Inventory({ items, onReorder, onEdit }) {
+        const [dragIndex, setDragIndex] = useState(null);
+
+        const onDragStart = (index) => setDragIndex(index);
+        const onDragOver = (e, index) => {
+          e.preventDefault();
+          if (index !== dragIndex) {
+            const updated = [...items];
+            const [moved] = updated.splice(dragIndex, 1);
+            updated.splice(index, 0, moved);
+            onReorder(updated);
+            setDragIndex(index);
+          }
+        };
+
+        return (
+          <div className="space-y-2 max-h-64 overflow-auto">
+            {items.map((item, idx) => (
+              <InventoryItem
+                key={item.id}
+                item={item}
+                onEdit={(updated) => onEdit(updated)}
+                draggable
+                onDragStart={() => onDragStart(idx)}
+                onDragOver={(e) => onDragOver(e, idx)}
+              />
+            ))}
+          </div>
+        );
+      }
+
+      function EditInventoryItem({ item = {}, onSave }) {
+        const [name, setName] = useState(item.name || '');
+        const [amount, setAmount] = useState(item.amount || 1);
+        const [description, setDescription] = useState(item.description || '');
+
+        return (
+          <div className="space-y-2 bg-white/10 p-4 rounded">
+            <input className="w-full bg-black/20 p-2 rounded" value={name} onChange={e => setName(e.target.value)} placeholder="Item name" />
+            <input className="w-full bg-black/20 p-2 rounded" type="number" value={amount} onChange={e => setAmount(+e.target.value)} placeholder="Amount" />
+            <textarea className="w-full bg-black/20 p-2 rounded" value={description} onChange={e => setDescription(e.target.value)} placeholder="Description" />
+            <button onClick={() => onSave({ ...item, name, amount, description })} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">Save</button>
+          </div>
+        );
+      }
+
+      function App() {
+        const [items, setItems] = useState([
+          { id: 1, name: 'Torch', amount: 2, description: 'Burns for 1 hour each.' },
+          { id: 2, name: 'Rope', amount: 1, description: '50 ft. hempen rope.' },
+        ]);
+        const [editingItem, setEditingItem] = useState(null);
+
+        const handleReorder = (newItems) => setItems(newItems);
+        const handleSaveItem = (updated) => {
+          setItems(prev => {
+            const existing = prev.find(i => i.id === updated.id);
+            if (existing) {
+              return prev.map(i => i.id === updated.id ? updated : i);
+            } else {
+              return [...prev, { ...updated, id: Date.now() }];
+            }
+          });
+          setEditingItem(null);
+        };
+
+        return (
+          <div className="max-w-xl mx-auto p-6 space-y-8">
+            <h1 className="text-2xl font-bold">TTRPG UI Storybook</h1>
+            <HPBar />
+            <StatTracker />
+            <div>
+              <h2 className="text-xl font-semibold mb-2">Inventory</h2>
+              <Inventory items={items} onReorder={handleReorder} onEdit={setEditingItem} />
+              <div className="mt-2">
+                <button onClick={() => setEditingItem({})} className="px-3 py-2 bg-green-600 hover:bg-green-700 rounded text-sm">+ Add Item</button>
+              </div>
+              {editingItem && (
+                <div className="mt-4">
+                  <EditInventoryItem item={editingItem} onSave={handleSaveItem} />
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      function InventoryItem({ item, onEdit, draggable, onDragStart, onDragOver }) {
+  const [open, setOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragRef = useRef();
+
+  const handleDragStart = (e) => {
+    setIsDragging(true);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", item.id);
+    onDragStart();
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
+  };
+
+  return (
+    <div
+      ref={dragRef}
+      className={`transition-opacity duration-200 ${isDragging ? "opacity-0" : ""}`}
+      draggable={draggable}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onDragOver={onDragOver}
+    >
+      <div className="bg-white/5 p-2 rounded text-sm">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <span className="cursor-grab text-lg">☰</span>
+            <span className="font-semibold">{item.name}</span>
+            <span className="text-white/50">x{item.amount}</span>
+            <button
+              onClick={() => onEdit({ ...item, amount: Math.max(item.amount - 1, 0) })}
+              className="px-2 py-0.5 rounded bg-white/10 text-xs"
+            >
+              –
+            </button>
+            <button
+              onClick={() => onEdit({ ...item, amount: item.amount + 1 })}
+              className="px-2 py-0.5 rounded bg-white/10 text-xs"
+            >
+              +
+            </button>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setOpen(!open)}
+              className="text-white/40 text-xs"
+            >
+              {open ? "▲" : "▼"}
+            </button>
+            <button
+              onClick={() => onEdit(item)}
+              className="text-blue-400 text-xs hover:text-blue-300"
+            >
+              ✏️
+            </button>
+          </div>
+        </div>
+        {open && (
+          <div className="mt-2 text-white/80 bg-white/10 rounded p-2">
+            {item.description || "No description"}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>
