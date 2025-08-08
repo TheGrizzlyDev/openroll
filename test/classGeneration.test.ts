@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { generateCharacter } from '../src/morg_borg/generateCharacter'
-import { classMap } from '../src/morg_borg/classes'
+import { generateCharacter } from '../src/mork_borg/generateCharacter'
+import { classMap } from '../src/mork_borg/classes'
 
 describe('class generation', () => {
   it('applies class data', () => {

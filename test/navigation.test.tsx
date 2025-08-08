@@ -3,7 +3,7 @@ import { describe, it, expect, afterEach } from 'vitest'
 import { MemoryRouter, Routes, Route } from 'react-router-dom'
 import SheetPage from '../src/components/SheetPage'
 import { useGameContext, type GameState } from '../src/GameContext'
-import { createSheet } from '../src/morg_borg/sheet'
+import { createSheet } from '../src/mork_borg/sheet'
 
 const setupStore = () => {
   const initial: GameState = {

@@ -3,7 +3,7 @@ import { render, fireEvent, cleanup } from '@testing-library/react'
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { renderOml } from '../src/oml/render'
 import { useGameContext, type GameState } from '../src/GameContext'
-import { createSheet } from '../src/morg_borg/sheet'
+import { createSheet } from '../src/mork_borg/sheet'
 
 const setup = (state?: Partial<GameState>) => {
   const base: GameState = {

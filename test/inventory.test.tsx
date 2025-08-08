@@ -6,7 +6,7 @@ vi.mock('@uiw/react-codemirror', () => ({
     <textarea value={value} onChange={e => onChange(e.target.value)} />
   )
 }))
-import Inventory, { reorderScrolls } from '../src/morg_borg/Inventory'
+import Inventory, { reorderScrolls } from '../src/mork_borg/Inventory'
 import {
   useGameContext,
   type InventoryItem,
@@ -14,7 +14,7 @@ import {
   type GameState,
   type GameContextValue
 } from '../src/GameContext'
-import { Sheet } from '../src/morg_borg/sheet'
+import { Sheet } from '../src/mork_borg/sheet'
 import { renderOml } from '../src/oml/render'
 
 const createSimpleSheet = (): Sheet => ({

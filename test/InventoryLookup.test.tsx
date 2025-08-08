@@ -2,7 +2,7 @@ import { render, fireEvent, cleanup } from '@testing-library/react'
 import { describe, it, expect, afterEach, vi } from 'vitest'
 import InventoryLookup from '../src/components/InventoryLookup'
 import { useGameContext, type GameState, type InventoryItem } from '../src/GameContext'
-import { createSheet } from '../src/morg_borg/sheet'
+import { createSheet } from '../src/mork_borg/sheet'
 
 const resetStore = (state: Partial<GameState> = {}) => {
   const base: GameState = {

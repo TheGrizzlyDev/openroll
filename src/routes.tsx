@@ -4,7 +4,7 @@ import { Suspense, lazy } from 'react'
 const CharacterSelect = lazy(() => import('./components/CharacterSelect'))
 const SheetPage = lazy(() => import('./components/SheetPage'))
 const LogView = lazy(() => import('./components/LogView'))
-const CharacterGenerator = lazy(() => import('./morg_borg/components/CharacterGenerator'))
+const CharacterGenerator = lazy(() => import('./mork_borg/components/CharacterGenerator'))
 
 export default function AppRoutes() {
   return (

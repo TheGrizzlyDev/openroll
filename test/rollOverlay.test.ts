@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest'
 import { NumberGenerator } from '@dice-roller/rpg-dice-roller'
 import { useGameContext, type GameState } from '../src/GameContext'
-import { createSheet } from '../src/morg_borg/sheet'
+import { createSheet } from '../src/mork_borg/sheet'
 
 const resetStore = (state: Partial<GameState> = {}) => {
   const base: GameState = {

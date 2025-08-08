@@ -2,7 +2,7 @@ import { render, fireEvent, cleanup } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import Notes from '../src/components/Notes'
 import { useGameContext, type GameState } from '../src/GameContext'
-import { createSheet } from '../src/morg_borg/sheet'
+import { createSheet } from '../src/mork_borg/sheet'
 
 vi.mock('@uiw/react-codemirror', () => ({
   default: ({

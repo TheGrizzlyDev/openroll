@@ -11,8 +11,8 @@ import {
 } from 'react'
 import { DiceRoller as DiceParser, type DiceRoll } from '@dice-roller/rpg-dice-roller'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { createSheet, type Sheet } from './morg_borg/sheet'
-import { generateCharacter } from './morg_borg/generateCharacter'
+import { createSheet, type Sheet } from './mork_borg/sheet'
+import { generateCharacter } from './mork_borg/generateCharacter'
 import type { MutableRefObject } from 'react'
 
 export interface InventoryItem {

@@ -139,15 +139,15 @@ exports[`SheetPage navigation > renders correctly 1`] = `
         </div>
       </label>
       <div
-        class="_grid_722138"
+        class="_grid_3388e6"
       >
         <div
-          class="_stat_722138"
+          class="_stat_3388e6"
         >
           <label>
             STR
             <div
-              class="_controls_722138"
+              class="_controls_3388e6"
             >
               <div
                 class="numeric-input"
@@ -175,24 +175,24 @@ exports[`SheetPage navigation > renders correctly 1`] = `
               </div>
               <button
                 aria-label="Roll"
-                class="_button_60b723 _iconButton_722138"
+                class="_button_60b723 _iconButton_3388e6"
                 type="button"
               />
               <button
                 aria-label="Edit notation"
-                class="_button_60b723 _iconButton_722138 _edit_722138"
+                class="_button_60b723 _iconButton_3388e6 _edit_3388e6"
                 type="button"
               />
             </div>
           </label>
         </div>
         <div
-          class="_stat_722138"
+          class="_stat_3388e6"
         >
           <label>
             AGI
             <div
-              class="_controls_722138"
+              class="_controls_3388e6"
             >
               <div
                 class="numeric-input"
@@ -220,24 +220,24 @@ exports[`SheetPage navigation > renders correctly 1`] = `
               </div>
               <button
                 aria-label="Roll"
-                class="_button_60b723 _iconButton_722138"
+                class="_button_60b723 _iconButton_3388e6"
                 type="button"
               />
               <button
                 aria-label="Edit notation"
-                class="_button_60b723 _iconButton_722138 _edit_722138"
+                class="_button_60b723 _iconButton_3388e6 _edit_3388e6"
                 type="button"
               />
             </div>
           </label>
         </div>
         <div
-          class="_stat_722138"
+          class="_stat_3388e6"
         >
           <label>
             PRE
             <div
-              class="_controls_722138"
+              class="_controls_3388e6"
             >
               <div
                 class="numeric-input"
@@ -265,24 +265,24 @@ exports[`SheetPage navigation > renders correctly 1`] = `
               </div>
               <button
                 aria-label="Roll"
-                class="_button_60b723 _iconButton_722138"
+                class="_button_60b723 _iconButton_3388e6"
                 type="button"
               />
               <button
                 aria-label="Edit notation"
-                class="_button_60b723 _iconButton_722138 _edit_722138"
+                class="_button_60b723 _iconButton_3388e6 _edit_3388e6"
                 type="button"
               />
             </div>
           </label>
         </div>
         <div
-          class="_stat_722138"
+          class="_stat_3388e6"
         >
           <label>
             TOU
             <div
-              class="_controls_722138"
+              class="_controls_3388e6"
             >
               <div
                 class="numeric-input"
@@ -310,12 +310,12 @@ exports[`SheetPage navigation > renders correctly 1`] = `
               </div>
               <button
                 aria-label="Roll"
-                class="_button_60b723 _iconButton_722138"
+                class="_button_60b723 _iconButton_3388e6"
                 type="button"
               />
               <button
                 aria-label="Edit notation"
-                class="_button_60b723 _iconButton_722138 _edit_722138"
+                class="_button_60b723 _iconButton_3388e6 _edit_3388e6"
                 type="button"
               />
             </div>
