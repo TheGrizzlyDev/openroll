@@ -4,6 +4,7 @@ import { useGameContext } from '../GameContext'
 import { FileInput } from './FileInput'
 import { Button, Dialog } from '../design-system'
 import DiceStyleSelector from './DiceStyleSelector'
+import { PageContainer, Section } from '../layout'
 
 export default function CharacterSelect() {
   const {
@@ -80,20 +81,29 @@ export default function CharacterSelect() {
     navigate('/generator')
   }
   return (
-    <div className="container start-screen">
-      <h1>Open Roll</h1>
-      <ul className="character-list">
-        {characters.map((c, idx) => (
-          <li key={idx}>
-            <Button onClick={() => handleLoad(idx)}>{c.name || `Character ${idx + 1}`}</Button>
-            <Button onClick={() => confirmDelete(idx)}>Delete</Button>
-          </li>
-        ))}
-      </ul>
-      <Button onClick={handleCreate}>Create New</Button>
-      <Button onClick={handleExport}>Export</Button>
-      <FileInput accept="application/json" onFileSelect={handleImport}>Import</FileInput>
-      <DiceStyleSelector />
+    <PageContainer title="Open Roll" startScreen>
+      <Section
+        title="Characters"
+        actions={
+          <>
+            <Button onClick={handleCreate}>Create New</Button>
+            <Button onClick={handleExport}>Export</Button>
+            <FileInput accept="application/json" onFileSelect={handleImport}>Import</FileInput>
+          </>
+        }
+      >
+        <ul className="character-list">
+          {characters.map((c, idx) => (
+            <li key={idx}>
+              <Button onClick={() => handleLoad(idx)}>
+                {c.name || `Character ${idx + 1}`}
+              </Button>
+              <Button onClick={() => confirmDelete(idx)}>Delete</Button>
+            </li>
+          ))}
+        </ul>
+        <DiceStyleSelector />
+      </Section>
       {overlay.visible && (
         <Dialog
           visible={overlay.visible}
@@ -106,6 +116,6 @@ export default function CharacterSelect() {
           <span>{overlay.message}</span>
         </Dialog>
       )}
-    </div>
+    </PageContainer>
   )
 }

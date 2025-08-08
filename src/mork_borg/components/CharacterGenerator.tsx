@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import type { ChangeEvent } from 'react'
 import { useGameContext } from '../../GameContext'
 import { Select, Button } from '../../design-system'
+import { PageContainer, Section } from '../../layout'
 import classes from '../classes'
 import type { InventoryItem, Scroll } from '../generateCharacter'
 
@@ -34,15 +35,14 @@ export default function CharacterGenerator() {
   }
 
   return (
-    <div className="container start-screen">
-      <h1>Character Generator</h1>
-      <div className="class-select">
+    <PageContainer title="Character Generator" startScreen>
+      <Section
+        title="Class"
+        actions={<Button onClick={handleRollClass}>Roll Class</Button>}
+      >
         <label>
           Class
-          <Select
-            value={sheet.class}
-            onChange={handleClassChange}
-          >
+          <Select value={sheet.class} onChange={handleClassChange}>
             <option value="">Random</option>
             {classes.map(cls => (
               <option key={cls} value={cls}>
@@ -51,9 +51,8 @@ export default function CharacterGenerator() {
             ))}
           </Select>
         </label>
-        <Button onClick={handleRollClass}>Roll Class</Button>
-      </div>
-      <div className="generated-results">
+      </Section>
+      <Section title="Results">
         <p>Class: {sheet.class}</p>
         <p>STR: {sheet.str}, AGI: {sheet.agi}, PRE: {sheet.pre}, TGH: {sheet.tou}</p>
         <p>HP: {sheet.hp}</p>
@@ -93,14 +92,19 @@ export default function CharacterGenerator() {
             </ul>
           </>
         )}
-      </div>
-      <div className="actions">
-        <Button onClick={() => createCharacter(sheet.class || undefined)}>
-          Reroll
-        </Button>
-        <Button onClick={handleConfirm}>Confirm</Button>
-        <Button onClick={handleCancel}>Cancel</Button>
-      </div>
-    </div>
+      </Section>
+      <Section
+        title="Finalize"
+        actions={
+          <>
+            <Button onClick={() => createCharacter(sheet.class || undefined)}>
+              Reroll
+            </Button>
+            <Button onClick={handleConfirm}>Confirm</Button>
+            <Button onClick={handleCancel}>Cancel</Button>
+          </>
+        }
+      />
+    </PageContainer>
   )
 }

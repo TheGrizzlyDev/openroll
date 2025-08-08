@@ -10,6 +10,7 @@ import { Button, Dialog } from '../design-system'
 import { Canvas } from '@react-three/fiber'
 import Dice3D from './Dice3D'
 import DiceTray from './DiceTray'
+import { PageContainer, Section } from '../layout'
 
 export default function SheetPage() {
   const {
@@ -28,50 +29,60 @@ export default function SheetPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
+  const tabTitle =
+    activeTab === 'character'
+      ? 'Character'
+      : activeTab === 'inventory'
+        ? 'Inventory'
+        : activeTab === 'notes'
+          ? 'Notes'
+          : 'Log'
+
   return (
-    <div className="container">
-      <h1>Open Roll</h1>
-      <Link to="/characters">Characters</Link>
+    <PageContainer
+      title="Open Roll"
+      headerActions={<Link to="/characters">Characters</Link>}
+    >
       <DiceRoller />
+      <Section
+        title={tabTitle}
+        actions={
+          <div className="tabs">
+            <Button
+              className={activeTab === 'character' ? 'active' : ''}
+              onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'character' })}
+            >
+              Character
+            </Button>
+            <Button
+              className={activeTab === 'inventory' ? 'active' : ''}
+              onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'inventory' })}
+            >
+              Inventory
+            </Button>
+            <Button
+              className={activeTab === 'notes' ? 'active' : ''}
+              onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'notes' })}
+            >
+              Notes
+            </Button>
+            <Button
+              className={activeTab === 'log' ? 'active' : ''}
+              onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'log' })}
+            >
+              Log
+            </Button>
+          </div>
+        }
+      >
+        {activeTab === 'character' && <CharacterSheet />}
 
-      <div className="tabs">
-        <Button
-          className={activeTab === 'character' ? 'active' : ''}
-          onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'character' })}
-        >
-          Character
-        </Button>
-        <Button
-          className={activeTab === 'inventory' ? 'active' : ''}
-          onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'inventory' })}
-        >
-          Inventory
-        </Button>
-        <Button
-          className={activeTab === 'notes' ? 'active' : ''}
-          onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'notes' })}
-        >
-          Notes
-        </Button>
-        <Button
-          className={activeTab === 'log' ? 'active' : ''}
-          onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'log' })}
-        >
-          Log
-        </Button>
-      </div>
+        {activeTab === 'inventory' && <Inventory />}
 
-      {activeTab === 'character' && (
-        <CharacterSheet />
-      )}
+        {activeTab === 'notes' && <Notes />}
 
-      {activeTab === 'inventory' && (
-        <Inventory />
-      )}
-
-      {activeTab === 'notes' && <Notes />}
-
-      {activeTab === 'log' && <LogView />}
+        {activeTab === 'log' && <LogView />}
+      </Section>
 
       {overlay.visible && (
         <Dialog
@@ -119,7 +130,7 @@ export default function SheetPage() {
           )}
         </Dialog>
       )}
-    </div>
+    </PageContainer>
   )
 }
 
