@@ -126,7 +126,7 @@ export function HpBar({
       </div>
 
       {/* Controls: ultra-compact, single row, bigger touch targets */}
-      <div className="mt-1 grid grid-cols-3 gap-1">
+      <div className={`mt-1 grid grid-cols-${tempEnabled ? 3 : 2} gap-1`}>
         {/* HP */}
         <div className="flex">
           <Button
@@ -146,7 +146,7 @@ export function HpBar({
         </div>
 
         {/* Temp (hidden if disabled) */}
-        {tempEnabled ? (
+        {tempEnabled && (
           <div className="flex">
             <Button
               type="button"
@@ -162,10 +162,6 @@ export function HpBar({
               className="ml-1 flex-1 px-2 py-1 text-xs border border-blue-400 bg-black/70 hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
               title="Temp +1"
             >+ Temp</Button>
-          </div>
-        ) : (
-          <div className="flex items-center justify-center text-[10px] text-yellow-200/60">
-            Temp HP disabled
           </div>
         )}
 

@@ -62,10 +62,8 @@ export default function CharacterSheet() {
     <div className="sheet">
       <HpBar
         hp={sheet.hp}
-        tempHp={sheet.tempHp}
         maxHp={sheet.maxHp}
         onHpChange={val => updateField('hp', val)}
-        onTempHpChange={val => updateField('tempHp', val)}
         onMaxHpChange={val => updateField('maxHp', val)}
       />
       <FormField label="Character" htmlFor="character">
