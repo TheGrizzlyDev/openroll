@@ -9,6 +9,7 @@ exports[`SheetPage navigation > renders correctly 1`] = `
       Open Roll
     </h1>
     <a
+      data-discover="true"
       href="/characters"
     >
       Characters

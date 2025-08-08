@@ -8,10 +8,7 @@ import { ThemeProvider } from './theme/ThemeProvider'
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
-    <BrowserRouter
-      basename={import.meta.env.BASE_URL || '/'}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <BrowserRouter basename={import.meta.env.BASE_URL || '/'}>
       <ThemeProvider game="mork_borg">
         <App />
       </ThemeProvider>

@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { describe, it, afterEach, beforeEach, expect } from 'vitest'
 import AppRoutes from '../src/routes'
 import { useGameContext, type GameState } from '../src/GameContext'
-import { createSheet } from '../src/morg_borg/sheet'
+import { createSheet } from '../src/mork_borg/sheet'
 
 const setupStore = () => {
   const initial: GameState = {
@@ -34,7 +34,7 @@ describe('app routing with future flags', () => {
   it('renders character select at /characters', async () => {
     window.history.pushState({}, '', '/characters')
     render(
-      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <BrowserRouter>
         <AppRoutes />
       </BrowserRouter>
     )
@@ -44,7 +44,7 @@ describe('app routing with future flags', () => {
   it('renders character generator at /generator', async () => {
     window.history.pushState({}, '', '/generator')
     render(
-      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <BrowserRouter>
         <AppRoutes />
       </BrowserRouter>
     )
@@ -54,7 +54,7 @@ describe('app routing with future flags', () => {
   it('renders sheet page at /sheet/:id', async () => {
     window.history.pushState({}, '', '/sheet/0')
     render(
-      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <BrowserRouter>
         <AppRoutes />
       </BrowserRouter>
     )
@@ -64,7 +64,7 @@ describe('app routing with future flags', () => {
   it('renders log view at /log', async () => {
     window.history.pushState({}, '', '/log')
     render(
-      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <BrowserRouter>
         <AppRoutes />
       </BrowserRouter>
     )
