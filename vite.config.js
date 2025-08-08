@@ -105,6 +105,9 @@ export default defineConfig(({ base = '/' }) => ({
       brotliSize: true,
     }),
   ],
+  resolve: {
+    dedupe: ['three'],
+  },
   test: {
     environment: 'jsdom',
     setupFiles: './test/setup.ts',
