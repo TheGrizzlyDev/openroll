@@ -3,7 +3,7 @@ import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
 import NumericInput from '../components/NumericInput'
 import Popup from '../components/Popup'
-import { Input, Select } from '../design-system'
+import { Input, Select, HpBar } from '../design-system'
 import StatGrid from './StatGrid'
 import classes from './classes'
 import type { Sheet } from './sheet'
@@ -125,26 +125,12 @@ export default function CharacterSheet() {
         )}
       </Popup>
 
-      <label>
-        HP
-        <NumericInput
-          value={sheet.hp}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            updateField('hp', Number(e.target.value))
-          }
-          min={0}
-        />
-      </label>
-      <label>
-        Max HP
-        <NumericInput
-          value={sheet.maxHp}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            updateField('maxHp', Number(e.target.value))
-          }
-          min={0}
-        />
-      </label>
+      <HpBar
+        hp={sheet.hp}
+        maxHp={sheet.maxHp}
+        onHpChange={val => updateField('hp', val)}
+        onMaxHpChange={val => updateField('maxHp', val)}
+      />
       <div className="secondary-stats">
         <label>
           Armor

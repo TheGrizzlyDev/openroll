@@ -339,70 +339,94 @@ exports[`SheetPage navigation > renders correctly 1`] = `
           </label>
         </div>
       </div>
-      <label>
-        HP
+      <div
+        class="hp-bar"
+      >
         <div
-          class="numeric-input"
+          class="flex items-center mb-2"
         >
-          <button
-            aria-label="Decrease value"
-            class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg numeric-input-button"
-            type="button"
+          <span
+            class="mr-2"
           >
-            −
-          </button>
+            HP
+          </span>
           <div
-            class="flex items-center"
+            class="flex-1 h-4 bg-bg-alt border border-accent rounded overflow-hidden"
           >
-            <input
-              class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none numeric-input-field"
-              min="0"
-              step="1"
-              type="number"
-              value="0"
+            <div
+              class="bg-accent h-full"
+              style="width: 0%;"
             />
           </div>
-          <button
-            aria-label="Increase value"
-            class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg numeric-input-button"
-            type="button"
+          <span
+            class="ml-2"
           >
-            +
-          </button>
+            0
+            /
+            0
+          </span>
         </div>
-      </label>
-      <label>
-        Max HP
         <div
-          class="numeric-input"
+          class="flex space-x-2"
         >
-          <button
-            aria-label="Decrease value"
-            class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg numeric-input-button"
-            type="button"
-          >
-            −
-          </button>
           <div
-            class="flex items-center"
+            class="numeric-input"
           >
-            <input
-              class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none numeric-input-field"
-              min="0"
-              step="1"
-              type="number"
-              value="0"
-            />
+            <button
+              aria-label="Decrease HP"
+              class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg numeric-input-button"
+              type="button"
+            >
+              −
+            </button>
+            <div
+              class="flex items-center"
+            >
+              <input
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none numeric-input-field"
+                min="0"
+                type="number"
+                value="0"
+              />
+            </div>
+            <button
+              aria-label="Increase HP"
+              class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg numeric-input-button"
+              type="button"
+            >
+              +
+            </button>
           </div>
-          <button
-            aria-label="Increase value"
-            class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg numeric-input-button"
-            type="button"
+          <div
+            class="numeric-input"
           >
-            +
-          </button>
+            <button
+              aria-label="Decrease Max HP"
+              class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg numeric-input-button"
+              type="button"
+            >
+              −
+            </button>
+            <div
+              class="flex items-center"
+            >
+              <input
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none numeric-input-field"
+                min="0"
+                type="number"
+                value="0"
+              />
+            </div>
+            <button
+              aria-label="Increase Max HP"
+              class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg numeric-input-button"
+              type="button"
+            >
+              +
+            </button>
+          </div>
         </div>
-      </label>
+      </div>
       <div
         class="secondary-stats"
       >
