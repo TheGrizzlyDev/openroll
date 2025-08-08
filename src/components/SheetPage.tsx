@@ -96,11 +96,18 @@ export default function SheetPage() {
                 <ambientLight intensity={0.5} />
                 <directionalLight position={[5, 10, 5]} />
                 <DiceTray>
-                  <Dice3D
-                    type={overlay.roll.type}
-                    rollResult={overlay.roll.result}
-                    position={[0, 1, 0]}
-                  />
+                  {overlay.roll.dice.map((die, i) => (
+                    <Dice3D
+                      key={i}
+                      type={die.type}
+                      rollResult={die.result}
+                      position={[
+                        (i - (overlay.roll!.dice.length - 1) / 2) * 2,
+                        1,
+                        0
+                      ]}
+                    />
+                  ))}
                 </DiceTray>
               </Canvas>
               <div>{overlay.message}</div>

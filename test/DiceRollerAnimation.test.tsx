@@ -30,10 +30,19 @@ describe('DiceRoller', () => {
   it('triggers overlay with correct roll result', () => {
     NumberGenerator.generator.engine = NumberGenerator.engines.min
     resetStore()
-    const { getByText } = render(<DiceRoller />)
+    const { getByText, getByPlaceholderText } = render(<DiceRoller />)
+    fireEvent.change(getByPlaceholderText('1d20'), { target: { value: '1d4+3d20' } })
     fireEvent.click(getByText('Roll'))
     const overlay = useGameContext.getState().state.overlay
     expect(overlay.visible).toBe(true)
-    expect(overlay.roll).toEqual({ type: 'd20', result: 1 })
+    expect(overlay.roll).toEqual({
+      dice: [
+        { type: 'd4', result: 1 },
+        { type: 'd20', result: 1 },
+        { type: 'd20', result: 1 },
+        { type: 'd20', result: 1 }
+      ],
+      total: 4
+    })
   })
 })

@@ -38,7 +38,7 @@ export type DiceType = 'd4' | 'd6' | 'd8' | 'd12' | 'd20'
 
 export interface OverlayState {
   message: string
-  roll: { type: DiceType; result: number } | null
+  roll: { dice: Array<{ type: DiceType; result: number }>; total: number } | null
   visible: boolean
 }
 
@@ -269,8 +269,19 @@ const storeCreator: StateCreator<
     const result = roller.roll(notation) as DiceRoll
     const total = result.total as number
     const entry: LogEntry = { label, notation, output: result.output, total }
-    const match = notation.match(/d(4|6|8|12|20)/i)
-    const type = match ? (`d${match[1]}` as DiceType) : 'd20'
+    const diceResults: Array<{ type: DiceType; result: number }> = []
+    const matches = [...notation.matchAll(/(\d*)d(4|6|8|12|20)/gi)]
+    let matchIndex = 0
+    for (const part of result.rolls as unknown[]) {
+      if (part && typeof part === 'object' && 'rolls' in part) {
+        const m = matches[matchIndex]
+        const type = m ? (`d${m[2]}` as DiceType) : 'd20'
+        for (const r of (part as { rolls: Array<{ value: number }> }).rolls) {
+          diceResults.push({ type, result: r.value })
+        }
+        matchIndex++
+      }
+    }
     const { overlayTimeout } = get()
     if (overlayTimeout) clearTimeout(overlayTimeout)
     const timeout = setTimeout(() => {
@@ -283,7 +294,11 @@ const storeCreator: StateCreator<
       state: {
         ...state,
         log: [entry, ...state.log],
-        overlay: { message: result.output, roll: { type, result: total }, visible: true }
+        overlay: {
+          message: result.output,
+          roll: { dice: diceResults, total },
+          visible: true
+        }
       },
       overlayTimeout: timeout
     }), false, 'roll')
