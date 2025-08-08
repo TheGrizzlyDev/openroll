@@ -12,6 +12,7 @@ export interface Sheet {
     tou: string
   }
   hp: number
+  tempHp: number
   maxHp: number
   armor: number
   omens: number
@@ -36,6 +37,7 @@ export const createSheet = (): Sheet => ({
     tou: '1d20'
   },
   hp: 0,
+  tempHp: 0,
   maxHp: 0,
   armor: 0,
   omens: 0,

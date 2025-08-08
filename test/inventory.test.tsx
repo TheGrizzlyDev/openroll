@@ -34,6 +34,7 @@ const createSimpleSheet = (): Sheet => ({
     tou: '1d20'
   },
   hp: 1,
+  tempHp: 0,
   maxHp: 1,
   armor: 0,
   omens: 0,

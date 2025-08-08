@@ -134,8 +134,10 @@ export default function CharacterSheet() {
 
       <HpBar
         hp={sheet.hp}
+        tempHp={sheet.tempHp}
         maxHp={sheet.maxHp}
         onHpChange={val => updateField('hp', val)}
+        onTempHpChange={val => updateField('tempHp', val)}
         onMaxHpChange={val => updateField('maxHp', val)}
       />
       <div className="secondary-stats">

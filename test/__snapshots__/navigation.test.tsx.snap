@@ -466,26 +466,30 @@ exports[`SheetPage navigation > renders correctly 1`] = `
               HP
             </span>
             <div
-              class="flex-1 h-4 bg-bg-alt border border-accent rounded overflow-hidden"
+              class="relative flex-1 h-4 bg-bg-alt border border-accent rounded overflow-hidden"
             >
               <div
-                class="bg-accent h-full"
+                class="absolute top-0 left-0 h-full bg-blue-500/50"
                 style="width: 0%;"
               />
+              <div
+                class="bg-red-600 h-full"
+                style="width: 0%;"
+              />
+              <div
+                class="absolute inset-0 flex items-center justify-center text-xs font-bold"
+              >
+                0
+                /
+                0
+              </div>
             </div>
-            <span
-              class="ml-2"
-            >
-              0
-              /
-              0
-            </span>
           </div>
           <div
             class="flex space-x-2"
           >
             <div
-              class="numeric-input"
+              class="flex space-x-1"
             >
               <button
                 aria-label="Decrease HP"
@@ -494,16 +498,6 @@ exports[`SheetPage navigation > renders correctly 1`] = `
               >
                 −
               </button>
-              <div
-                class="flex items-center"
-              >
-                <input
-                  class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none numeric-input-field"
-                  min="0"
-                  type="number"
-                  value="0"
-                />
-              </div>
               <button
                 aria-label="Increase HP"
                 class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg numeric-input-button"
@@ -513,7 +507,25 @@ exports[`SheetPage navigation > renders correctly 1`] = `
               </button>
             </div>
             <div
-              class="numeric-input"
+              class="flex space-x-1"
+            >
+              <button
+                aria-label="Decrease Temp HP"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg numeric-input-button"
+                type="button"
+              >
+                −
+              </button>
+              <button
+                aria-label="Increase Temp HP"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg numeric-input-button"
+                type="button"
+              >
+                +
+              </button>
+            </div>
+            <div
+              class="flex space-x-1"
             >
               <button
                 aria-label="Decrease Max HP"
@@ -522,16 +534,6 @@ exports[`SheetPage navigation > renders correctly 1`] = `
               >
                 −
               </button>
-              <div
-                class="flex items-center"
-              >
-                <input
-                  class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none numeric-input-field"
-                  min="0"
-                  type="number"
-                  value="0"
-                />
-              </div>
               <button
                 aria-label="Increase Max HP"
                 class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg numeric-input-button"

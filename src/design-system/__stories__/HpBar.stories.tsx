@@ -14,10 +14,18 @@ type Story = StoryObj<typeof HpBar>
 
 export const Default: Story = {
   render: () => {
-    const [hp, setHp] = useState(3)
+    const [hp, setHp] = useState(8)
+    const [tempHp, setTempHp] = useState(2)
     const [maxHp, setMaxHp] = useState(10)
     return (
-      <HpBar hp={hp} maxHp={maxHp} onHpChange={setHp} onMaxHpChange={setMaxHp} />
+      <HpBar
+        hp={hp}
+        tempHp={tempHp}
+        maxHp={maxHp}
+        onHpChange={setHp}
+        onTempHpChange={setTempHp}
+        onMaxHpChange={setMaxHp}
+      />
     )
   }
 }
