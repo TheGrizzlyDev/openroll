@@ -8,7 +8,7 @@ const meta: Meta<typeof Stat> = {
   args: {
     id: 'str',
     value: 10,
-    onChange: () => {},
+    onChange: value => { void value },
     onRoll: () => {},
     onEdit: () => {}
   }
@@ -18,4 +18,16 @@ export default meta
 
 type Story = StoryObj<typeof Stat>
 
-export const Default: Story = {}
+export const Basic: Story = {}
+
+export const InfoEnabled: Story = {
+  args: {
+    onInfo: () => {}
+  }
+}
+
+export const LongPress: Story = {
+  args: {
+    onRollAdv: () => {}
+  }
+}

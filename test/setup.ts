@@ -4,12 +4,18 @@ import * as matchers from '@testing-library/jest-dom/matchers'
 
 expect.extend(matchers)
 
+interface TestTask {
+  meta?: { timeout?: number }
+  duration?: number
+  name: string
+}
+
 afterEach(ctx => {
-  const task = ctx.task as any
+  const task = ctx.task as TestTask
   const timeout = task.meta?.timeout ?? 10_000
   const duration = task.duration
   if (typeof timeout === 'number' && typeof duration === 'number' && duration > timeout) {
-    console.warn(`⚠️ Test "${ctx.task.name}" exceeded timeout of ${timeout}ms (took ${duration}ms)`)
+    console.warn(`⚠️ Test "${task.name}" exceeded timeout of ${timeout}ms (took ${duration}ms)`)
   }
 })
 

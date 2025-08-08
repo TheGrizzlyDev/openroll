@@ -82,24 +82,38 @@ exports[`SheetPage navigation > renders correctly 1`] = `
       <div
         class="sheet"
       >
-        <label>
-          Character
+        <div
+          class="flex flex-col"
+        >
+          <label
+            for="character"
+          >
+            Character
+          </label>
           <div
             class="flex items-center"
           >
             <input
               class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none "
+              id="character"
               value=""
             />
           </div>
-        </label>
-        <label>
-          Class
+        </div>
+        <div
+          class="flex flex-col"
+        >
+          <label
+            for="class"
+          >
+            Class
+          </label>
           <div
             class="flex items-center"
           >
             <select
               class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none "
+              id="class"
             >
               <option
                 value=""
@@ -138,151 +152,233 @@ exports[`SheetPage navigation > renders correctly 1`] = `
               </option>
             </select>
           </div>
-        </label>
-        <label>
-          Trait
+        </div>
+        <div
+          class="flex flex-col"
+        >
+          <label
+            for="trait"
+          >
+            Trait
+          </label>
           <div
             class="flex items-center"
           >
             <input
               class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none "
+              id="trait"
               value=""
             />
           </div>
-        </label>
-        <label>
-          Background
+        </div>
+        <div
+          class="flex flex-col"
+        >
+          <label
+            for="background"
+          >
+            Background
+          </label>
           <div
             class="flex items-center"
           >
             <input
               class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none "
+              id="background"
               value=""
             />
           </div>
-        </label>
+        </div>
         <div
           class="grid gap-2 [grid-template-columns:repeat(auto-fit,_minmax(160px,_1fr))]"
         >
           <div
             class="flex flex-col"
           >
-            <label>
+            <label
+              for="stat-str"
+            >
               STR
-              <div
-                class="group flex items-center gap-1"
+            </label>
+            <div
+              class="group flex items-center gap-1"
+            >
+              <button
+                aria-label="Decrement"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1"
+                type="button"
               >
-                <div
-                  class="flex items-center"
-                >
-                  <input
-                    class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none w-16 text-center"
-                    type="number"
-                    value="0"
-                  />
-                </div>
-                <button
-                  aria-label="Roll"
-                  class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1"
-                  type="button"
-                />
-                <button
-                  aria-label="Edit notation"
-                  class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1 invisible group-hover:visible group-focus-within:visible"
-                  type="button"
+                −
+              </button>
+              <div
+                class="flex items-center"
+              >
+                <input
+                  class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none w-16 text-center"
+                  id="stat-str"
+                  type="number"
+                  value="0"
                 />
               </div>
-            </label>
+              <button
+                aria-label="Increment"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1"
+                type="button"
+              >
+                +
+              </button>
+              <button
+                aria-label="Roll"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1"
+                type="button"
+              />
+              <button
+                aria-label="Edit notation"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1 invisible group-hover:visible group-focus-within:visible"
+                type="button"
+              />
+            </div>
           </div>
           <div
             class="flex flex-col"
           >
-            <label>
+            <label
+              for="stat-agi"
+            >
               AGI
-              <div
-                class="group flex items-center gap-1"
+            </label>
+            <div
+              class="group flex items-center gap-1"
+            >
+              <button
+                aria-label="Decrement"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1"
+                type="button"
               >
-                <div
-                  class="flex items-center"
-                >
-                  <input
-                    class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none w-16 text-center"
-                    type="number"
-                    value="0"
-                  />
-                </div>
-                <button
-                  aria-label="Roll"
-                  class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1"
-                  type="button"
-                />
-                <button
-                  aria-label="Edit notation"
-                  class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1 invisible group-hover:visible group-focus-within:visible"
-                  type="button"
+                −
+              </button>
+              <div
+                class="flex items-center"
+              >
+                <input
+                  class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none w-16 text-center"
+                  id="stat-agi"
+                  type="number"
+                  value="0"
                 />
               </div>
-            </label>
+              <button
+                aria-label="Increment"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1"
+                type="button"
+              >
+                +
+              </button>
+              <button
+                aria-label="Roll"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1"
+                type="button"
+              />
+              <button
+                aria-label="Edit notation"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1 invisible group-hover:visible group-focus-within:visible"
+                type="button"
+              />
+            </div>
           </div>
           <div
             class="flex flex-col"
           >
-            <label>
+            <label
+              for="stat-pre"
+            >
               PRE
-              <div
-                class="group flex items-center gap-1"
+            </label>
+            <div
+              class="group flex items-center gap-1"
+            >
+              <button
+                aria-label="Decrement"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1"
+                type="button"
               >
-                <div
-                  class="flex items-center"
-                >
-                  <input
-                    class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none w-16 text-center"
-                    type="number"
-                    value="0"
-                  />
-                </div>
-                <button
-                  aria-label="Roll"
-                  class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1"
-                  type="button"
-                />
-                <button
-                  aria-label="Edit notation"
-                  class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1 invisible group-hover:visible group-focus-within:visible"
-                  type="button"
+                −
+              </button>
+              <div
+                class="flex items-center"
+              >
+                <input
+                  class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none w-16 text-center"
+                  id="stat-pre"
+                  type="number"
+                  value="0"
                 />
               </div>
-            </label>
+              <button
+                aria-label="Increment"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1"
+                type="button"
+              >
+                +
+              </button>
+              <button
+                aria-label="Roll"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1"
+                type="button"
+              />
+              <button
+                aria-label="Edit notation"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1 invisible group-hover:visible group-focus-within:visible"
+                type="button"
+              />
+            </div>
           </div>
           <div
             class="flex flex-col"
           >
-            <label>
+            <label
+              for="stat-tou"
+            >
               TOU
-              <div
-                class="group flex items-center gap-1"
+            </label>
+            <div
+              class="group flex items-center gap-1"
+            >
+              <button
+                aria-label="Decrement"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1"
+                type="button"
               >
-                <div
-                  class="flex items-center"
-                >
-                  <input
-                    class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none w-16 text-center"
-                    type="number"
-                    value="0"
-                  />
-                </div>
-                <button
-                  aria-label="Roll"
-                  class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1"
-                  type="button"
-                />
-                <button
-                  aria-label="Edit notation"
-                  class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1 invisible group-hover:visible group-focus-within:visible"
-                  type="button"
+                −
+              </button>
+              <div
+                class="flex items-center"
+              >
+                <input
+                  class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none w-16 text-center"
+                  id="stat-tou"
+                  type="number"
+                  value="0"
                 />
               </div>
-            </label>
+              <button
+                aria-label="Increment"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1"
+                type="button"
+              >
+                +
+              </button>
+              <button
+                aria-label="Roll"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1"
+                type="button"
+              />
+              <button
+                aria-label="Edit notation"
+                class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg h-8 w-8 p-1 invisible group-hover:visible group-focus-within:visible"
+                type="button"
+              />
+            </div>
           </div>
         </div>
         <div
@@ -376,8 +472,14 @@ exports[`SheetPage navigation > renders correctly 1`] = `
         <div
           class="secondary-stats"
         >
-          <label>
-            Armor
+          <div
+            class="flex flex-col"
+          >
+            <label
+              for="armor"
+            >
+              Armor
+            </label>
             <div
               class="numeric-input"
             >
@@ -393,6 +495,7 @@ exports[`SheetPage navigation > renders correctly 1`] = `
               >
                 <input
                   class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none numeric-input-field"
+                  id="armor"
                   min="0"
                   step="1"
                   type="number"
@@ -407,9 +510,15 @@ exports[`SheetPage navigation > renders correctly 1`] = `
                 +
               </button>
             </div>
-          </label>
-          <label>
-            Omens
+          </div>
+          <div
+            class="flex flex-col"
+          >
+            <label
+              for="omens"
+            >
+              Omens
+            </label>
             <div
               class="numeric-input"
             >
@@ -425,6 +534,7 @@ exports[`SheetPage navigation > renders correctly 1`] = `
               >
                 <input
                   class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none numeric-input-field"
+                  id="omens"
                   min="0"
                   step="1"
                   type="number"
@@ -439,9 +549,15 @@ exports[`SheetPage navigation > renders correctly 1`] = `
                 +
               </button>
             </div>
-          </label>
-          <label>
-            Silver
+          </div>
+          <div
+            class="flex flex-col"
+          >
+            <label
+              for="silver"
+            >
+              Silver
+            </label>
             <div
               class="numeric-input"
             >
@@ -457,6 +573,7 @@ exports[`SheetPage navigation > renders correctly 1`] = `
               >
                 <input
                   class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none numeric-input-field"
+                  id="silver"
                   min="0"
                   step="1"
                   type="number"
@@ -471,7 +588,7 @@ exports[`SheetPage navigation > renders correctly 1`] = `
                 +
               </button>
             </div>
-          </label>
+          </div>
         </div>
       </div>
     </section>

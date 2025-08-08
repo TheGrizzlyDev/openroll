@@ -42,9 +42,10 @@ export default function CharacterSheet() {
     })
   }
 
-  const rollStat = (stat: StatKey) => {
+  const rollStat = (stat: StatKey, advantage = false) => {
     const mod = Number(sheet[stat]) || 0
-    const notation = statDiceValues[stat] || '1d20'
+    const base = statDiceValues[stat] || '1d20'
+    const notation = advantage ? base.replace(/(\d+)?d(\d+)/, (_m, _n, sides) => `2d${sides}kh1`) : base
     const fullNotation = mod ? `${notation}${mod >= 0 ? `+${mod}` : mod}` : notation
     try {
       Parser.parse(fullNotation)

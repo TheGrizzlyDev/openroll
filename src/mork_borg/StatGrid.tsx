@@ -1,4 +1,3 @@
-import { type ChangeEvent } from 'react'
 import { FormField, Stat } from '../design-system'
 import type { Sheet } from './sheet'
 
@@ -8,7 +7,7 @@ interface StatGridProps {
   sheet: Sheet
   statDiceErrors: Record<StatKey, string>
   updateField: (_stat: StatKey, _value: number) => void
-  rollStat: (_stat: StatKey) => void
+  rollStat: (_stat: StatKey, _advantage?: boolean) => void
   setEditingStat: (_stat: StatKey) => void
 }
 
@@ -33,10 +32,9 @@ export default function StatGrid({
             <Stat
               id={id}
               value={sheet[stat]}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                updateField(stat, Number(e.target.value))
-              }
+              onChange={value => updateField(stat, value)}
               onRoll={() => rollStat(stat)}
+              onRollAdv={() => rollStat(stat, true)}
               onEdit={() => setEditingStat(stat)}
             />
           </FormField>
