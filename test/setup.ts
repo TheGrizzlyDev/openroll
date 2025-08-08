@@ -11,7 +11,7 @@ interface TaskMeta {
 }
 
 afterEach(ctx => {
-  const task = ctx.task as TestTask
+  const task = ctx.task as TaskMeta
   const timeout = task.meta?.timeout ?? 10_000
   const duration = task.duration
   if (typeof timeout === 'number' && typeof duration === 'number' && duration > timeout) {

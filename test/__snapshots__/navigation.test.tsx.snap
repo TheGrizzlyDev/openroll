@@ -111,15 +111,33 @@ exports[`SheetPage navigation > renders correctly 1`] = `
           >
             Character
           </label>
+        <div
+          class="flex flex-col"
+        >
+          <label
+            for="character"
+          >
+            Character
+          </label>
           <div
             class="flex items-center"
           >
             <input
               class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none "
               id="character"
+              id="character"
               value=""
             />
           </div>
+        </div>
+        <div
+          class="flex flex-col"
+        >
+          <label
+            for="class"
+          >
+            Class
+          </label>
         </div>
         <div
           class="flex flex-col"
@@ -134,6 +152,7 @@ exports[`SheetPage navigation > renders correctly 1`] = `
           >
             <select
               class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none "
+              id="class"
               id="class"
             >
               <option
@@ -182,15 +201,34 @@ exports[`SheetPage navigation > renders correctly 1`] = `
           >
             Trait
           </label>
+        </div>
+        <div
+          class="flex flex-col"
+        >
+          <label
+            for="trait"
+          >
+            Trait
+          </label>
           <div
             class="flex items-center"
           >
             <input
               class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none "
               id="trait"
+              id="trait"
               value=""
             />
           </div>
+        </div>
+        <div
+          class="flex flex-col"
+        >
+          <label
+            for="background"
+          >
+            Background
+          </label>
         </div>
         <div
           class="flex flex-col"
@@ -206,9 +244,11 @@ exports[`SheetPage navigation > renders correctly 1`] = `
             <input
               class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none "
               id="background"
+              id="background"
               value=""
             />
           </div>
+        </div>
         </div>
         <div
           class="grid gap-2 [grid-template-columns:repeat(auto-fit,_minmax(160px,_1fr))]"
@@ -216,6 +256,9 @@ exports[`SheetPage navigation > renders correctly 1`] = `
           <div
             class="flex flex-col"
           >
+            <label
+              for="stat-str"
+            >
             <label
               for="stat-str"
             >
@@ -266,6 +309,9 @@ exports[`SheetPage navigation > renders correctly 1`] = `
             <label
               for="stat-agi"
             >
+            <label
+              for="stat-agi"
+            >
               AGI
             </label>
             <div
@@ -313,6 +359,9 @@ exports[`SheetPage navigation > renders correctly 1`] = `
             <label
               for="stat-pre"
             >
+            <label
+              for="stat-pre"
+            >
               PRE
             </label>
             <div
@@ -357,6 +406,9 @@ exports[`SheetPage navigation > renders correctly 1`] = `
           <div
             class="flex flex-col"
           >
+            <label
+              for="stat-tou"
+            >
             <label
               for="stat-tou"
             >
@@ -501,6 +553,14 @@ exports[`SheetPage navigation > renders correctly 1`] = `
             >
               Armor
             </label>
+          <div
+            class="flex flex-col"
+          >
+            <label
+              for="armor"
+            >
+              Armor
+            </label>
             <div
               class="numeric-input"
             >
@@ -517,6 +577,7 @@ exports[`SheetPage navigation > renders correctly 1`] = `
                 <input
                   class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none numeric-input-field"
                   id="armor"
+                  id="armor"
                   min="0"
                   step="1"
                   type="number"
@@ -531,6 +592,15 @@ exports[`SheetPage navigation > renders correctly 1`] = `
                 +
               </button>
             </div>
+          </div>
+          <div
+            class="flex flex-col"
+          >
+            <label
+              for="omens"
+            >
+              Omens
+            </label>
           </div>
           <div
             class="flex flex-col"
@@ -556,6 +626,7 @@ exports[`SheetPage navigation > renders correctly 1`] = `
                 <input
                   class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none numeric-input-field"
                   id="omens"
+                  id="omens"
                   min="0"
                   step="1"
                   type="number"
@@ -570,6 +641,15 @@ exports[`SheetPage navigation > renders correctly 1`] = `
                 +
               </button>
             </div>
+          </div>
+          <div
+            class="flex flex-col"
+          >
+            <label
+              for="silver"
+            >
+              Silver
+            </label>
           </div>
           <div
             class="flex flex-col"
@@ -595,6 +675,7 @@ exports[`SheetPage navigation > renders correctly 1`] = `
                 <input
                   class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none numeric-input-field"
                   id="silver"
+                  id="silver"
                   min="0"
                   step="1"
                   type="number"
@@ -609,6 +690,7 @@ exports[`SheetPage navigation > renders correctly 1`] = `
                 +
               </button>
             </div>
+          </div>
           </div>
         </div>
       </div>

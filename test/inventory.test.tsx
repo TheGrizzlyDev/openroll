@@ -93,12 +93,11 @@ describe('Inventory handlers', () => {
   it('adds items', () => {
     const logInventory = vi.fn()
     resetStore({}, { logInventory })
-    const { getAllByPlaceholderText, getByPlaceholderText, getAllByText, container } = render(<Inventory />)
+    const { getAllByPlaceholderText, getAllByText, container } = render(<Inventory />)
     fireEvent.click(getAllByText('Add')[0])
     fireEvent.change(getAllByPlaceholderText('Name')[0], {
       target: { value: 'Sword' }
     })
-    fireEvent.change(getByPlaceholderText('Qty'), { target: { value: '2' } })
     const editBtn = getAllByText('Edit')[0]
     fireEvent.click(editBtn)
     const textarea = container.querySelector('textarea') as HTMLTextAreaElement
@@ -109,25 +108,25 @@ describe('Inventory handlers', () => {
     fireEvent.click(addItemBtn)
     const items = useGameContext.getState().state.inventory
     expect(items).toEqual([
-      expect.objectContaining({ name: 'Sword', qty: 2, notes: 'Sharp' })
+      expect.objectContaining({ name: 'Sword', qty: 1, notes: 'Sharp' })
     ])
-    expect(logInventory).toHaveBeenCalledWith('Added Sword x2')
+    expect(logInventory).toHaveBeenCalledWith('Added Sword x1')
   })
 
   it('updates items', () => {
     const items: InventoryItem[] = [{ id: 1, name: 'Sword', qty: 1, notes: '' }]
     const logInventory = vi.fn()
     resetStore({ inventory: items }, { logInventory })
-    const { getAllByText, getByPlaceholderText } = render(<Inventory />)
+    const { getAllByText, getAllByPlaceholderText } = render(<Inventory />)
     const editItemBtn = getAllByText('Edit').find(btn => btn.closest('li'))
     fireEvent.click(editItemBtn!)
-    fireEvent.change(getByPlaceholderText('Qty'), { target: { value: '3' } })
+    fireEvent.change(getAllByPlaceholderText('Name')[0], { target: { value: 'Axe' } })
     fireEvent.click(getAllByText('Save')[0])
     const stateItems = useGameContext.getState().state.inventory
     expect(stateItems).toEqual([
-      expect.objectContaining({ id: 1, name: 'Sword', qty: 3 })
+      expect.objectContaining({ id: 1, name: 'Axe', qty: 1 })
     ])
-    expect(logInventory).toHaveBeenCalledWith('Updated Sword')
+    expect(logInventory).toHaveBeenCalledWith('Updated Axe')
   })
 
   it('deletes items', () => {
@@ -175,17 +174,16 @@ describe('Inventory handlers', () => {
     resetStore({}, { roll })
     const {
       getAllByPlaceholderText,
-      getByPlaceholderText,
       getAllByText,
       container,
-      getByText
+      getByText,
+      getByPlaceholderText
     } = render(<Inventory />)
 
     fireEvent.click(getAllByText('Add')[0])
     fireEvent.change(getAllByPlaceholderText('Name')[0], {
       target: { value: 'Torch' }
     })
-    fireEvent.change(getByPlaceholderText('Qty'), { target: { value: '1' } })
     fireEvent.click(getAllByText('Edit')[0])
     const itemTextarea = container.querySelector('textarea') as HTMLTextAreaElement
     fireEvent.change(itemTextarea, { target: { value: '[dice "1d4" 1d4] damage' } })
@@ -276,13 +274,45 @@ describe('InventoryItem component', () => {
     const { getByText } = render(
       <DndContext>
         <SortableContext items={[item.id]}>
-          <InventoryItemComp item={item}>
+          <InventoryItemComp item={item} defaultExpanded>
             <button>Use</button>
           </InventoryItemComp>
         </SortableContext>
       </DndContext>
     )
     expect(getByText('Use')).toBeTruthy()
+  })
+
+  it('expands to show notes', () => {
+    resetStore()
+    const item: InventoryItem = { id: 1, name: 'Sword', qty: 1, notes: 'Sharp' }
+    const { queryByText, getByRole } = render(
+      <DndContext>
+        <SortableContext items={[item.id]}>
+          <InventoryItemComp item={item} />
+        </SortableContext>
+      </DndContext>
+    )
+    expect(queryByText('Sharp')).toBeNull()
+    fireEvent.click(getByRole('button', { name: 'Sword' }))
+    expect(queryByText('Sharp')).toBeTruthy()
+  })
+
+  it('adjusts quantity with buttons', () => {
+    const item: InventoryItem = { id: 1, name: 'Sword', qty: 1, notes: '' }
+    resetStore({ inventory: [item] })
+    const { getByLabelText } = render(
+      <DndContext>
+        <SortableContext items={[item.id]}>
+          <InventoryItemComp item={item} />
+        </SortableContext>
+      </DndContext>
+    )
+    fireEvent.click(getByLabelText('Increase quantity'))
+    expect(useGameContext.getState().state.inventory[0].qty).toBe(2)
+    fireEvent.click(getByLabelText('Decrease quantity'))
+    fireEvent.click(getByLabelText('Decrease quantity'))
+    expect(useGameContext.getState().state.inventory).toHaveLength(0)
   })
 
   it('displays scroll information', () => {

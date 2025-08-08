@@ -3,7 +3,6 @@ import { arrayMove } from '@dnd-kit/sortable'
 import SortableList from '../components/SortableList'
 import InventoryItem from '../components/InventoryItem'
 import { useGameContext, type Scroll } from '../GameContext'
-import NumericInput from '../components/NumericInput'
 import SmartTextEditor from '../components/SmartTextEditor'
 import { Input, Select, Button, Dialog } from '../design-system'
 // eslint-disable-next-line react-refresh/only-export-components
@@ -24,8 +23,8 @@ export default function Inventory() {
     roll,
     logInventory: onLog
   } = useGameContext()
-  type InventoryForm = { name: string; qty: number | string; notes: string }
-  const empty: InventoryForm = { name: '', qty: 1, notes: '' }
+  type InventoryForm = { name: string; notes: string }
+  const empty: InventoryForm = { name: '', notes: '' }
   const [form, setForm] = useState<InventoryForm>(empty)
   const [editingId, setEditingId] = useState<number | null>(null)
   const [showItemPopup, setShowItemPopup] = useState(false)
@@ -51,7 +50,7 @@ export default function Inventory() {
     const newItem = {
       id: Date.now(),
       name: form.name,
-      qty: Number(form.qty) || 0,
+      qty: 1,
       notes: form.notes
     }
     dispatch({ type: 'SET_INVENTORY', inventory: [...items, newItem] })
@@ -63,7 +62,7 @@ export default function Inventory() {
   const startEdit = (id: number) => {
     const item = items.find(i => i.id === id)
     if (!item) return
-    setForm({ name: item.name, qty: item.qty, notes: item.notes })
+    setForm({ name: item.name, notes: item.notes })
     setEditingId(id)
     setShowItemPopup(true)
   }
@@ -72,7 +71,7 @@ export default function Inventory() {
     dispatch({
       type: 'SET_INVENTORY',
       inventory: items.map(i =>
-        i.id === editingId ? { ...i, ...form, qty: Number(form.qty) || 0 } : i
+        i.id === editingId ? { ...i, name: form.name, notes: form.notes } : i
       )
     })
     onLog?.(`Updated ${form.name}`)
@@ -223,14 +222,6 @@ export default function Inventory() {
                 }
               />
             </div>
-            <NumericInput
-              placeholder="Qty"
-              value={form.qty}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleFormChange('qty', e.target.value)
-              }
-              min={0}
-            />
             <SmartTextEditor
               value={form.notes}
               onChange={value => handleFormChange('notes', value)}
