@@ -36,7 +36,7 @@ export default function InventoryLookup({ description, attrs }: InventoryLookupP
           <ul>
             {items.map(item => (
               <li key={item.id}>
-                <button type="button" onClick={() => setOpen(false)}>{item.name}</button>
+                <Button type="button" onClick={() => setOpen(false)}>{item.name}</Button>
               </li>
             ))}
           </ul>

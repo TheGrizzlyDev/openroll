@@ -1,5 +1,5 @@
 import type React from 'react'
-import { Button } from '../design-system'
+import { Button, Input } from '../design-system'
 
 interface NumericInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string | number
@@ -43,14 +43,14 @@ export default function NumericInput({
       >
         −
       </Button>
-      <input
+      <Input
         type="number"
         value={value}
         onChange={onChange}
         min={min}
         max={max}
         step={step}
-        className={`numeric-input-field base-input${className ? ` ${className}` : ''}`}
+        className={`numeric-input-field${className ? ` ${className}` : ''}`}
         {...props}
       />
       <Button

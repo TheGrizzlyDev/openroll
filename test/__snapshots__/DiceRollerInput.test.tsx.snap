@@ -6,17 +6,17 @@ exports[`DiceRoller > renders correctly 1`] = `
     class="dice-roller"
   >
     <div
-      class="_wrapper_013038"
+      class="flex items-center"
     >
       <input
-        class="_input_013038 "
+        class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 transition-shadow focus:shadow-[0_0_5px_var(--color-accent)] focus:outline-none "
         placeholder="1d20"
         type="text"
         value="1d20"
       />
     </div>
     <button
-      class="_button_60b723 "
+      class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg "
     >
       Roll
     </button>

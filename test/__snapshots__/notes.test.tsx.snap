@@ -16,7 +16,7 @@ exports[`Notes tab > renders correctly 1`] = `
         class="_editorControls_1cc5ba"
       >
         <button
-          class="_button_60b723 "
+          class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg "
           type="button"
         >
           Edit

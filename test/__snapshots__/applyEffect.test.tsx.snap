@@ -4,7 +4,7 @@ exports[`apply effect handler > renders correctly 1`] = `
 <div>
   <div>
     <button
-      class="_button_60b723 badge"
+      class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg badge"
       type="button"
     >
       Buff

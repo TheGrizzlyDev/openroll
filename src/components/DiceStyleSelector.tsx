@@ -27,11 +27,11 @@ export default function DiceStyleSelector() {
     <div className="dice-style-selector">
       <label>
         Dice Color
-        <input type="color" value={diceStyle.color} onChange={handleColor} />
+        <Input type="color" value={diceStyle.color} onChange={handleColor} />
       </label>
       <label>
         Edge Color
-        <input type="color" value={diceStyle.edgeColor} onChange={handleEdgeColor} />
+        <Input type="color" value={diceStyle.edgeColor} onChange={handleEdgeColor} />
       </label>
       <label>
         Texture URLs

@@ -10,20 +10,6 @@ h1, h2 {
   text-align: center;
 }
 
-.base-input {
-  background: var(--color-bg-alt);
-  border: var(--border-width, 1px) solid var(--color-accent);
-  border-radius: var(--border-radius, 0);
-  color: var(--color-text);
-  font-family: inherit;
-  padding: 0.4rem;
-  transition: box-shadow 0.2s;
-}
-
-.base-input:focus {
-  box-shadow: 0 0 5px var(--color-accent);
-  outline: none;
-}
 
 .sheet label {
   display: block;

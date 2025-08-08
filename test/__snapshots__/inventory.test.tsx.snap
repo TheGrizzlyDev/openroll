@@ -8,7 +8,7 @@ exports[`Inventory handlers > renders correctly 1`] = `
     <h2>
       Inventory 
       <button
-        class="_button_60b723 "
+        class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg "
       >
         Add
       </button>
@@ -34,7 +34,7 @@ exports[`Inventory handlers > renders correctly 1`] = `
     <h2>
       Scrolls 
       <button
-        class="_button_60b723 "
+        class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg "
       >
         Add
       </button>

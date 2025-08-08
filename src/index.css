@@ -37,7 +37,6 @@ body {
     gap: 0.25rem;
   }
 
-  body .base-input,
   body button {
     font-size: 0.875rem;
     padding: 0.25rem;
