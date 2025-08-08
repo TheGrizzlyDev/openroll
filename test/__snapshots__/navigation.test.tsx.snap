@@ -54,25 +54,46 @@ exports[`SheetPage navigation > renders correctly 1`] = `
           class="section-actions"
         >
           <div
-            class="tabs"
+            class="flex "
+            role="tablist"
           >
             <button
-              class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg active"
+              aria-controls="«r0»-panel-character"
+              aria-selected="true"
+              class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg flex-1 bg-accent text-bg "
+              id="«r0»-tab-character"
+              role="tab"
+              tabindex="0"
             >
               Character
             </button>
             <button
-              class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg "
+              aria-controls="«r0»-panel-inventory"
+              aria-selected="false"
+              class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg flex-1 "
+              id="«r0»-tab-inventory"
+              role="tab"
+              tabindex="-1"
             >
               Inventory
             </button>
             <button
-              class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg "
+              aria-controls="«r0»-panel-notes"
+              aria-selected="false"
+              class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg flex-1 "
+              id="«r0»-tab-notes"
+              role="tab"
+              tabindex="-1"
             >
               Notes
             </button>
             <button
-              class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg "
+              aria-controls="«r0»-panel-log"
+              aria-selected="false"
+              class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg flex-1 "
+              id="«r0»-tab-log"
+              role="tab"
+              tabindex="-1"
             >
               Log
             </button>
@@ -591,6 +612,27 @@ exports[`SheetPage navigation > renders correctly 1`] = `
           </div>
         </div>
       </div>
+      <div
+        aria-labelledby="«r0»-tab-inventory"
+        class=""
+        hidden=""
+        id="«r0»-panel-inventory"
+        role="tabpanel"
+      />
+      <div
+        aria-labelledby="«r0»-tab-notes"
+        class=""
+        hidden=""
+        id="«r0»-panel-notes"
+        role="tabpanel"
+      />
+      <div
+        aria-labelledby="«r0»-tab-log"
+        class=""
+        hidden=""
+        id="«r0»-panel-log"
+        role="tabpanel"
+      />
     </section>
   </div>
 </div>

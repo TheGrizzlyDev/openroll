@@ -6,7 +6,7 @@ import CharacterSheet from '../mork_borg/CharacterSheet'
 import LogView from './LogView'
 import Notes from './Notes'
 import { useGameContext } from '../GameContext'
-import { Button, Dialog } from '../design-system'
+import { Dialog, Tabs, TabList, Tab, TabPanel } from '../design-system'
 import { Canvas } from '@react-three/fiber'
 import Dice3D from './Dice3D'
 import DiceTray from './DiceTray'
@@ -44,45 +44,38 @@ export default function SheetPage() {
       headerActions={<Link to="/characters">Characters</Link>}
     >
       <DiceRoller />
-      <Section
-        title={tabTitle}
-        actions={
-          <div className="tabs">
-            <Button
-              className={activeTab === 'character' ? 'active' : ''}
-              onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'character' })}
-            >
-              Character
-            </Button>
-            <Button
-              className={activeTab === 'inventory' ? 'active' : ''}
-              onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'inventory' })}
-            >
-              Inventory
-            </Button>
-            <Button
-              className={activeTab === 'notes' ? 'active' : ''}
-              onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'notes' })}
-            >
-              Notes
-            </Button>
-            <Button
-              className={activeTab === 'log' ? 'active' : ''}
-              onClick={() => dispatch({ type: 'SET_ACTIVE_TAB', tab: 'log' })}
-            >
-              Log
-            </Button>
-          </div>
-        }
+      <Tabs
+        value={activeTab}
+        onValueChange={(tab) => dispatch({ type: 'SET_ACTIVE_TAB', tab })}
       >
-        {activeTab === 'character' && <CharacterSheet />}
+        <Section
+          title={tabTitle}
+          actions={
+            <TabList>
+              <Tab value="character">Character</Tab>
+              <Tab value="inventory">Inventory</Tab>
+              <Tab value="notes">Notes</Tab>
+              <Tab value="log">Log</Tab>
+            </TabList>
+          }
+        >
+          <TabPanel value="character">
+            <CharacterSheet />
+          </TabPanel>
 
-        {activeTab === 'inventory' && <Inventory />}
+          <TabPanel value="inventory">
+            <Inventory />
+          </TabPanel>
 
-        {activeTab === 'notes' && <Notes />}
+          <TabPanel value="notes">
+            <Notes />
+          </TabPanel>
 
-        {activeTab === 'log' && <LogView />}
-      </Section>
+          <TabPanel value="log">
+            <LogView />
+          </TabPanel>
+        </Section>
+      </Tabs>
 
       {overlay.visible && (
         <Dialog

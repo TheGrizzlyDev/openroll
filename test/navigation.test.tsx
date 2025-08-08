@@ -41,7 +41,7 @@ describe('SheetPage navigation', () => {
 
   it('switches to notes tab', () => {
     setupStore()
-    const { getByText, queryByText } = render(
+    const { getByRole, queryByText } = render(
       <MemoryRouter initialEntries={['/sheet/0']}>
         <Routes>
           <Route path="/sheet/:id" element={<SheetPage />} />
@@ -49,8 +49,10 @@ describe('SheetPage navigation', () => {
       </MemoryRouter>
     )
     expect(queryByText('Edit')).toBeNull()
-    fireEvent.click(getByText('Notes'))
+    const notesTab = getByRole('tab', { name: 'Notes' })
+    fireEvent.click(notesTab)
     expect(useGameContext.getState().state.activeTab).toBe('notes')
-    expect(getByText('Edit')).toBeTruthy()
+    expect(notesTab.getAttribute('aria-selected')).toBe('true')
+    expect(getByRole('button', { name: 'Edit' })).toBeTruthy()
   })
 })
