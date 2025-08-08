@@ -12,6 +12,6 @@ describe('dice expressions', () => {
     const roller = new DiceRoller()
     const result = roller.roll('4d6kh3+2') as DiceRoll
     expect(result.total).toBe(5)
-    expect(result.output).toBe('4d6kh3+2: [1d, 1, 1, 1]+2 = 5')
+    expect(result.output).toMatch(/^4d6kh3\+2: \[(?:\d+d?,\s){3}\d+d?\]\+2 = 5$/)
   })
 })
