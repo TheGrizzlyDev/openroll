@@ -1,15 +1,6 @@
 import { useState, type ChangeEvent } from 'react'
-import {
-  DndContext,
-  useSensors,
-  useSensor,
-  PointerSensor,
-  TouchSensor,
-  type DragStartEvent,
-  type DragMoveEvent,
-  type DragEndEvent
-} from '@dnd-kit/core'
-import { SortableContext, arrayMove } from '@dnd-kit/sortable'
+import { arrayMove } from '@dnd-kit/sortable'
+import SortableList from '../components/SortableList'
 import InventoryItem from '../components/InventoryItem'
 import { useGameContext, type Scroll } from '../GameContext'
 import NumericInput from '../components/NumericInput'
@@ -44,9 +35,6 @@ export default function Inventory() {
   const [scrollForm, setScrollForm] = useState<ScrollForm>(emptyScroll)
   const [editingScrollId, setEditingScrollId] = useState<number | null>(null)
   const [showScrollPopup, setShowScrollPopup] = useState(false)
-  const sensors = useSensors(useSensor(PointerSensor), useSensor(TouchSensor))
-  const [startPointerY, setStartPointerY] = useState(0)
-
   const handleFormChange = <K extends keyof InventoryForm>(
     field: K,
     value: InventoryForm[K]
@@ -103,49 +91,6 @@ export default function Inventory() {
     }
   }
 
-  const handleDragStart = (event: DragStartEvent) => {
-    const activator = event.activatorEvent as PointerEvent | TouchEvent | KeyboardEvent
-    let y = 0
-    if ('touches' in activator) {
-      y = activator.touches[0]?.clientY ?? 0
-    } else if ('clientY' in activator) {
-      y = activator.clientY ?? 0
-    }
-    setStartPointerY(y)
-    document.body.style.overflow = 'hidden'
-  }
-
-  const handleDragMove = (event: DragMoveEvent) => {
-    const currentY = startPointerY + event.delta.y
-    const threshold = 40
-    const viewportHeight = window.innerHeight
-    if (currentY < threshold) {
-      window.scrollBy({ top: -10 })
-    } else if (currentY > viewportHeight - threshold) {
-      window.scrollBy({ top: 10 })
-    }
-  }
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event
-    document.body.style.overflow = ''
-    if (over && active.id !== over.id) {
-      const oldIndex = items.findIndex(i => i.id === active.id)
-      const newIndex = items.findIndex(i => i.id === over.id)
-      dispatch({ type: 'SET_INVENTORY', inventory: arrayMove(items, oldIndex, newIndex) })
-    }
-  }
-
-  const handleScrollDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event
-    document.body.style.overflow = ''
-    if (over && active.id !== over.id) {
-      dispatch({
-        type: 'SET_SCROLLS',
-        scrolls: reorderScrolls(scrolls, Number(active.id), Number(over.id))
-      })
-    }
-  }
 
   const handleScrollFormChange = <K extends keyof ScrollForm>(
     field: K,
@@ -236,44 +181,31 @@ export default function Inventory() {
       <h2>
         Inventory <Button onClick={() => { resetForm(); setShowItemPopup(true) }}>Add</Button>
       </h2>
-      <DndContext
-        sensors={sensors}
-        onDragStart={handleDragStart}
-        onDragMove={handleDragMove}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext items={items.map(i => i.id)}>
-          <ul>
-            {items.map(item => (
-              <InventoryItem key={item.id} item={item}>
-                <Button onClick={() => startEdit(item.id)}>Edit</Button>
-                <Button onClick={() => handleDelete(item.id)}>Delete</Button>
-              </InventoryItem>
-            ))}
-          </ul>
-        </SortableContext>
-      </DndContext>
+      <SortableList
+        items={items}
+        onReorder={list => dispatch({ type: 'SET_INVENTORY', inventory: list })}
+        renderItem={item => (
+          <InventoryItem key={item.id} item={item}>
+            <Button onClick={() => startEdit(item.id)}>Edit</Button>
+            <Button onClick={() => handleDelete(item.id)}>Delete</Button>
+          </InventoryItem>
+        )}
+      />
       <h2>
         Scrolls <Button onClick={() => { resetScrollForm(); setShowScrollPopup(true) }}>Add</Button>
       </h2>
-      <DndContext
-        sensors={sensors}
-        onDragStart={handleDragStart}
-        onDragMove={handleDragMove}
-        onDragEnd={handleScrollDragEnd}
-      >
-        <SortableContext items={scrolls.map(s => s.id)}>
-          <ul className="scrolls">
-            {scrolls.map(scroll => (
-              <InventoryItem key={scroll.id} item={scroll}>
-                <Button onClick={() => handleCastScroll(scroll.id)}>Cast</Button>
-                <Button onClick={() => startScrollEdit(scroll.id)}>Edit</Button>
-                <Button onClick={() => handleDeleteScroll(scroll.id)}>Delete</Button>
-              </InventoryItem>
-            ))}
-          </ul>
-        </SortableContext>
-      </DndContext>
+      <SortableList
+        items={scrolls}
+        onReorder={list => dispatch({ type: 'SET_SCROLLS', scrolls: list })}
+        renderItem={scroll => (
+          <InventoryItem key={scroll.id} item={scroll}>
+            <Button onClick={() => handleCastScroll(scroll.id)}>Cast</Button>
+            <Button onClick={() => startScrollEdit(scroll.id)}>Edit</Button>
+            <Button onClick={() => handleDeleteScroll(scroll.id)}>Delete</Button>
+          </InventoryItem>
+        )}
+        className="scrolls"
+      />
       {showItemPopup && (
         <Popup
           visible={showItemPopup}
