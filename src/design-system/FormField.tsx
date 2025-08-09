@@ -12,7 +12,7 @@ export function FormField({ label, htmlFor, error, children }: FormFieldProps) {
     <div className="flex flex-col">
       <label htmlFor={htmlFor}>{label}</label>
       {children}
-      {error && <span className="error-message">{error}</span>}
+      {error && <span className="text-error text-xs">{error}</span>}
     </div>
   )
 }
