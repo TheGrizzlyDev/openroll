@@ -14,7 +14,9 @@ export default function PageContainer({
   children
 }: PageContainerProps) {
   return (
-    <div className={`container${startScreen ? ' start-screen' : ''}`}>
+    <div
+      className={`mx-auto max-w-[800px] p-4${startScreen ? ' start-screen' : ''}`}
+    >
       <header className="page-header">
         <h1>{title}</h1>
         {headerActions && <div className="page-header-actions">{headerActions}</div>}
