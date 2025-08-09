@@ -3,7 +3,7 @@
 exports[`DiceRoller > renders correctly 1`] = `
 <div>
   <div
-    class="dice-roller"
+    class="mb-4 flex items-center gap-2 max-[400px]:flex-col max-[400px]:items-stretch max-[400px]:gap-1"
   >
     <div
       class="flex items-center"
@@ -16,7 +16,7 @@ exports[`DiceRoller > renders correctly 1`] = `
       />
     </div>
     <button
-      class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg "
+      class="bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg max-[400px]:w-full"
     >
       Roll
     </button>

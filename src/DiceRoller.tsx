@@ -38,7 +38,7 @@ export default function DiceRoller() {
   }
 
   return (
-    <div className="dice-roller">
+    <div className="mb-4 flex items-center gap-2 max-[400px]:flex-col max-[400px]:items-stretch max-[400px]:gap-1">
       <Input
         type="text"
         value={notation}
@@ -55,8 +55,15 @@ export default function DiceRoller() {
         placeholder="1d20"
         className={error ? 'border-error' : undefined}
       />
+<<<<<<< ours
       <Button icon="roll" onClick={handleRoll}>Roll</Button>
       {error && <span className="text-error text-xs">{error}</span>}
+=======
+      <Button icon="roll" onClick={handleRoll} className="max-[400px]:w-full">
+        Roll
+      </Button>
+      {error && <span className="error-message">{error}</span>}
+>>>>>>> theirs
       {result !== null && (
         <span style={srOnly} aria-live="polite">
           {result.output}

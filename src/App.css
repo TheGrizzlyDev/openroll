@@ -9,14 +9,6 @@ h1, h2 {
   margin-bottom: 0.5rem;
 }
 
-.dice-roller {
-  align-items: center;
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-
 .stat {
   display: flex;
   flex-direction: column;
@@ -40,11 +32,6 @@ h1, h2 {
   width: auto;
 }
 
-@media (width >= 768px) {
-  .dice-roller button {
-    width: auto;
-  }
-}
 
 .inventory ul {
   list-style: none;
