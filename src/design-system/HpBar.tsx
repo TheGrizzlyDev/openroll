@@ -24,13 +24,8 @@ export function HpBar({
   const tempEnabled = !!onTempHpChange
   const tempPct = tempEnabled && maxHp > 0 ? clamp((hp + tempHp) / maxHp, 0, 1) : pct
 
-  const state = pct <= 0.25 ? 'danger' : pct <= 0.5 ? 'warn' : 'ok'
-  const barColor =
-    state === 'danger'
-      ? 'bg-error'
-      : state === 'warn'
-        ? 'bg-accent/80'
-        : 'bg-accent'
+  const isDanger = pct <= 0.25
+  const barColor = pct <= 0.5 ? 'bg-error' : 'bg-accent'
 
   const changeHp = (delta: number) => onHpChange(clamp(hp + delta, 0, maxHp))
   const changeTempHp = (delta: number) => {
@@ -60,9 +55,9 @@ export function HpBar({
           'relative w-full',
           'h-9',                     // thicker for readability
           'rounded-sm border-2 border-accent',
-          'bg-bg',
+          'bg-bg-alt',
           'shadow-[0_0_0_1px_rgba(0,0,0,0.8),inset_0_0_12px_rgba(0,0,0,0.8)]',
-          state === 'danger' ? 'animate-pulse' : ''
+          isDanger ? 'animate-pulse' : ''
         ].join(' ')}
         style={{
           backgroundImage: noiseOverlay + ',repeating-linear-gradient(to right, rgba(0,0,0,.28) 0 1px, transparent 1px 8%)',
