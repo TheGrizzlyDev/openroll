@@ -211,7 +211,7 @@ export default function Inventory() {
             setShowItemPopup(false)
           }}
         >
-          <div className="inventory-form">
+          <div className="flex min-w-60 flex-col gap-2">
             <div style={{ flex: 1 }}>
               <Input
                 placeholder="Name"
@@ -225,7 +225,7 @@ export default function Inventory() {
               value={form.notes}
               onChange={value => handleFormChange('notes', value)}
             />
-            <div className="inventory-actions">
+            <div className="flex justify-end gap-2">
               {editingId ? (
                 <>
                   <Button onClick={handleSave}>Save</Button>
@@ -253,7 +253,7 @@ export default function Inventory() {
             setShowScrollPopup(false)
           }}
         >
-          <div className="inventory-form">
+          <div className="flex min-w-60 flex-col gap-2">
             <Select
               value={scrollForm.type}
               onChange={(e: ChangeEvent<HTMLSelectElement>) =>
@@ -286,7 +286,7 @@ export default function Inventory() {
               value={scrollForm.notes}
               onChange={value => handleScrollFormChange('notes', value)}
             />
-            <div className="inventory-actions">
+            <div className="flex justify-end gap-2">
               {editingScrollId ? (
                 <>
                   <Button onClick={handleSaveScroll}>Save</Button>

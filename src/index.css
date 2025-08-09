@@ -42,9 +42,6 @@ body {
     padding: 0.25rem;
   }
 
-  body .inventory-form {
-    flex-direction: column;
-  }
 
   body .overlay {
     font-size: 0.875rem;
