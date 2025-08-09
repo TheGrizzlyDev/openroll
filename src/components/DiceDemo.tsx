@@ -1,36 +1,71 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import initDiceDemo from '../diceDemo'
 import '../DiceDemo.css'
 
 export default function DiceDemo() {
+  const canvasRef = useRef<HTMLDivElement>(null)
+  const toastRef = useRef<HTMLDivElement>(null)
+  const toolbarRef = useRef<HTMLDivElement>(null)
+  const settingsRef = useRef<HTMLDivElement>(null)
+  const apiRef = useRef<ReturnType<typeof initDiceDemo> | null>(null)
+  const [slowMo, setSlowMo] = useState(false)
+
   useEffect(() => {
-    const app = document.getElementById('app') as HTMLElement
-    const toast = document.getElementById('toast') as HTMLElement
-    const toolbar = document.querySelector('.toolbar') as HTMLElement
-    const settings = document.getElementById('settings') as HTMLElement
-    initDiceDemo({ app, toast, toolbar, settings })
+    if (
+      canvasRef.current &&
+      toastRef.current &&
+      toolbarRef.current &&
+      settingsRef.current
+    ) {
+      apiRef.current = initDiceDemo({
+        app: canvasRef.current,
+        toast: toastRef.current,
+        toolbar: toolbarRef.current,
+        settings: settingsRef.current,
+      })
+    }
   }, [])
 
   return (
     <>
-      <div id="app" />
+      <div id="app" ref={canvasRef} />
       <div id="ui">
-        <div id="toast" />
-        <div className="toolbar">
-          <button id="throw" className="btn">Throw dice</button>
-          <button id="slowmo" className="btn">Slow‑mo: off</button>
-          <button id="reset" className="btn">Reset view</button>
-          <label className="btn" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <div id="toast" ref={toastRef} />
+        <div className="toolbar" ref={toolbarRef}>
+          <button
+            className="btn"
+            onClick={() => apiRef.current?.throwAll(Date.now())}
+          >
+            Throw dice
+          </button>
+          <button
+            className="btn"
+            onClick={() => setSlowMo(apiRef.current?.toggleSlowMo() ?? slowMo)}
+          >
+            {`Slow-mo: ${slowMo ? 'on' : 'off'}`}
+          </button>
+          <button className="btn" onClick={() => apiRef.current?.resetOrbit()}>
+            Reset view
+          </button>
+          <label
+            className="btn"
+            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+          >
             View
-            <select id="viewMode" defaultValue="ortho">
+            <select
+              defaultValue="ortho"
+              onChange={(e) => apiRef.current?.setViewMode(e.target.value)}
+            >
               <option value="ortho">Ortho (Game)</option>
               <option value="perspTop">Persp Top</option>
               <option value="perspFree">Persp Free</option>
             </select>
           </label>
-          <button id="toggle-settings" className="btn">Settings</button>
+          <button className="btn" onClick={() => apiRef.current?.toggleSettings()}>
+            Settings
+          </button>
         </div>
-        <div className="panel" id="settings" style={{ display: 'none' }}>
+        <div className="panel" id="settings" ref={settingsRef} style={{ display: 'none' }}>
           <div><b>Dice</b></div>
           <div className="grid">
             <label>Die <input id="baseColor" type="color" defaultValue="#e991ff" /></label>

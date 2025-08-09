@@ -758,7 +758,7 @@ export default function initDiceDemo({ app, toast, toolbar, settings }) {
     d.snapping = false
   }
   // Throw all dice using a seeded RNG.
-  function throwAll(seed) {
+  function throwAll(seed?) {
     const rng = makeRng(seed || (Math.random() * 1e9) | 0)
     dice.forEach((d) => throwDie(d, rng))
     scheduleResultsToast()
@@ -1020,27 +1020,20 @@ export default function initDiceDemo({ app, toast, toolbar, settings }) {
     }, 4000)
   }
   // UI
-  // Button and select handlers for user interaction.
-  const throwBtn = toolbar.querySelector("#throw")
-  const slowmoBtn = toolbar.querySelector("#slowmo")
-  const resetBtn = toolbar.querySelector("#reset")
-  const toggleSettingsBtn = toolbar.querySelector("#toggle-settings")
-  const viewModeSelect = toolbar.querySelector("#viewMode")
+  // Button and select handlers for user interaction are exposed via the
+  // returned API rather than DOM listeners.
 
   function toggleSlowMo() {
     slowMo = !slowMo
-    slowmoBtn.textContent = `Slow\u2011mo: ${slowMo ? "on" : "off"}`
+    return slowMo
   }
 
-  throwBtn.addEventListener("click", () => throwAll())
-  slowmoBtn.addEventListener("click", toggleSlowMo)
-  resetBtn.addEventListener("click", () => orbit.reset())
-  toggleSettingsBtn.addEventListener("click", () => {
+  function toggleSettings() {
     settings.style.display =
       settings.style.display === "none" ? "block" : "none"
-  })
-  viewModeSelect.addEventListener("change", (e) => {
-    const mode = e.target.value
+  }
+
+  function setViewMode(mode) {
     if (mode === "ortho") {
       camera = orthoCamera
     } else if (mode === "perspTop") {
@@ -1053,7 +1046,7 @@ export default function initDiceDemo({ app, toast, toolbar, settings }) {
       perspCamera.lookAt(0, 0.6, 0)
     }
     orbit.apply()
-  })
+  }
   // Binds
   // Helper to connect form controls to CONFIG values.
   const bind = (id, key, parseFn = (v) => v, onChange = applyAppearanceAll) => {
@@ -1138,5 +1131,7 @@ export default function initDiceDemo({ app, toast, toolbar, settings }) {
     resetOrbit: orbit.reset,
     applyAppearanceAll,
     rebuildTray,
+    setViewMode,
+    toggleSettings,
   }
 }
