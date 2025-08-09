@@ -33,7 +33,7 @@ export function NumericAttribute({
         type="button"
         aria-label={`Decrease ${id}`}
         onClick={() => handle(-step)}
-        className="h-10 w-10 p-0 grid place-items-center rounded border border-accent bg-bg-alt hover:bg-bg hover:text-text active:translate-y-px text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        className="h-10 w-10 p-0 grid place-items-center active:translate-y-px"
       >
         −
       </Button>
@@ -44,7 +44,7 @@ export function NumericAttribute({
         type="button"
         aria-label={`Increase ${id}`}
         onClick={() => handle(step)}
-        className="h-10 w-10 p-0 grid place-items-center rounded border border-accent bg-bg-alt hover:bg-bg hover:text-text active:translate-y-px text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        className="h-10 w-10 p-0 grid place-items-center active:translate-y-px"
       >
         +
       </Button>
