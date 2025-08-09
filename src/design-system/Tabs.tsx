@@ -82,8 +82,8 @@ export function Tab({ value, className = '', children, ...props }: TabProps) {
   const id = `${idBase}-tab-${value}`
   const panelId = `${idBase}-panel-${value}`
   const baseClasses =
-    'bg-bg-alt border border-accent rounded-[var(--border-radius)] text-accent cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors hover:bg-accent hover:text-bg flex-1'
-  const activeClasses = selected ? ' bg-accent text-bg' : ''
+    'border border-accent bg-bg text-text hover:bg-bg-alt focus-visible:ring-2 focus-visible:ring-accent rounded-[var(--border-radius)] cursor-pointer font-body font-bold tracking-wider py-2 px-4 uppercase transition-colors flex-1'
+  const activeClasses = selected ? ' text-accent' : ''
 
   return (
     <button

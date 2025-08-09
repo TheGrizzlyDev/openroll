@@ -95,7 +95,7 @@ export function Dialog({ visible, onClose, children }: DialogProps) {
     >
       <div
         ref={contentRef}
-        className={`flex flex-col items-center gap-2 border border-accent bg-bg-alt text-accent transition-transform transition-opacity duration-300 p-2 text-sm sm:p-4 sm:text-base ${
+        className={`flex flex-col items-center gap-2 border border-accent bg-bg transition-transform transition-opacity duration-300 p-2 text-sm sm:p-4 sm:text-base ${
           visible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
         }`}
         role="dialog"
