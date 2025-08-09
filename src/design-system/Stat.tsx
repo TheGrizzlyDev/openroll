@@ -149,13 +149,13 @@ export function Stat({
         }`}
       />
 
-      {/* Edit (always keyboard focusable; fades in visually on hover/focus of group) */}
+      {/* Edit */}
       <Button
         type="button"
         icon="edit"
         aria-label={`Edit ${id.toUpperCase()} notation`}
         onClick={onEdit}
-        className="h-10 w-10 p-2 rounded border border-accent bg-bg-alt hover:bg-bg hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent text-text opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity"
+        className="h-10 w-10 p-2 rounded border border-accent bg-bg-alt hover:bg-bg hover:text-text active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent text-text"
         title="Edit notation"
       />
 
