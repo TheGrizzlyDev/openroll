@@ -3,10 +3,13 @@ import { renderOml } from '../oml/render'
 import { useGameContext } from '../GameContext'
 import CodeMirror from '@uiw/react-codemirror'
 import { autocompletion } from '@codemirror/autocomplete'
-import { EditorView } from '@codemirror/view'
-import { omlLanguage, omlCompletion } from '../oml/codemirror'
+import {
+  omlLanguage,
+  omlCompletion,
+  omlTheme,
+  omlHighlight
+} from '../oml/codemirror'
 import { Button } from '../design-system'
-import styles from './SmartTextEditor.module.css'
 
 interface SmartTextEditorProps {
   value: string
@@ -21,23 +24,6 @@ export default function SmartTextEditor({ value, onChange }: SmartTextEditorProp
     typeof navigator !== 'undefined' &&
     /Mobi|Android|iP(ad|hone|od)/i.test(navigator.userAgent)
 
-  const editorTheme = EditorView.theme({
-    '&': {
-      backgroundColor: 'var(--color-bg-alt)',
-      color: 'var(--color-text)'
-    },
-    '.cm-content': {
-      fontFamily: 'var(--font-body)'
-    },
-    '.cm-gutters': {
-      backgroundColor: 'var(--color-bg-alt)',
-      color: 'var(--color-text)'
-    },
-    '&.cm-focused .cm-cursor': {
-      borderLeftColor: 'var(--color-text)'
-    }
-  })
-
   useEffect(() => {
     if (!editing) setDraft(value)
   }, [value, editing])
@@ -50,22 +36,24 @@ export default function SmartTextEditor({ value, onChange }: SmartTextEditorProp
   }
 
   return (
-    <div className={styles.editor}>
+    <div className="flex flex-col gap-2">
       {editing ? (
         <CodeMirror
           value={draft}
           height="200px"
+          className="w-full"
           extensions={[
             omlLanguage,
             ...(isMobile ? [] : [autocompletion({ override: [omlCompletion] })]),
-            editorTheme
+            omlTheme,
+            omlHighlight
           ]}
           onChange={value => setDraft(value)}
         />
       ) : (
         <div>{renderOml(value, roll)}</div>
       )}
-      <div className={styles.editorControls}>
+      <div className="flex gap-2 justify-end">
         <Button type="button" onClick={handleToggle}>
           {editing ? 'Save' : 'Edit'}
         </Button>
