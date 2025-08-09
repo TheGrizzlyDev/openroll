@@ -1,1 +1,2 @@
-Re-enable snapshot tests once UI stabilizes.
+- Re-enable snapshot tests once UI stabilizes.
+- Re-add unit testing for react components.

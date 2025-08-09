@@ -14,7 +14,7 @@
     "lint:js": "eslint .",
     "lint:css": "stylelint \"src/**/*.{css,scss}\"",
     "preview": "vite preview",
-    "test": "vitest run --environment jsdom",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "update-submodules": "git submodule update --init --recursive && git submodule sync",
     "storybook": "storybook dev -p 6006",
