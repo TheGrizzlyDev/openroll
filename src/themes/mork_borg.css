@@ -1,24 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap');
 
 :root {
-  --color-bg: #000;
-  --color-bg-alt: #1a1a1a;
-  --color-text: #f8f003;
-  --color-accent: #f06;
+  --color-bg: #111;
+  --color-bg-alt: #222;
+  --color-text: #fff;
+  --color-accent: #f8f003;
   --color-error: #f00;
   --font-body: 'Metal Mania', cursive;
-  --border-width: 2px;
+  --border-width: 3px;
+  --border-radius: 0;
 }
 
 body {
   background: var(--color-bg);
-  background-image: repeating-linear-gradient(
-    -45deg,
-    var(--color-bg) 0,
-    var(--color-bg) 10px,
-    var(--color-bg-alt) 10px,
-    var(--color-bg-alt) 20px
-  );
   color: var(--color-text);
   font-family: var(--font-body);
 }

@@ -11,7 +11,7 @@ export function Select({ icon, children, className = '', ...props }: SelectProps
     <div className="flex items-center">
       {icon && icons[icon] && <span className="mr-1">{icons[icon]}</span>}
       <select
-        className={`bg-bg border border-accent rounded text-text flex-1 font-body p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${className}`}
+        className={`bg-bg border border-accent rounded-[var(--border-radius)] text-text flex-1 font-body p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${className}`}
         {...props}
       >
         {children}
