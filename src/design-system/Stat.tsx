@@ -63,100 +63,100 @@ export function Stat({
   const hintId = `${id}-hint`
 
   return (
-    <div className="group inline-flex items-center gap-2" role="group" aria-labelledby={labelId}>
-      {/* Visual label is optional; we keep it screen-reader only by default */}
-      <span id={labelId} className="sr-only">{id.toUpperCase()} stat</span>
+    <div className="p-3 border border-accent bg-bg rounded-[var(--border-radius)] flex items-center justify-between">
+      <div className="group inline-flex items-center gap-2" role="group" aria-labelledby={labelId}>
+        {/* Visual label is optional; we keep it screen-reader only by default */}
+        <span id={labelId} className="sr-only">{id.toUpperCase()} stat</span>
 
-      {/* Info (optional) */}
-      {onInfo && (
+        {/* Info (optional) */}
+        {onInfo && (
+          <Button
+            type="button"
+            aria-label={`${id.toUpperCase()} info`}
+            onClick={onInfo}
+            className="h-10 w-10 p-2"
+            title="Info"
+          >
+            ℹ️
+          </Button>
+        )}
+
+        {/* Decrement */}
         <Button
           type="button"
-          aria-label={`${id.toUpperCase()} info`}
-          onClick={onInfo}
-          className="h-10 w-10 p-2 rounded border border-accent bg-bg-alt hover:bg-bg hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent text-text"
-          title="Info"
+          aria-label={`Decrease ${id.toUpperCase()}`}
+          onClick={() => onChange(value - 1)}
+          className="h-10 w-10 p-0 active:translate-y-px"
+          title={`Decrease ${id.toUpperCase()}`}
         >
-          ℹ️
+          −
         </Button>
-      )}
 
-      {/* Decrement */}
-      <Button
-        type="button"
-        aria-label={`Decrease ${id.toUpperCase()}`}
-        onClick={() => onChange(value - 1)}
-        className="h-10 w-10 p-0 grid place-items-center rounded border border-accent bg-bg-alt hover:bg-bg hover:text-text active:translate-y-px text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-        title={`Decrease ${id.toUpperCase()}`}
-      >
-        −
-      </Button>
+        {/* Value input (type=number exposes native spinbutton semantics to SRs) */}
+        <div className="w-10 text-center tabular-nums">
+          <label htmlFor={id} className="sr-only">
+            {id.toUpperCase()} value
+          </label>
+          <input
+            id={id}
+            type="number"
+            inputMode="numeric"
+            value={value}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              onChange(Number(e.target.value))
+            }
+            className="h-10 w-full rounded border border-accent bg-transparent text-center text-base font-extrabold font-mono text-text tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            aria-describedby={hintId}
+          />
+        </div>
 
-      {/* Value input (type=number exposes native spinbutton semantics to SRs) */}
-      <div className="w-10 text-center tabular-nums">
-        <label htmlFor={id} className="sr-only">
-          {id.toUpperCase()} value
-        </label>
-        <input
-          id={id}
-          type="number"
-          inputMode="numeric"
-          value={value}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onChange(Number(e.target.value))
-          }
-          className="h-10 w-full rounded border border-accent bg-transparent text-center text-base font-extrabold font-mono text-text tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-          aria-describedby={hintId}
+        {/* Increment */}
+        <Button
+          type="button"
+          aria-label={`Increase ${id.toUpperCase()}`}
+          onClick={() => onChange(value + 1)}
+          className="h-10 w-10 p-0 active:translate-y-px"
+          title={`Increase ${id.toUpperCase()}`}
+        >
+          +
+        </Button>
+
+        {/* Roll (click = normal; hold 500ms = adv; Shift+Enter = adv) */}
+        <Button
+          type="button"
+          icon="dice"
+          aria-label={`Roll ${id.toUpperCase()}${onRollAdv ? ' (Shift+Enter for advantage or long-press)' : ''}`}
+          title={onRollAdv ? 'Enter: Roll • Shift+Enter: Advantage • Long-press: Advantage' : 'Enter: Roll'}
+          aria-keyshortcuts={onRollAdv ? 'Enter, Shift+Enter' : 'Enter'}
+          onMouseDown={start}
+          onMouseUp={end}
+          onMouseLeave={end}
+          onTouchStart={start}
+          onTouchEnd={end}
+          onTouchCancel={end}
+          onKeyDown={onRollKeyDown}
+          className={`h-10 w-10 p-2 active:translate-y-px ${
+            onRollAdv ? 'border-error focus-visible:ring-error' : ''
+          }`}
         />
+
+        {/* Edit */}
+        <Button
+          type="button"
+          icon="edit"
+          aria-label={`Edit ${id.toUpperCase()} notation`}
+          onClick={onEdit}
+          className="h-10 w-10 p-2 active:translate-y-px"
+          title="Edit notation"
+        />
+
+        {/* SR-only hint + live region */}
+        <span id={hintId} className="sr-only">
+          Use minus and plus to change {id.toUpperCase()}. Type a number, or use arrow keys in the field.
+          Press Enter to roll. {onRollAdv ? 'Press Shift+Enter or long-press to roll with advantage.' : ''}
+        </span>
+        <div ref={liveRef} aria-live="polite" className="sr-only" />
       </div>
-
-      {/* Increment */}
-      <Button
-        type="button"
-        aria-label={`Increase ${id.toUpperCase()}`}
-        onClick={() => onChange(value + 1)}
-        className="h-10 w-10 p-0 grid place-items-center rounded border border-accent bg-bg-alt hover:bg-bg hover:text-text active:translate-y-px text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-        title={`Increase ${id.toUpperCase()}`}
-      >
-        +
-      </Button>
-
-      {/* Roll (click = normal; hold 500ms = adv; Shift+Enter = adv) */}
-      <Button
-        type="button"
-        icon="dice"
-        aria-label={`Roll ${id.toUpperCase()}${onRollAdv ? ' (Shift+Enter for advantage or long-press)' : ''}`}
-        title={onRollAdv ? 'Enter: Roll • Shift+Enter: Advantage • Long-press: Advantage' : 'Enter: Roll'}
-        aria-keyshortcuts={onRollAdv ? 'Enter, Shift+Enter' : 'Enter'}
-        onMouseDown={start}
-        onMouseUp={end}
-        onMouseLeave={end}
-        onTouchStart={start}
-        onTouchEnd={end}
-        onTouchCancel={end}
-        onKeyDown={onRollKeyDown}
-        className={`h-10 w-10 p-2 rounded border bg-bg-alt hover:bg-bg hover:text-text active:translate-y-px focus-visible:outline-none focus-visible:ring-2 text-text ${
-          onRollAdv
-            ? 'border-error focus-visible:ring-error'
-            : 'border-accent focus-visible:ring-accent'
-        }`}
-      />
-
-      {/* Edit */}
-      <Button
-        type="button"
-        icon="edit"
-        aria-label={`Edit ${id.toUpperCase()} notation`}
-        onClick={onEdit}
-        className="h-10 w-10 p-2 rounded border border-accent bg-bg-alt hover:bg-bg hover:text-text active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent text-text"
-        title="Edit notation"
-      />
-
-      {/* SR-only hint + live region */}
-      <span id={hintId} className="sr-only">
-        Use minus and plus to change {id.toUpperCase()}. Type a number, or use arrow keys in the field.
-        Press Enter to roll. {onRollAdv ? 'Press Shift+Enter or long-press to roll with advantage.' : ''}
-      </span>
-      <div ref={liveRef} aria-live="polite" className="sr-only" />
     </div>
   )
 }
