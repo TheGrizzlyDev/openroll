@@ -22,22 +22,6 @@ h1, h2 {
   margin-bottom: 1rem;
 }
 
-.tabs {
-  display: flex;
-  margin-bottom: 1rem;
-}
-
-.tabs button {
-  cursor: pointer;
-  flex: 1;
-  padding: 0.5rem;
-}
-
-.tabs button.active {
-  background: var(--color-accent);
-  color: var(--color-bg-alt);
-}
-
 
 .stat {
   display: flex;

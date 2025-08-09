@@ -26,11 +26,6 @@ body {
     font-size: 1.25rem;
   }
 
-  body .tabs button {
-    font-size: 0.875rem;
-    padding: 0.25rem;
-  }
-
   body .dice-roller {
     align-items: stretch;
     flex-direction: column;
