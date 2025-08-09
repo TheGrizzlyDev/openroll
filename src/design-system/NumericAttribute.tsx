@@ -37,16 +37,8 @@ export function NumericAttribute({
       >
         −
       </Button>
-      <div className="relative h-10 w-20 rounded grid place-items-center border-2 border-accent bg-bg shadow-[inset_0_0_12px_rgba(0,0,0,.85)]">
-        <span className="text-base font-extrabold text-text font-mono tabular-nums">{value}</span>
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -top-px left-0 right-0 h-px opacity-70"
-          style={{
-            background:
-              'repeating-linear-gradient(90deg, rgba(255,255,255,.12) 0 2px, transparent 2px 6px)'
-          }}
-        />
+      <div className="h-10 w-10 rounded border border-accent text-center leading-10 font-extrabold font-mono text-text tabular-nums">
+        {value}
       </div>
       <Button
         type="button"

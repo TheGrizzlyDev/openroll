@@ -1,6 +1,5 @@
 import { type ChangeEvent, type KeyboardEvent, useEffect, useRef } from 'react'
 import { Button } from './Button'
-import { Input } from './Input'
 
 interface StatProps {
   id: string
@@ -93,9 +92,11 @@ export function Stat({
       </Button>
 
       {/* Value input (type=number exposes native spinbutton semantics to SRs) */}
-      <div className="relative h-10 w-20 rounded grid place-items-center border-2 border-accent bg-bg shadow-inner">
-        <label htmlFor={id} className="sr-only">{id.toUpperCase()} value</label>
-        <Input
+      <div className="w-10 text-center tabular-nums">
+        <label htmlFor={id} className="sr-only">
+          {id.toUpperCase()} value
+        </label>
+        <input
           id={id}
           type="number"
           inputMode="numeric"
@@ -103,7 +104,7 @@ export function Stat({
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             onChange(Number(e.target.value))
           }
-          className="absolute inset-0 w-full h-full bg-transparent border-0 text-center text-base font-extrabold text-text font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="h-10 w-full rounded border border-accent bg-transparent text-center text-base font-extrabold font-mono text-text tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           aria-describedby={hintId}
         />
       </div>
