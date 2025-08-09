@@ -5,6 +5,7 @@ const CharacterSelect = lazy(() => import('./components/CharacterSelect'))
 const SheetPage = lazy(() => import('./components/SheetPage'))
 const LogView = lazy(() => import('./components/LogView'))
 const CharacterGenerator = lazy(() => import('./mork_borg/components/CharacterGenerator'))
+const DiceDemo = lazy(() => import('./components/DiceDemo'))
 
 export default function AppRoutes() {
   return (
@@ -14,6 +15,7 @@ export default function AppRoutes() {
         <Route path="/generator" element={<CharacterGenerator />} />
         <Route path="/sheet/:id" element={<SheetPage />} />
         <Route path="/log" element={<LogView />} />
+        <Route path="/dice-demo" element={<DiceDemo />} />
         <Route path="*" element={<Navigate to="/characters" />} />
       </Routes>
     </Suspense>
