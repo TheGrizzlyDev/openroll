@@ -137,22 +137,4 @@ h1, h2 {
   width: auto;
 }
 
-.numeric-input {
-  align-items: center;
-  display: flex;
-  max-width: 5rem;
-}
 
-.numeric-input-button {
-  border-radius: 20px;
-  line-height: 1;
-  padding: 0.25rem;
-  width: 1.5rem;
-}
-
-.numeric-input-field {
-  flex: 1;
-  margin: 0 4px;
-  max-width: 5rem;
-  text-align: center;
-}

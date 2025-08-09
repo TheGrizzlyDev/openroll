@@ -1,8 +1,7 @@
 import { useState, type ChangeEvent } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
-import NumericInput from '../components/NumericInput'
-import { Input, Select, HpBar, FormField, Dialog } from '../design-system'
+import { Input, Select, HpBar, FormField, Dialog, NumericAttribute } from '../design-system'
 import StatGrid from './StatGrid'
 import classes from './classes'
 import type { Sheet } from './sheet'
@@ -140,32 +139,26 @@ export default function CharacterSheet() {
       </Dialog>
       <div className="secondary-stats">
         <FormField label="Armor" htmlFor="armor">
-          <NumericInput
+          <NumericAttribute
             id="armor"
             value={sheet.armor}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              updateField('armor', Number(e.target.value))
-            }
+            onChange={val => updateField('armor', val)}
             min={0}
           />
         </FormField>
         <FormField label="Omens" htmlFor="omens">
-          <NumericInput
+          <NumericAttribute
             id="omens"
             value={sheet.omens}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              updateField('omens', Number(e.target.value))
-            }
+            onChange={val => updateField('omens', val)}
             min={0}
           />
         </FormField>
         <FormField label="Silver" htmlFor="silver">
-          <NumericInput
+          <NumericAttribute
             id="silver"
             value={sheet.silver}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              updateField('silver', Number(e.target.value))
-            }
+            onChange={val => updateField('silver', val)}
             min={0}
           />
         </FormField>
