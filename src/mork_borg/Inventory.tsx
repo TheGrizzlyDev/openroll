@@ -174,8 +174,8 @@ export default function Inventory() {
     }
   }
 
-  return (
-    <div className="inventory">
+    return (
+      <div>
       <h2>
         Inventory <Button onClick={() => { resetForm(); setShowItemPopup(true) }}>Add</Button>
       </h2>
@@ -192,18 +192,17 @@ export default function Inventory() {
       <h2>
         Scrolls <Button onClick={() => { resetScrollForm(); setShowScrollPopup(true) }}>Add</Button>
       </h2>
-      <SortableList
-        items={scrolls}
-        onReorder={list => dispatch({ type: 'SET_SCROLLS', scrolls: list })}
-        renderItem={scroll => (
-          <InventoryItem key={scroll.id} item={scroll}>
-            <Button onClick={() => handleCastScroll(scroll.id)}>Cast</Button>
-            <Button onClick={() => startScrollEdit(scroll.id)}>Edit</Button>
-            <Button onClick={() => handleDeleteScroll(scroll.id)}>Delete</Button>
-          </InventoryItem>
-        )}
-        className="scrolls"
-      />
+        <SortableList
+          items={scrolls}
+          onReorder={list => dispatch({ type: 'SET_SCROLLS', scrolls: list })}
+          renderItem={scroll => (
+            <InventoryItem key={scroll.id} item={scroll}>
+              <Button onClick={() => handleCastScroll(scroll.id)}>Cast</Button>
+              <Button onClick={() => startScrollEdit(scroll.id)}>Edit</Button>
+              <Button onClick={() => handleDeleteScroll(scroll.id)}>Delete</Button>
+            </InventoryItem>
+          )}
+        />
       {showItemPopup && (
         <Dialog
           visible={showItemPopup}

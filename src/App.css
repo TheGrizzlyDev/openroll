@@ -1,26 +1,37 @@
-.inventory ul {
+h1, h2 {
+  color: var(--color-text);
+  margin: 0.5rem 0;
+  text-align: center;
+}
+
+.sheet label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat button {
+  margin-top: 0.25rem;
+}
+
+.log ul {
   list-style: none;
-  margin: 0 0 0.5rem;
   padding: 0;
 }
 
-.inventory li {
-  align-items: center;
-  display: flex;
-  gap: 0.5rem;
+.log li {
   margin-bottom: 0.25rem;
 }
 
-.inventory li > div {
-  align-items: center;
-  display: flex;
-  flex: 1;
-  gap: 0.5rem;
+.log button {
+  margin-bottom: 0.5rem;
+  width: auto;
 }
 
-.inventory li > div span {
-  flex-grow: 1;
-}
 
 .inventory-form {
   display: flex;
@@ -33,26 +44,6 @@
   display: flex;
   gap: 0.5rem;
   justify-content: flex-end;
-}
-
-.inventory-actions button,
-.inventory li button {
-  width: auto;
-}
-
-.drag-handle {
-  cursor: grab;
-  flex: none;
-  touch-action: none;
-  width: 1em;
-}
-
-.inventory li.dragging {
-  opacity: 0.5;
-}
-
-.scrolls li.dragging {
-  opacity: 0.5;
 }
 
 .overlay {

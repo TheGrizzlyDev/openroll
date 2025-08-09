@@ -75,7 +75,7 @@ export default function SortableList<T extends { id: UniqueIdentifier }>(
       onDragEnd={handleDragEnd}
     >
       <SortableContext items={items.map(i => i.id)}>
-        <ul className={className}>
+        <ul className={`m-0 mb-2 list-none p-0 ${className ?? ''}`}>
           {items.map(item => renderItem(item))}
         </ul>
       </SortableContext>
