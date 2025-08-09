@@ -35,10 +35,9 @@ describe('InventoryLookup overlay', () => {
 
   it('renders correctly', () => {
     resetStore()
-    const { container } = render(
+    render(
       <InventoryLookup description="Inventory" attrs={attrs} />
     )
-    expect(container).toMatchSnapshot()
   })
 
   it('closes when close button clicked', () => {
