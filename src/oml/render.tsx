@@ -16,7 +16,7 @@ export function renderNodes(
         <Button
           type="button"
           key={i}
-          className="badge"
+          variant="pill"
           onClick={() => ctx.roll(node.notation)}
         >
           {label}
@@ -29,7 +29,7 @@ export function renderNodes(
         <Button
           type="button"
           key={i}
-          className="badge"
+          variant="pill"
           onClick={() => ctx.applyEffect(node)}
         >
           {label}

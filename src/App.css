@@ -137,19 +137,6 @@ h1, h2 {
   width: auto;
 }
 
-.badge {
-  border-radius: 9999px;
-  cursor: pointer;
-  display: inline-block;
-  padding: 0.1rem 0.4rem;
-  transition: background 0.2s, color 0.2s;
-}
-
-.badge:hover {
-  background: var(--color-accent);
-  color: var(--color-bg-alt);
-}
-
 .numeric-input {
   align-items: center;
   display: flex;
