@@ -93,7 +93,7 @@ export function Stat({
       </Button>
 
       {/* Value input (type=number exposes native spinbutton semantics to SRs) */}
-      <div className="relative h-10 w-20 rounded grid place-items-center border-2 border-accent bg-bg shadow-[inset_0_0_12px_rgba(0,0,0,.85)]">
+      <div className="relative h-10 w-20 rounded grid place-items-center border-2 border-accent bg-bg shadow-inner">
         <label htmlFor={id} className="sr-only">{id.toUpperCase()} value</label>
         <Input
           id={id}
@@ -105,15 +105,6 @@ export function Stat({
           }
           className="absolute inset-0 w-full h-full bg-transparent border-0 text-center text-base font-extrabold text-text font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           aria-describedby={hintId}
-        />
-        {/* decorative stitch */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -top-px left-0 right-0 h-px opacity-70"
-          style={{
-            background:
-              'repeating-linear-gradient(90deg, rgba(255,255,255,.12) 0 2px, transparent 2px 6px)'
-          }}
         />
       </div>
 

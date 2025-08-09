@@ -7,7 +7,6 @@ import {
 import type { CompletionSource, CompletionContext } from '@codemirror/autocomplete'
 import { EditorView } from '@codemirror/view'
 import { tags } from '@lezer/highlight'
-import { background } from 'storybook/internal/theming'
 
 interface OmlState {
   inTag: boolean
