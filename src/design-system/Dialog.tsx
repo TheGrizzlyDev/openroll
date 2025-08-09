@@ -89,13 +89,13 @@ export function Dialog({ visible, onClose, children }: DialogProps) {
 
   return (
     <div
-      className={`fixed inset-0 z-[10000] flex items-center justify-center bg-black/50 transition-opacity duration-300 ${
+      className={`fixed inset-0 z-[10000] flex items-center justify-center bg-bg/80 transition-opacity duration-300 ${
         visible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}
     >
       <div
         ref={contentRef}
-        className={`flex flex-col items-center gap-2 border border-accent bg-bg transition-transform transition-opacity duration-300 p-2 text-sm sm:p-4 sm:text-base ${
+        className={`flex flex-col items-center gap-2 border border-accent bg-bg rounded-[var(--border-radius)] transition-transform transition-opacity duration-300 p-2 text-sm sm:p-4 sm:text-base ${
           visible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
         }`}
         role="dialog"
