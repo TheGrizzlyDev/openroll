@@ -1,4 +1,4 @@
-import { type ChangeEvent, useEffect, useRef } from 'react'
+import { type ChangeEvent, type KeyboardEvent, useEffect, useRef } from 'react'
 import { Button } from './Button'
 import { Input } from './Input'
 
@@ -48,7 +48,7 @@ export function Stat({
     }
   }
 
-  const onRollKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+  const onRollKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
     // Enter/Space activate buttons by default; we intercept Shift+Enter for advantage
     if (e.key === 'Enter' && e.shiftKey && onRollAdv) {
       e.preventDefault()

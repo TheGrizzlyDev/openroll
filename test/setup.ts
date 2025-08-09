@@ -53,19 +53,19 @@ if (originalFetch) {
 const XHR = globalThis.XMLHttpRequest
 if (XHR) {
   const open = XHR.prototype.open
-  const openAny = open as unknown as (...args: unknown[]) => unknown
-  XHR.prototype.open = function (method: string, url: string, ...args: unknown[]) {
+  const openAny = open as unknown as (..._args: unknown[]) => unknown
+  XHR.prototype.open = function (method: string, url: string, ..._args: unknown[]) {
     if (isAllowed(url)) {
-      return openAny.call(this, method, url, ...args)
+      return openAny.call(this, method, url, ..._args)
     }
     logAndThrow('XMLHttpRequest', url)
   }
 }
 
 function wrapRequest(mod: Record<string, unknown>, name: string) {
-  const orig = (mod.request as (...args: unknown[]) => unknown)
-  ;(mod as { request: (...args: unknown[]) => unknown }).request = function (...args: unknown[]) {
-    const options = args[0] as unknown
+  const orig = (mod.request as (..._args: unknown[]) => unknown)
+  ;(mod as { request: (..._args: unknown[]) => unknown }).request = function (..._args: unknown[]) {
+    const options = _args[0] as unknown
     let url = ''
     if (typeof options === 'string') {
       url = options
@@ -91,7 +91,7 @@ function wrapRequest(mod: Record<string, unknown>, name: string) {
     }
 
     if (isAllowed(url)) {
-      return orig.apply(this, args as never[])
+      return orig.apply(this, _args as never[])
     }
     logAndThrow(name, url)
   }

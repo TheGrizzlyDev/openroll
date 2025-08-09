@@ -27,10 +27,10 @@ export function HpBar({
   const state = pct <= 0.25 ? 'danger' : pct <= 0.5 ? 'warn' : 'ok'
   const barColor =
     state === 'danger'
-      ? 'bg-red-600'
+      ? 'bg-error'
       : state === 'warn'
-        ? 'bg-yellow-400'
-        : 'bg-green-600'
+        ? 'bg-accent/80'
+        : 'bg-accent'
 
   const changeHp = (delta: number) => onHpChange(clamp(hp + delta, 0, maxHp))
   const changeTempHp = (delta: number) => {
@@ -59,8 +59,8 @@ export function HpBar({
         className={[
           'relative w-full',
           'h-9',                     // thicker for readability
-          'rounded-sm border-2 border-yellow-400',
-          'bg-[#0a0a0a]',
+          'rounded-sm border-2 border-accent',
+          'bg-bg',
           'shadow-[0_0_0_1px_rgba(0,0,0,0.8),inset_0_0_12px_rgba(0,0,0,0.8)]',
           state === 'danger' ? 'animate-pulse' : ''
         ].join(' ')}
@@ -109,7 +109,7 @@ export function HpBar({
 
         {/* Label: larger, high-contrast */}
         <div
-          className="absolute inset-0 grid place-items-center text-xs md:text-sm font-black tracking-wide text-yellow-50 drop-shadow-[0_1px_0_rgba(0,0,0,0.9)]"
+          className="absolute inset-0 grid place-items-center text-xs md:text-sm font-black tracking-wide text-text drop-shadow-[0_1px_0_rgba(0,0,0,0.9)]"
         >
           {hp}/{maxHp}{tempEnabled && tempHp ? ` (+${tempHp})` : ''}
         </div>
@@ -133,16 +133,20 @@ export function HpBar({
             type="button"
             aria-label="Decrease HP"
             onClick={() => changeHp(-1)}
-            className="flex-1 px-2 py-1 text-xs border border-yellow-500 bg-black/70 hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
+            className="flex-1 px-2 py-1 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             title="HP −1"
-          >− HP</Button>
+          >
+            − HP
+          </Button>
           <Button
             type="button"
             aria-label="Increase HP"
             onClick={() => changeHp(1)}
-            className="ml-1 flex-1 px-2 py-1 text-xs border border-yellow-500 bg-black/70 hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
+            className="ml-1 flex-1 px-2 py-1 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             title="HP +1"
-          >+ HP</Button>
+          >
+            + HP
+          </Button>
         </div>
 
         {/* Temp (hidden if disabled) */}
@@ -152,16 +156,20 @@ export function HpBar({
               type="button"
               aria-label="Decrease temporary HP"
               onClick={() => changeTempHp(-1)}
-              className="flex-1 px-2 py-1 text-xs border border-blue-400 bg-black/70 hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+              className="flex-1 px-2 py-1 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               title="Temp −1"
-            >− Temp</Button>
+            >
+              − Temp
+            </Button>
             <Button
               type="button"
               aria-label="Increase temporary HP"
               onClick={() => changeTempHp(1)}
-              className="ml-1 flex-1 px-2 py-1 text-xs border border-blue-400 bg-black/70 hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+              className="ml-1 flex-1 px-2 py-1 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               title="Temp +1"
-            >+ Temp</Button>
+            >
+              + Temp
+            </Button>
           </div>
         )}
 
@@ -171,16 +179,20 @@ export function HpBar({
             type="button"
             aria-label="Decrease maximum HP"
             onClick={() => changeMaxHp(-1)}
-            className="flex-1 px-2 py-1 text-xs border border-neutral-600 bg-black/70 hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+            className="flex-1 px-2 py-1 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             title="Max −1"
-          >− Max</Button>
+          >
+            − Max
+          </Button>
           <Button
             type="button"
             aria-label="Increase maximum HP"
             onClick={() => changeMaxHp(1)}
-            className="ml-1 flex-1 px-2 py-1 text-xs border border-neutral-600 bg-black/70 hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+            className="ml-1 flex-1 px-2 py-1 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             title="Max +1"
-          >+ Max</Button>
+          >
+            + Max
+          </Button>
         </div>
       </div>
     </div>
