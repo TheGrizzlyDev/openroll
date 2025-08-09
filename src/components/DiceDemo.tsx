@@ -4,7 +4,11 @@ import '../DiceDemo.css'
 
 export default function DiceDemo() {
   useEffect(() => {
-    initDiceDemo()
+    const app = document.getElementById('app') as HTMLElement
+    const toast = document.getElementById('toast') as HTMLElement
+    const toolbar = document.querySelector('.toolbar') as HTMLElement
+    const settings = document.getElementById('settings') as HTMLElement
+    initDiceDemo({ app, toast, toolbar, settings })
   }, [])
 
   return (

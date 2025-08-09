@@ -2,7 +2,7 @@
 // @ts-nocheck
 import * as THREE from "three"
 
-export default function initDiceDemo() {
+export default function initDiceDemo({ app, toast, toolbar, settings }) {
   // Main entry point for the standalone Three.js dice demo.
   // Sets up rendering, physics simulation and UI bindings.
   // ===== Config =====
@@ -81,7 +81,6 @@ export default function initDiceDemo() {
   // Renderer/Scene/Cameras
   // Create renderer and two cameras (orthographic and perspective)
   // used for different viewing modes.
-  const app = document.getElementById("app")
   const renderer = new THREE.WebGLRenderer({ antialias: true })
   renderer.setSize(window.innerWidth, window.innerHeight)
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
@@ -1002,15 +1001,14 @@ export default function initDiceDemo() {
     scheduleResultsToast._t = setTimeout(() => showResultsToast(), 2200)
   }
   function showResultsToast() {
-    const t = document.getElementById("toast")
-    if (!t) return
+    if (!toast) return
     const vals = dice
       .map((d) => `${d.kind.toUpperCase()}: ${valueOfDie(d)}`)
       .join(" \u2022 ")
     const div = document.createElement("div")
     div.className = "toast"
     div.textContent = vals
-    t.appendChild(div)
+    toast.appendChild(div)
     requestAnimationFrame(() => {
       div.style.opacity = "1"
       div.style.transform = "translateY(0)"
@@ -1023,20 +1021,25 @@ export default function initDiceDemo() {
   }
   // UI
   // Button and select handlers for user interaction.
-  document.getElementById("throw").addEventListener("click", () => throwAll())
-  document.getElementById("slowmo").addEventListener("click", () => {
+  const throwBtn = toolbar.querySelector("#throw")
+  const slowmoBtn = toolbar.querySelector("#slowmo")
+  const resetBtn = toolbar.querySelector("#reset")
+  const toggleSettingsBtn = toolbar.querySelector("#toggle-settings")
+  const viewModeSelect = toolbar.querySelector("#viewMode")
+
+  function toggleSlowMo() {
     slowMo = !slowMo
-    document.getElementById("slowmo").textContent =
-      `Slow\u2011mo: ${slowMo ? "on" : "off"}`
+    slowmoBtn.textContent = `Slow\u2011mo: ${slowMo ? "on" : "off"}`
+  }
+
+  throwBtn.addEventListener("click", () => throwAll())
+  slowmoBtn.addEventListener("click", toggleSlowMo)
+  resetBtn.addEventListener("click", () => orbit.reset())
+  toggleSettingsBtn.addEventListener("click", () => {
+    settings.style.display =
+      settings.style.display === "none" ? "block" : "none"
   })
-  document
-    .getElementById("reset")
-    .addEventListener("click", () => orbit.reset())
-  document.getElementById("toggle-settings").addEventListener("click", () => {
-    const s = document.getElementById("settings")
-    s.style.display = s.style.display === "none" ? "block" : "none"
-  })
-  document.getElementById("viewMode").addEventListener("change", (e) => {
+  viewModeSelect.addEventListener("change", (e) => {
     const mode = e.target.value
     if (mode === "ortho") {
       camera = orthoCamera
@@ -1054,7 +1057,7 @@ export default function initDiceDemo() {
   // Binds
   // Helper to connect form controls to CONFIG values.
   const bind = (id, key, parseFn = (v) => v, onChange = applyAppearanceAll) => {
-    const el = document.getElementById(id)
+    const el = settings.querySelector(`#${id}`)
     CONFIG[key] = parseFn(el.value)
     el.addEventListener("input", () => {
       CONFIG[key] = parseFn(el.value)
@@ -1129,4 +1132,11 @@ export default function initDiceDemo() {
     renderer.setSize(window.innerWidth, window.innerHeight)
     orbit.apply()
   })
+  return {
+    throwAll,
+    toggleSlowMo,
+    resetOrbit: orbit.reset,
+    applyAppearanceAll,
+    rebuildTray,
+  }
 }
