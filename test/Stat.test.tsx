@@ -45,7 +45,7 @@ describe('Stat component', () => {
         onRollAdv={handleAdv}
       />
     )
-    const rollButton = getByLabelText('Roll')
+    const rollButton = getByLabelText(/Roll/)
     fireEvent.mouseDown(rollButton)
     vi.advanceTimersByTime(600)
     fireEvent.mouseUp(rollButton)

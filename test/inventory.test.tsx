@@ -118,7 +118,8 @@ describe('Inventory handlers', () => {
     const items: InventoryItem[] = [{ id: 1, name: 'Sword', qty: 1, notes: '' }]
     const logInventory = vi.fn()
     resetStore({ inventory: items }, { logInventory })
-    const { getAllByText, getAllByPlaceholderText } = render(<Inventory />)
+    const { getAllByText, getAllByPlaceholderText, getByText } = render(<Inventory />)
+    fireEvent.click(getByText('Sword'))
     const editItemBtn = getAllByText('Edit').find(btn => btn.closest('li'))
     fireEvent.click(editItemBtn!)
     fireEvent.change(getAllByPlaceholderText('Name')[0], { target: { value: 'Axe' } })

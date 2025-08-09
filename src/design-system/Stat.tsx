@@ -74,7 +74,7 @@ export function Stat({
           type="button"
           aria-label={`${id.toUpperCase()} info`}
           onClick={onInfo}
-          className="h-10 w-10 p-2 rounded border border-yellow-500 bg-black/70 hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
+          className="h-10 w-10 p-2 rounded border border-accent bg-bg-alt hover:bg-bg hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent text-text"
           title="Info"
         >
           ℹ️
@@ -86,14 +86,14 @@ export function Stat({
         type="button"
         aria-label={`Decrease ${id.toUpperCase()}`}
         onClick={() => onChange(value - 1)}
-        className="h-10 w-10 p-0 grid place-items-center rounded border border-yellow-500 bg-black/70 hover:bg-black/50 active:translate-y-px text-yellow-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
+        className="h-10 w-10 p-0 grid place-items-center rounded border border-accent bg-bg-alt hover:bg-bg hover:text-text active:translate-y-px text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         title={`Decrease ${id.toUpperCase()}`}
       >
         −
       </Button>
 
       {/* Value input (type=number exposes native spinbutton semantics to SRs) */}
-      <div className="relative h-10 w-20 rounded grid place-items-center border-2 border-yellow-400 bg-[#0b1220] shadow-[inset_0_0_12px_rgba(0,0,0,.85)]">
+      <div className="relative h-10 w-20 rounded grid place-items-center border-2 border-accent bg-bg shadow-[inset_0_0_12px_rgba(0,0,0,.85)]">
         <label htmlFor={id} className="sr-only">{id.toUpperCase()} value</label>
         <Input
           id={id}
@@ -103,7 +103,7 @@ export function Stat({
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             onChange(Number(e.target.value))
           }
-          className="absolute inset-0 w-full h-full bg-transparent border-0 text-center text-base font-extrabold text-yellow-50 font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
+          className="absolute inset-0 w-full h-full bg-transparent border-0 text-center text-base font-extrabold text-text font-mono tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           aria-describedby={hintId}
         />
         {/* decorative stitch */}
@@ -122,7 +122,7 @@ export function Stat({
         type="button"
         aria-label={`Increase ${id.toUpperCase()}`}
         onClick={() => onChange(value + 1)}
-        className="h-10 w-10 p-0 grid place-items-center rounded border border-yellow-500 bg-black/70 hover:bg-black/50 active:translate-y-px text-yellow-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400"
+        className="h-10 w-10 p-0 grid place-items-center rounded border border-accent bg-bg-alt hover:bg-bg hover:text-text active:translate-y-px text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         title={`Increase ${id.toUpperCase()}`}
       >
         +
@@ -142,10 +142,10 @@ export function Stat({
         onTouchEnd={end}
         onTouchCancel={end}
         onKeyDown={onRollKeyDown}
-        className={`h-10 w-10 p-2 rounded border bg-black/70 hover:bg-black/50 active:translate-y-px focus-visible:outline-none focus-visible:ring-2 ${
+        className={`h-10 w-10 p-2 rounded border bg-bg-alt hover:bg-bg hover:text-text active:translate-y-px focus-visible:outline-none focus-visible:ring-2 text-text ${
           onRollAdv
-            ? 'border-blue-400 focus-visible:ring-blue-400'
-            : 'border-yellow-500 focus-visible:ring-yellow-400'
+            ? 'border-error focus-visible:ring-error'
+            : 'border-accent focus-visible:ring-accent'
         }`}
       />
 
@@ -155,7 +155,7 @@ export function Stat({
         icon="edit"
         aria-label={`Edit ${id.toUpperCase()} notation`}
         onClick={onEdit}
-        className="h-10 w-10 p-2 rounded border border-neutral-600 bg-black/70 hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity"
+        className="h-10 w-10 p-2 rounded border border-accent bg-bg-alt hover:bg-bg hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent text-text opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity"
         title="Edit notation"
       />
 
