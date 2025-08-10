@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useGameContext } from '../GameContext'
 import { FileInput } from './FileInput'
 import { Button, Dialog } from '../design-system'
@@ -8,9 +8,10 @@ import { PageContainer, Section } from '../layout'
 import { sortCharactersByLastAccess } from '../sortCharactersByLastAccess'
 import { useDiceSetStore, type DiceSet } from '../diceSetStore'
 import { useTraySetStore } from '../traySetStore'
-import { useStartPageStore } from '../startPageStore'
 import GeneralSettings from './GeneralSettings'
 import MorkBorgSettings from '../mork_borg/components/GameSettings'
+
+type StartTab = 'characters' | 'dices' | 'trays' | 'settings'
 
 export default function StartPage() {
     const {
@@ -25,6 +26,7 @@ export default function StartPage() {
     setOverlayTimeout
   } = useGameContext()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const handleExport = () => {
     const data = exportCharacters()
@@ -99,7 +101,7 @@ export default function StartPage() {
   }))
   const activeTraySet = traySets.find(s => s.active)?.id ?? null
 
-  const activeTab = useStartPageStore(state => state.activeTab)
+  const activeTab = location.pathname.split('/')[1] as StartTab
 
   const DiceSetCard = ({ set }: { set: DiceSet }) => {
     const { id, name, active } = set

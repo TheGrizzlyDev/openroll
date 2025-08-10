@@ -2,7 +2,8 @@ import React from 'react'
 import { Button } from '../design-system'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useSettingsStore } from '../settingsStore'
-import { useStartPageStore, type StartTab } from '../startPageStore'
+
+type StartTab = 'characters' | 'dices' | 'trays' | 'settings'
 
 const tabs: { id: StartTab; label: string }[] = [
   { id: 'characters', label: 'Characters' },
@@ -13,10 +14,9 @@ const tabs: { id: StartTab; label: string }[] = [
 
 export default function Navbar() {
   const navPosition = useSettingsStore(state => state.navPosition)
-  const activeTab = useStartPageStore(state => state.activeTab)
-  const setActiveTab = useStartPageStore(state => state.setActiveTab)
   const navigate = useNavigate()
   const location = useLocation()
+  const activeTab = location.pathname.split('/')[1] as StartTab
 
   const vertical = navPosition === 'left' || navPosition === 'right'
   const positionClass = {
@@ -36,10 +36,9 @@ export default function Navbar() {
         <Button
           key={tab.id}
           onClick={() => {
-            setActiveTab(tab.id)
-            navigate('/')
+            navigate('/' + tab.id)
           }}
-          disabled={location.pathname === '/' && activeTab === tab.id}
+          disabled={activeTab === tab.id}
         >
           {tab.label}
         </Button>
