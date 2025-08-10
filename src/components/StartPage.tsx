@@ -8,8 +8,9 @@ import { PageContainer, Section } from '../layout'
 import { sortCharactersByLastAccess } from '../sortCharactersByLastAccess'
 import { useDiceSetStore, type DiceSet } from '../diceSetStore'
 import { useTraySetStore } from '../traySetStore'
-import { useSettingsStore, type NavPosition } from '../settingsStore'
 import { useStartPageStore } from '../startPageStore'
+import GeneralSettings from './GeneralSettings'
+import MorkBorgSettings from '../mork_borg/components/GameSettings'
 
 export default function StartPage() {
   const {
@@ -98,8 +99,6 @@ export default function StartPage() {
   }))
   const activeTraySet = traySets.find(s => s.active)?.id ?? null
 
-  const navPosition = useSettingsStore(state => state.navPosition)
-  const setNavPosition = useSettingsStore(state => state.setNavPosition)
   const activeTab = useStartPageStore(state => state.activeTab)
 
   const DiceSetCard = ({ set }: { set: DiceSet }) => {
@@ -217,24 +216,13 @@ export default function StartPage() {
       case 'settings':
         return (
           <Section title="Settings">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block mb-1" htmlFor="nav-position">
-                  Navbar position
-                </label>
-                <select
-                  id="nav-position"
-                  value={navPosition}
-                  onChange={e => setNavPosition(e.target.value as NavPosition)}
-                  className="border rounded p-1"
-                >
-                  <option value="bottom">Bottom</option>
-                  <option value="top">Top</option>
-                  <option value="left">Left</option>
-                  <option value="right">Right</option>
-                </select>
-              </div>
-              <div>Per-game Settings Component</div>
+            <div className="flex flex-col gap-4">
+              <Section title="General Settings">
+                <GeneralSettings />
+              </Section>
+              <Section title="Mörk Borg Settings">
+                <MorkBorgSettings />
+              </Section>
             </div>
           </Section>
         )
