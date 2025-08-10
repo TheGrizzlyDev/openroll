@@ -92,9 +92,11 @@ export default function StartPage() {
   const activateDiceSet = useDiceSetStore(state => state.activateSet)
   const sortedDiceSets = [...diceSets].sort((a, b) => b.updatedAt - a.updatedAt)
 
-  const traySets = useTraySetStore(state => state.sets)
-  const activeTraySet = useTraySetStore(state => state.activeId)
-  const setActiveTraySet = useTraySetStore(state => state.setActive)
+  const { sets: traySets, setActive: setActiveTraySet } = useTraySetStore(state => ({
+    sets: state.sets,
+    setActive: state.setActive
+  }))
+  const activeTraySet = traySets.find(s => s.active)?.id ?? null
 
   const navPosition = useSettingsStore(state => state.navPosition)
   const setNavPosition = useSettingsStore(state => state.setNavPosition)
@@ -123,15 +125,45 @@ export default function StartPage() {
     )
   }
 
-  const TraySetCard = ({ id, name }: { id: string; name: string }) => (
-    <div className="p-2 border rounded flex flex-col items-center gap-2">
-      <div className="w-12 h-12 bg-gray-200" />
-      <Button onClick={() => setActiveTraySet(id)} disabled={activeTraySet === id}>
-        {activeTraySet === id ? 'Active' : 'Use'}
-      </Button>
-      <div>{name}</div>
-    </div>
-  )
+  const TraySetCard = ({ id, name }: { id: string; name: string }) => {
+    const canvasRef = useRef<HTMLCanvasElement>(null)
+    useEffect(() => {
+      const ctx = canvasRef.current?.getContext('2d')
+      if (!ctx) return
+      const color = `hsl(${Math.floor(Math.random() * 360)} 70% 50%)`
+      ctx.fillStyle = color
+      ctx.fillRect(5, 5, 40, 40)
+    }, [])
+    return (
+      <div className="p-2 border rounded flex flex-col items-center gap-2">
+        <canvas ref={canvasRef} width={50} height={50} />
+        <Button onClick={() => setActiveTraySet(id)} disabled={activeTraySet === id}>
+          {activeTraySet === id ? 'Active' : 'Use'}
+        </Button>
+        <div>{name}</div>
+      </div>
+    )
+  }
+
+  const NoTrayCard = () => {
+    const canvasRef = useRef<HTMLCanvasElement>(null)
+    useEffect(() => {
+      const ctx = canvasRef.current?.getContext('2d')
+      if (!ctx) return
+      const color = `hsl(${Math.floor(Math.random() * 360)} 70% 50%)`
+      ctx.fillStyle = color
+      ctx.fillRect(5, 5, 40, 40)
+    }, [])
+    return (
+      <div className="p-2 border rounded flex flex-col items-center gap-2">
+        <canvas ref={canvasRef} width={50} height={50} />
+        <Button onClick={() => setActiveTraySet(null)} disabled={activeTraySet === null}>
+          {activeTraySet === null ? 'Active' : 'Use'}
+        </Button>
+        <div>No Tray</div>
+      </div>
+    )
+  }
   const renderTab = () => {
     switch (activeTab) {
       case 'characters':
@@ -175,16 +207,7 @@ export default function StartPage() {
         return (
           <Section title="Trays">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-2 border rounded flex flex-col items-center gap-2">
-                <div className="w-12 h-12 bg-gray-200" />
-                <Button
-                  onClick={() => setActiveTraySet(null)}
-                  disabled={activeTraySet === null}
-                >
-                  {activeTraySet === null ? 'Active' : 'Use'}
-                </Button>
-                <div>No Tray</div>
-              </div>
+              <NoTrayCard />
               {traySets.map(set => (
                 <TraySetCard key={set.id} id={set.id} name={set.name} />
               ))}
