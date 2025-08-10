@@ -1047,62 +1047,41 @@ export default function initDiceDemo({ app, toast, toolbar, settings }) {
     }
     orbit.apply()
   }
-  // Binds
-  // Helper to connect form controls to CONFIG values.
-  const bind = (id, key, parseFn = (v) => v, onChange = applyAppearanceAll) => {
-    const el = settings.querySelector(`#${id}`)
-    CONFIG[key] = parseFn(el.value)
-    el.addEventListener("input", () => {
-      CONFIG[key] = parseFn(el.value)
-      onChange()
+  function applyConfig(cfg) {
+    Object.assign(CONFIG, {
+      baseColor: cfg.baseColor,
+      emissiveColor: cfg.emissiveColor,
+      emissiveIntensity: cfg.emissiveIntensity,
+      glowColor: cfg.glowColor,
+      glowOpacity: cfg.glowOpacity,
+      textureKind: cfg.textureKind,
+      fontFamily: cfg.fontFamily,
+      fontWeight: cfg.fontWeight,
+      fontSize: cfg.fontSize,
+      fontColor: cfg.fontColor,
+      strokeColor: cfg.strokeColor,
+      strokeWidth: cfg.strokeWidth,
+      trayShape: cfg.trayShape,
+      trayBaseColor: cfg.trayBaseColor,
+      trayEmissiveColor: cfg.trayEmissiveColor,
+      trayEmissiveIntensity: cfg.trayEmissiveIntensity,
+      trayOpacity: cfg.trayOpacity,
+      trayTextureKind: cfg.trayTextureKind,
+      trayRimHeight: cfg.trayRimHeight,
+      trayRimThickness: cfg.trayRimThickness,
+      trayRimColor: cfg.trayRimColor,
+      trayRimEmissive: cfg.trayRimEmissive,
+      trayRimEmissiveIntensity: cfg.trayRimEmissiveIntensity,
+      trayRimOpacity: cfg.trayRimOpacity,
     })
+    FLOOR_EPS = cfg.floorEps
+    FLOOR_EPS_KIND.d20 = cfg.floorEpsD20
+    FLOOR_EPS_KIND.d8 = cfg.floorEpsD8
+    FLOOR_EPS_KIND.d6 = cfg.floorEpsD6
+    FLOOR_EPS_KIND.d4 = cfg.floorEpsD4
+    applyAppearanceAll()
+    rebuildTray()
   }
-  bind("baseColor", "baseColor")
-  bind("emissiveColor", "emissiveColor")
-  bind("emissiveIntensity", "emissiveIntensity", (v) => parseFloat(v))
-  bind("glowColor", "glowColor")
-  bind("glowOpacity", "glowOpacity", (v) => parseFloat(v))
-  bind("textureKind", "textureKind")
-  bind("fontFamily", "fontFamily")
-  bind("fontWeight", "fontWeight")
-  bind("fontSize", "fontSize", (v) => parseInt(v, 10) || 64)
-  bind("fontColor", "fontColor")
-  bind("strokeColor", "strokeColor")
-  bind("strokeWidth", "strokeWidth", (v) => parseInt(v, 10) || 0)
-  bind(
-    "trayShape",
-    "trayShape",
-    (v) => v,
-    () => {
-      rebuildTray()
-    },
-  )
-  bind("trayBaseColor", "trayBaseColor", (v) => v, rebuildTray)
-  bind("trayEmissiveColor", "trayEmissiveColor", (v) => v, rebuildTray)
-  bind(
-    "trayEmissiveIntensity",
-    "trayEmissiveIntensity",
-    (v) => parseFloat(v),
-    rebuildTray,
-  )
-  bind("trayOpacity", "trayOpacity", (v) => parseFloat(v), rebuildTray)
-  bind("trayTextureKind", "trayTextureKind", (v) => v, rebuildTray)
-  bind("trayRimHeight", "trayRimHeight", (v) => parseFloat(v), rebuildTray)
-  bind(
-    "trayRimThickness",
-    "trayRimThickness",
-    (v) => parseFloat(v),
-    rebuildTray,
-  )
-  bind("trayRimColor", "trayRimColor", (v) => v, rebuildTray)
-  bind("trayRimEmissive", "trayRimEmissive", (v) => v, rebuildTray)
-  bind(
-    "trayRimEmissiveIntensity",
-    "trayRimEmissiveIntensity",
-    (v) => parseFloat(v),
-    rebuildTray,
-  )
-  bind("trayRimOpacity", "trayRimOpacity", (v) => parseFloat(v), rebuildTray)
   // Init
   // Build initial tray and roll dice on first load.
   rebuildTray()
@@ -1133,5 +1112,6 @@ export default function initDiceDemo({ app, toast, toolbar, settings }) {
     rebuildTray,
     setViewMode,
     toggleSettings,
+    applyConfig,
   }
 }
