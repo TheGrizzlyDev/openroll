@@ -13,13 +13,13 @@ import GeneralSettings from './GeneralSettings'
 import MorkBorgSettings from '../mork_borg/components/GameSettings'
 
 export default function StartPage() {
-  const {
-    state: { characters, overlay },
-    dispatch,
-    loadCharacter,
-    deleteCharacter,
-    createCharacter,
-    exportCharacters,
+    const {
+      state: { characters, lastAccess, overlay },
+      dispatch,
+      loadCharacter,
+      deleteCharacter,
+      createCharacter,
+      exportCharacters,
     importCharacters,
     overlayTimeout,
     setOverlayTimeout
@@ -87,7 +87,7 @@ export default function StartPage() {
     navigate('/generator')
   }
 
-  const sortedCharacters = sortCharactersByLastAccess(characters)
+    const sortedIndexes = sortCharactersByLastAccess(characters, lastAccess)
 
   const diceSets = useDiceSetStore(state => state.sets)
   const activateDiceSet = useDiceSetStore(state => state.activateSet)
@@ -179,16 +179,18 @@ export default function StartPage() {
               </>
             }
           >
-            <ul className="character-list">
-              {sortedCharacters.map((c, idx) => (
-                <li key={idx}>
-                  <Button onClick={() => handleLoad(idx)}>
-                    {c.name || `Character ${idx + 1}`}
-                  </Button>
-                  <Button onClick={() => confirmDelete(idx)}>Delete</Button>
-                </li>
-              ))}
-            </ul>
+              <ul className="character-list">
+                {sortedIndexes.map(originalIdx => (
+                  <li key={originalIdx}>
+                    <Button onClick={() => handleLoad(originalIdx)}>
+                      {characters[originalIdx].name || `Character ${originalIdx + 1}`}
+                    </Button>
+                    <Button onClick={() => confirmDelete(originalIdx)}>
+                      Delete
+                    </Button>
+                  </li>
+                ))}
+              </ul>
             <DiceStyleSelector />
           </Section>
         )

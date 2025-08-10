@@ -28,6 +28,7 @@ export interface LogEntry {
 }
 
 export interface Character {
+  id: string
   name: string
   sheet: Sheet
   inventory: InventoryItem[]
@@ -50,6 +51,7 @@ export interface DiceStyle {
 
 export interface GameState {
   characters: Character[]
+  lastAccess: Record<string, number>
   current: number | null
   sheet: Sheet
   inventory: InventoryItem[]
@@ -92,6 +94,7 @@ export interface GameContextValue {
 
 const initialState: GameState = {
   characters: [],
+  lastAccess: {},
   current: null,
   sheet: createSheet(),
   inventory: [],
@@ -112,21 +115,29 @@ const reducer = (state: GameState, action: GameAction): GameState => {
       const newState = { ...state, sheet: action.sheet }
       if (state.current !== null) {
         const updated = [...state.characters]
-        const existing =
-          updated[state.current] || {
+        let char = updated[state.current]
+        if (!char) {
+          char = {
+            id: crypto.randomUUID(),
             name: '',
             sheet: createSheet(),
             inventory: [],
             scrolls: []
           }
-        updated[state.current] = {
-          ...existing,
+        } else if (!char.id) {
+          char = { ...char, id: crypto.randomUUID() }
+        }
+        char = {
+          ...char,
           name: action.sheet.name,
           sheet: action.sheet,
           inventory: state.inventory,
           scrolls: state.scrolls
         }
+        updated[state.current] = char
+        const lastAccess = { ...state.lastAccess, [char.id]: Date.now() }
         newState.characters = updated
+        newState.lastAccess = lastAccess
       }
       return newState
     }
@@ -134,15 +145,23 @@ const reducer = (state: GameState, action: GameAction): GameState => {
       const newState = { ...state, inventory: action.inventory }
       if (state.current !== null) {
         const updated = [...state.characters]
-        const existing =
-          updated[state.current] || {
+        let char = updated[state.current]
+        if (!char) {
+          char = {
+            id: crypto.randomUUID(),
             name: '',
             sheet: createSheet(),
             inventory: [],
             scrolls: []
           }
-        updated[state.current] = { ...existing, inventory: action.inventory }
+        } else if (!char.id) {
+          char = { ...char, id: crypto.randomUUID() }
+        }
+        char = { ...char, inventory: action.inventory }
+        updated[state.current] = char
+        const lastAccess = { ...state.lastAccess, [char.id]: Date.now() }
         newState.characters = updated
+        newState.lastAccess = lastAccess
       }
       return newState
     }
@@ -150,15 +169,23 @@ const reducer = (state: GameState, action: GameAction): GameState => {
       const newState = { ...state, scrolls: action.scrolls }
       if (state.current !== null) {
         const updated = [...state.characters]
-        const existing =
-          updated[state.current] || {
+        let char = updated[state.current]
+        if (!char) {
+          char = {
+            id: crypto.randomUUID(),
             name: '',
             sheet: createSheet(),
             inventory: state.inventory,
             scrolls: []
           }
-        updated[state.current] = { ...existing, scrolls: action.scrolls }
+        } else if (!char.id) {
+          char = { ...char, id: crypto.randomUUID() }
+        }
+        char = { ...char, scrolls: action.scrolls }
+        updated[state.current] = char
+        const lastAccess = { ...state.lastAccess, [char.id]: Date.now() }
         newState.characters = updated
+        newState.lastAccess = lastAccess
       }
       return newState
     }
@@ -190,15 +217,26 @@ const storeCreator: StateCreator<
   loadCharacter: idx => {
     const char = get().state.characters[idx]
     if (!char) return
-    set(({ state }) => ({
-      state: {
-        ...state,
-        current: idx,
-        sheet: char.sheet || createSheet(),
-        inventory: char.inventory || [],
-        scrolls: char.scrolls || []
+    const now = Date.now()
+    const id = char.id ?? crypto.randomUUID()
+    set(({ state }) => {
+      const characters = [...state.characters]
+      if (!char.id) {
+        characters[idx] = { ...char, id }
       }
-    }), false, 'loadCharacter')
+      const lastAccess = { ...state.lastAccess, [id]: now }
+      return {
+        state: {
+          ...state,
+          characters,
+          lastAccess,
+          current: idx,
+          sheet: char.sheet || createSheet(),
+          inventory: char.inventory || [],
+          scrolls: char.scrolls || []
+        }
+      }
+    }, false, 'loadCharacter')
   },
   createCharacter: cls => {
     const { sheet, inventory, scrolls } = generateCharacter(cls)
@@ -217,26 +255,47 @@ const storeCreator: StateCreator<
     const { state } = get()
     const index = state.current ?? state.characters.length
     const updated = [...state.characters]
+    const existing = updated[index]
+    const id = existing?.id ?? crypto.randomUUID()
     updated[index] = {
+      id,
       name: '',
       sheet: state.sheet,
       inventory: state.inventory,
       scrolls: state.scrolls
     }
-    set({ state: { ...state, characters: updated, current: index } }, false, 'finalizeCharacter')
+    const lastAccess = { ...state.lastAccess, [id]: Date.now() }
+    set(
+      {
+        state: { ...state, characters: updated, lastAccess, current: index }
+      },
+      false,
+      'finalizeCharacter'
+    )
     return index
   },
   cancelCreation: () =>
     set(({ state }) => ({ state: { ...state, current: null } }), false, 'cancelCreation'),
   deleteCharacter: idx =>
-    set(({ state }) => ({
-      state: {
-        ...state,
-        characters: state.characters.filter((_, i) => i !== idx),
-        current: null
+    set(({ state }) => {
+      const characters = state.characters.filter((_, i) => i !== idx)
+      const lastAccess = { ...state.lastAccess }
+      const char = state.characters[idx]
+      if (char?.id) delete lastAccess[char.id]
+      return {
+        state: {
+          ...state,
+          characters,
+          lastAccess,
+          current: null
+        }
       }
-    }), false, 'deleteCharacter'),
-  exportCharacters: () => JSON.stringify(get().state.characters, null, 2),
+    }, false, 'deleteCharacter'),
+  exportCharacters: () => {
+    const { characters, lastAccess } = get().state
+    const data = characters.map(c => ({ ...c, lastAccess: lastAccess[c.id] }))
+    return JSON.stringify(data, null, 2)
+  },
   importCharacters: data => {
     let parsed: unknown
     try {
@@ -245,7 +304,13 @@ const storeCreator: StateCreator<
       return false
     }
     if (!Array.isArray(parsed)) return false
-    const sanitized = parsed.map(c => {
+    const sanitizedChars: Character[] = []
+    const lastAccesses: Record<string, number> = {}
+    parsed.forEach(c => {
+      const id =
+        typeof (c as { id?: string }).id === 'string'
+          ? (c as { id: string }).id
+          : crypto.randomUUID()
       const name = typeof (c as Character).name === 'string' ? (c as Character).name : ''
       const sheet =
         typeof (c as Character).sheet === 'object'
@@ -257,11 +322,23 @@ const storeCreator: StateCreator<
       const scrolls = Array.isArray((c as Character).scrolls)
         ? (c as Character).scrolls
         : []
-      return { name, sheet, inventory, scrolls }
+      const last = typeof (c as { lastAccess?: number }).lastAccess === 'number'
+        ? (c as { lastAccess: number }).lastAccess
+        : Date.now()
+      sanitizedChars.push({ id, name, sheet, inventory, scrolls })
+      lastAccesses[id] = last
     })
-    set(({ state }) => ({
-      state: { ...state, characters: [...state.characters, ...sanitized] }
-    }), false, 'importCharacters')
+    set(
+      ({ state }) => ({
+        state: {
+          ...state,
+          characters: [...state.characters, ...sanitizedChars],
+          lastAccess: { ...state.lastAccess, ...lastAccesses }
+        }
+      }),
+      false,
+      'importCharacters'
+    )
     return true
   },
   roll: (notation: string, label = '') => {
@@ -367,20 +444,28 @@ const storeCreator: StateCreator<
 
       if (newState.current !== null) {
         const updated = [...newState.characters]
-        const existing =
-          updated[newState.current] || {
+        let char = updated[newState.current]
+        if (!char) {
+          char = {
+            id: crypto.randomUUID(),
             name: '',
             sheet: createSheet(),
             inventory: [],
             scrolls: []
           }
-        updated[newState.current] = {
-          ...existing,
+        } else if (!char.id) {
+          char = { ...char, id: crypto.randomUUID() }
+        }
+        char = {
+          ...char,
           sheet: newState.sheet,
           inventory: newState.inventory,
           scrolls: newState.scrolls
         }
+        updated[newState.current] = char
+        const lastAccess = { ...newState.lastAccess, [char.id]: Date.now() }
         newState.characters = updated
+        newState.lastAccess = lastAccess
       }
 
       newState.log = [
@@ -397,7 +482,12 @@ const storeCreator: StateCreator<
 })
 
 type PersistedState = {
-  state: { characters: Character[]; log: LogEntry[]; diceStyle: DiceStyle }
+  state: {
+    characters: Character[]
+    lastAccess: Record<string, number>
+    log: LogEntry[]
+    diceStyle: DiceStyle
+  }
 }
 
 const storeWithPersist = persist(storeCreator, {
@@ -406,17 +496,29 @@ const storeWithPersist = persist(storeCreator, {
   partialize: state => ({
     state: {
       characters: state.state.characters,
+      lastAccess: state.state.lastAccess,
       log: state.state.log,
       diceStyle: state.state.diceStyle
     }
   }),
-  merge: (persistedState, currentState) => ({
-    ...currentState,
-    state: {
-      ...currentState.state,
-      ...(persistedState as PersistedState).state
+  merge: (persistedState, currentState) => {
+    const merged = {
+      ...currentState,
+      state: {
+        ...currentState.state,
+        ...(persistedState as PersistedState).state
+      }
     }
-  })
+    const lastAccess = { ...merged.state.lastAccess }
+    merged.state.characters = merged.state.characters.map(c => {
+      const id = c.id || crypto.randomUUID()
+      const char = c.id ? c : { ...c, id }
+      if (!lastAccess[id]) lastAccess[id] = Date.now()
+      return char
+    })
+    merged.state.lastAccess = lastAccess
+    return merged
+  }
 })
 
 const store = (import.meta.env.DEV
