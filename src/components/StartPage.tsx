@@ -2,14 +2,14 @@ import React, { useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useGameContext } from '../GameContext'
 import { FileInput } from './FileInput'
-import { Button, Dialog } from '../design-system'
-import DiceStyleSelector from './DiceStyleSelector'
+import { Button, Dialog, FormField, Select } from '../design-system'
 import { PageContainer, Section } from '../layout'
 import { sortCharactersByLastAccess } from '../sortCharactersByLastAccess'
 import { useDiceSetStore, type DiceSet } from '../diceSetStore'
 import { useTraySetStore } from '../traySetStore'
 import GeneralSettings from './GeneralSettings'
-import MorkBorgSettings from '../mork_borg/components/GameSettings'
+import { useSettingsStore } from '../settingsStore'
+import { useThemeStore } from '../theme/themeStore'
 
 type StartTab = 'characters' | 'dices' | 'trays' | 'settings'
 
@@ -103,6 +103,10 @@ export default function StartPage() {
 
   const activeTab = location.pathname.split('/')[1] as StartTab
 
+  const appThemeId = useSettingsStore(state => state.appThemeId)
+  const setAppThemeId = useSettingsStore(state => state.setAppThemeId)
+  const themes = useThemeStore.getState().themes
+
   const DiceSetCard = ({ set }: { set: DiceSet }) => {
     const { id, name, active } = set
     const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -193,7 +197,6 @@ export default function StartPage() {
                   </li>
                 ))}
               </ul>
-            <DiceStyleSelector />
           </Section>
         )
       case 'dices':
@@ -222,10 +225,22 @@ export default function StartPage() {
           <Section title="Settings">
             <div className="flex flex-col gap-4">
               <Section title="General Settings">
-                <GeneralSettings />
-              </Section>
-              <Section title="Mörk Borg Settings">
-                <MorkBorgSettings />
+                <div className="flex flex-col gap-4">
+                  <GeneralSettings />
+                  <FormField label="App theme" htmlFor="app-theme">
+                    <Select
+                      id="app-theme"
+                      value={appThemeId}
+                      onChange={e => setAppThemeId(e.target.value)}
+                    >
+                      {themes.map(theme => (
+                        <option key={theme.id} value={theme.id}>
+                          {theme.name}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormField>
+                </div>
               </Section>
             </div>
           </Section>

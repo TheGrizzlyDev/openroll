@@ -4,17 +4,16 @@ import { useGameContext, type GameState } from '../src/GameContext'
 import { createSheet } from '../src/mork_borg/sheet'
 
 const resetStore = (state: Partial<GameState> = {}) => {
-    const base: GameState = {
-      characters: [],
-      lastAccess: {},
-      current: null,
-      sheet: createSheet(),
-      inventory: [],
-      scrolls: [],
-      log: [],
+  const base: GameState = {
+    characters: [],
+    lastAccess: {},
+    current: null,
+    sheet: createSheet(),
+    inventory: [],
+    scrolls: [],
+    log: [],
     activeTab: 'character',
-    overlay: { message: '', roll: null, visible: false },
-    diceStyle: { color: '#ffffff', edgeColor: '#000000', textureUrls: [] }
+    overlay: { message: '', roll: null, visible: false }
   }
   useGameContext.setState({ state: { ...base, ...state }, overlayTimeout: null })
 }

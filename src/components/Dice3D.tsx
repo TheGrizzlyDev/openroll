@@ -3,7 +3,6 @@ import { useFrame } from '@react-three/fiber'
 import { Edges } from '@react-three/drei'
 import { useBox } from '@react-three/cannon/dist/index.js'
 import * as THREE from 'three'
-import { useTheme } from '../theme/ThemeProvider'
 
 export interface Dice3DProps {
   type?: 'd4' | 'd6' | 'd8' | 'd12' | 'd20'
@@ -182,26 +181,18 @@ function DiceBody({ geometry, materials, orientations, edgeColor, rollResult, sp
 export default function Dice3D({
   type = 'd6',
   rollResult = 1,
-  color: propColor,
-  edgeColor: propEdgeColor,
-  faceTextures: propTextures,
+  color = '#ffffff',
+  edgeColor = '#000000',
+  faceTextures = [],
   size = 1,
   speed = 1,
   position = [0, 0, 0]
 }: Dice3DProps) {
-  const { diceStyle } = useTheme()
-  const color = propColor ?? diceStyle.color
-  const edgeColor = propEdgeColor ?? diceStyle.edgeColor
-  const faceTextures = propTextures ?? diceStyle.textureUrls
   const [externalTextures, setExternalTextures] = useState<THREE.Texture[]>([])
 
   useEffect(() => {
     console.debug('Dice3D textures:', { mode: import.meta.env.MODE, faceTextures })
-    if (
-      import.meta.env.MODE === 'test' ||
-      !faceTextures ||
-      faceTextures.length === 0
-    ) {
+    if (import.meta.env.MODE === 'test' || faceTextures.length === 0) {
       setExternalTextures([])
       return
     }

@@ -43,12 +43,6 @@ export interface OverlayState {
   visible: boolean
 }
 
-export interface DiceStyle {
-  color: string
-  edgeColor: string
-  textureUrls: string[]
-}
-
 export interface GameState {
   characters: Character[]
   lastAccess: Record<string, number>
@@ -59,7 +53,6 @@ export interface GameState {
   log: LogEntry[]
   activeTab: string
   overlay: OverlayState
-  diceStyle: DiceStyle
 }
 
 export type GameAction =
@@ -72,7 +65,6 @@ export type GameAction =
   | { type: 'SET_LOG'; log: LogEntry[] }
   | { type: 'SET_ACTIVE_TAB'; tab: string }
   | { type: 'SET_OVERLAY'; overlay: OverlayState }
-  | { type: 'SET_DICE_STYLE'; diceStyle: DiceStyle }
 
 export interface GameContextValue {
   state: GameState
@@ -89,7 +81,6 @@ export interface GameContextValue {
   roll: (_notation: string, _label?: string) => { total: number; output: string }
   logInventory: (_message: string) => void
   applyEffect: (_effect: ApplyNode) => number
-  setDiceStyle: (_style: DiceStyle) => void
 }
 
 const initialState: GameState = {
@@ -101,8 +92,7 @@ const initialState: GameState = {
   scrolls: [],
   log: [],
   activeTab: 'character',
-  overlay: { message: '', roll: null, visible: false },
-  diceStyle: { color: '#ffffff', edgeColor: '#000000', textureUrls: [] }
+  overlay: { message: '', roll: null, visible: false }
 }
 
 const reducer = (state: GameState, action: GameAction): GameState => {
@@ -197,8 +187,6 @@ const reducer = (state: GameState, action: GameAction): GameState => {
       return { ...state, activeTab: action.tab }
     case 'SET_OVERLAY':
       return { ...state, overlay: action.overlay }
-    case 'SET_DICE_STYLE':
-      return { ...state, diceStyle: action.diceStyle }
     default:
       return state
   }
@@ -476,9 +464,7 @@ const storeCreator: StateCreator<
       return { state: newState, overlayTimeout: timeout }
     }, false, 'applyEffect')
     return amount
-  },
-  setDiceStyle: style =>
-    set(({ state }) => ({ state: { ...state, diceStyle: style } }), false, 'setDiceStyle')
+  }
 })
 
 type PersistedState = {
@@ -486,7 +472,6 @@ type PersistedState = {
     characters: Character[]
     lastAccess: Record<string, number>
     log: LogEntry[]
-    diceStyle: DiceStyle
   }
 }
 
@@ -497,8 +482,7 @@ const storeWithPersist = persist(storeCreator, {
     state: {
       characters: state.state.characters,
       lastAccess: state.state.lastAccess,
-      log: state.state.log,
-      diceStyle: state.state.diceStyle
+      log: state.state.log
     }
   }),
   merge: (persistedState, currentState) => {
