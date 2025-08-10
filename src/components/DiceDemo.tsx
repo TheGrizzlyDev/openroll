@@ -10,6 +10,7 @@ export default function DiceDemo() {
   const canvasRef = useRef<HTMLDivElement>(null)
   const toolbarRef = useRef<HTMLDivElement>(null)
   const settingsRef = useRef<HTMLDivElement>(null)
+  const toastRef = useRef<HTMLDivElement>(null)
   const [config, setConfig] = useState<DiceConfig>({
     baseColor: '#e991ff',
     emissiveColor: '#3a2bc4',
@@ -55,19 +56,14 @@ export default function DiceDemo() {
       applyConfig(newConfig)
     }
 
-  const {
-    throwAll,
-    toggleSlowMo: toggleSlowMoApi,
-    applyConfig,
-    resetView,
-    setViewMode,
-    toggleSettings,
-  } = useDiceScene({
-    app: canvasRef,
-    toolbar: toolbarRef,
-    settings: settingsRef,
-    config,
-  })
+  const { throwAll, applyConfig, resetView, setViewMode, toggleSettings } =
+    useDiceScene({
+      app: canvasRef,
+      toast: toastRef,
+      toolbar: toolbarRef,
+      settings: settingsRef,
+      config,
+    })
 
   useEffect(() => {
     throwAll(Date.now())
@@ -93,6 +89,7 @@ export default function DiceDemo() {
           config={config}
           handleConfigChange={handleConfigChange}
         />
+        <DiceToast toastRef={toastRef} />
       </div>
     </>
   )

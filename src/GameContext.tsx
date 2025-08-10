@@ -222,14 +222,14 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const cancelCreation = () => {
     skipSave.current = false
     dispatch({ type: 'SET_CURRENT', current: null })
-    navigate('/characters')
+    navigate('/')
   }
 
   const deleteCharacter = (idx: number) => {
     const updated = state.characters.filter((_, i) => i !== idx)
     dispatch({ type: 'SET_CHARACTERS', characters: updated })
     dispatch({ type: 'SET_CURRENT', current: null })
-    navigate('/characters')
+    navigate('/')
   }
 
   const exportCharacters = () => JSON.stringify(state.characters, null, 2)
@@ -281,7 +281,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    if (location.pathname === '/characters') {
+    if (location.pathname === '/') {
       dispatch({ type: 'SET_CURRENT', current: null })
     }
   }, [location.pathname])

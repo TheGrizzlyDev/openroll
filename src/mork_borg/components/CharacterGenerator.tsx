@@ -22,7 +22,7 @@ export default function CharacterGenerator() {
 
   const handleCancel = () => {
     cancelCreation()
-    navigate('/characters')
+    navigate('/')
   }
 
   const handleClassChange = (e: ChangeEvent<HTMLSelectElement>) => {

@@ -43,7 +43,6 @@ interface UseDiceSceneParams {
 
 export interface DiceSceneApi {
   throwAll: (_seed: number) => void
-  toggleSlowMo: () => boolean | undefined
   resetView: () => void
   applyConfig: (_cfg: DiceConfig) => void
   setViewMode: (_mode: string) => void
@@ -82,10 +81,6 @@ export default function useDiceScene({
     apiRef.current?.throwAll(seed)
   }, [])
 
-  const toggleSlowMo = useCallback(() => {
-    return apiRef.current?.toggleSlowMo()
-  }, [])
-
   const resetView = useCallback(() => {
     apiRef.current?.resetOrbit()
   }, [])
@@ -108,7 +103,6 @@ export default function useDiceScene({
 
   return {
     throwAll,
-    toggleSlowMo,
     resetView,
     applyConfig,
     setViewMode,

@@ -1,0 +1,241 @@
+import React, { useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useGameContext } from '../GameContext'
+import { FileInput } from './FileInput'
+import { Button, Dialog } from '../design-system'
+import DiceStyleSelector from './DiceStyleSelector'
+import { PageContainer, Section } from '../layout'
+import { sortCharactersByLastAccess } from '../sortCharactersByLastAccess'
+import { useDiceSetStore } from '../diceSetStore'
+import { useTraySetStore } from '../traySetStore'
+import { useSettingsStore, type NavPosition } from '../settingsStore'
+import { useStartPageStore } from '../startPageStore'
+
+export default function StartPage() {
+  const {
+    state: { characters, overlay },
+    dispatch,
+    loadCharacter,
+    deleteCharacter,
+    createCharacter,
+    exportCharacters,
+    importCharacters,
+    overlayTimeout,
+    setOverlayTimeout
+  } = useGameContext()
+  const navigate = useNavigate()
+
+  const handleExport = () => {
+    const data = exportCharacters()
+    const blob = new Blob([data], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'characters.json'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const handleImport = (file: File) => {
+    const reader = new FileReader()
+    reader.onload = ({ target }: ProgressEvent<FileReader>) => {
+      const data = target?.result as string
+      const success = importCharacters(data)
+      if (!success) {
+        dispatch({
+          type: 'SET_OVERLAY',
+          overlay: { message: 'Failed to import characters', roll: null, visible: true }
+        })
+      } else {
+        let count = 0
+        try {
+          const parsed = JSON.parse(data)
+          count = Array.isArray(parsed) ? parsed.length : 0
+        } catch {
+          count = 0
+        }
+        dispatch({
+          type: 'SET_OVERLAY',
+          overlay: {
+            message: `${count} character${count === 1 ? '' : 's'} imported`,
+            roll: null,
+            visible: true
+          }
+        })
+      }
+      if (overlayTimeout) clearTimeout(overlayTimeout)
+      const timeout = setTimeout(
+        () => dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } }),
+        10000
+      )
+      setOverlayTimeout(timeout)
+    }
+    reader.readAsText(file)
+  }
+
+  const confirmDelete = (idx: number) =>
+    window.confirm('Delete this character?') && deleteCharacter(idx)
+
+  const handleLoad = (idx: number) => {
+    loadCharacter(idx)
+    navigate(`/sheet/${idx}`)
+  }
+
+  const handleCreate = () => {
+    createCharacter()
+    navigate('/generator')
+  }
+
+  const sortedCharacters = sortCharactersByLastAccess(characters)
+
+  const diceSets = useDiceSetStore(state => state.sets)
+  const activeDiceSet = useDiceSetStore(state => state.activeId)
+  const setActiveDiceSet = useDiceSetStore(state => state.setActive)
+
+  const traySets = useTraySetStore(state => state.sets)
+  const activeTraySet = useTraySetStore(state => state.activeId)
+  const setActiveTraySet = useTraySetStore(state => state.setActive)
+
+  const navPosition = useSettingsStore(state => state.navPosition)
+  const setNavPosition = useSettingsStore(state => state.setNavPosition)
+  const activeTab = useStartPageStore(state => state.activeTab)
+
+  const DiceSetCard = ({ id, name }: { id: string; name: string }) => {
+    const canvasRef = useRef<HTMLCanvasElement>(null)
+    useEffect(() => {
+      const ctx = canvasRef.current?.getContext('2d')
+      if (!ctx) return
+      const color = `hsl(${Math.floor(Math.random() * 360)} 70% 50%)`
+      ctx.fillStyle = color
+      ctx.beginPath()
+      ctx.arc(25, 25, 20, 0, Math.PI * 2)
+      ctx.fill()
+    }, [])
+    return (
+      <div className="p-2 border rounded flex flex-col items-center gap-2">
+        <canvas ref={canvasRef} width={50} height={50} />
+        <Button onClick={() => setActiveDiceSet(id)} disabled={activeDiceSet === id}>
+          {activeDiceSet === id ? 'Active' : 'Use'}
+        </Button>
+        <div>{name}</div>
+      </div>
+    )
+  }
+
+  const TraySetCard = ({ id, name }: { id: string; name: string }) => (
+    <div className="p-2 border rounded flex flex-col items-center gap-2">
+      <div className="w-12 h-12 bg-gray-200" />
+      <Button onClick={() => setActiveTraySet(id)} disabled={activeTraySet === id}>
+        {activeTraySet === id ? 'Active' : 'Use'}
+      </Button>
+      <div>{name}</div>
+    </div>
+  )
+  const renderTab = () => {
+    switch (activeTab) {
+      case 'characters':
+        return (
+          <Section
+            title="Characters"
+            actions={
+              <>
+                <Button onClick={handleCreate}>Create New</Button>
+                <Button onClick={handleExport}>Export</Button>
+                <FileInput accept="application/json" onFileSelect={handleImport}>
+                  Import
+                </FileInput>
+              </>
+            }
+          >
+            <ul className="character-list">
+              {sortedCharacters.map((c, idx) => (
+                <li key={idx}>
+                  <Button onClick={() => handleLoad(idx)}>
+                    {c.name || `Character ${idx + 1}`}
+                  </Button>
+                  <Button onClick={() => confirmDelete(idx)}>Delete</Button>
+                </li>
+              ))}
+            </ul>
+            <DiceStyleSelector />
+          </Section>
+        )
+      case 'dices':
+        return (
+          <Section title="Dices">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              {diceSets.map(set => (
+                <DiceSetCard key={set.id} id={set.id} name={set.name} />
+              ))}
+            </div>
+          </Section>
+        )
+      case 'trays':
+        return (
+          <Section title="Trays">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="p-2 border rounded flex flex-col items-center gap-2">
+                <div className="w-12 h-12 bg-gray-200" />
+                <Button
+                  onClick={() => setActiveTraySet(null)}
+                  disabled={activeTraySet === null}
+                >
+                  {activeTraySet === null ? 'Active' : 'Use'}
+                </Button>
+                <div>No Tray</div>
+              </div>
+              {traySets.map(set => (
+                <TraySetCard key={set.id} id={set.id} name={set.name} />
+              ))}
+            </div>
+          </Section>
+        )
+      case 'settings':
+        return (
+          <Section title="Settings">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block mb-1" htmlFor="nav-position">
+                  Navbar position
+                </label>
+                <select
+                  id="nav-position"
+                  value={navPosition}
+                  onChange={e => setNavPosition(e.target.value as NavPosition)}
+                  className="border rounded p-1"
+                >
+                  <option value="bottom">Bottom</option>
+                  <option value="top">Top</option>
+                  <option value="left">Left</option>
+                  <option value="right">Right</option>
+                </select>
+              </div>
+              <div>Per-game Settings Component</div>
+            </div>
+          </Section>
+        )
+      default:
+        return null
+    }
+  }
+  return (
+    <>
+      <PageContainer title="Open Roll" startScreen>
+        {renderTab()}
+      </PageContainer>
+
+      {overlay.visible && (
+        <Dialog
+          visible={overlay.visible}
+          onClose={() => {
+            if (overlayTimeout) clearTimeout(overlayTimeout)
+            setOverlayTimeout(null)
+            dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } })
+          }}
+        >
+          <span>{overlay.message}</span>
+        </Dialog>
+      )}
+    </>
+  )
+}

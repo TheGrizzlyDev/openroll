@@ -41,7 +41,7 @@ export default function SheetPage() {
   return (
     <PageContainer
       title="Open Roll"
-      headerActions={<Link to="/characters">Characters</Link>}
+      headerActions={<Link to="/">Characters</Link>}
     >
       <DiceRoller />
       <Tabs
