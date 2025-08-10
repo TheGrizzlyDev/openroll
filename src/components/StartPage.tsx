@@ -6,7 +6,7 @@ import { Button, Dialog } from '../design-system'
 import DiceStyleSelector from './DiceStyleSelector'
 import { PageContainer, Section } from '../layout'
 import { sortCharactersByLastAccess } from '../sortCharactersByLastAccess'
-import { useDiceSetStore } from '../diceSetStore'
+import { useDiceSetStore, type DiceSet } from '../diceSetStore'
 import { useTraySetStore } from '../traySetStore'
 import { useSettingsStore, type NavPosition } from '../settingsStore'
 import { useStartPageStore } from '../startPageStore'
@@ -89,8 +89,8 @@ export default function StartPage() {
   const sortedCharacters = sortCharactersByLastAccess(characters)
 
   const diceSets = useDiceSetStore(state => state.sets)
-  const activeDiceSet = useDiceSetStore(state => state.activeId)
-  const setActiveDiceSet = useDiceSetStore(state => state.setActive)
+  const activateDiceSet = useDiceSetStore(state => state.activateSet)
+  const sortedDiceSets = [...diceSets].sort((a, b) => b.updatedAt - a.updatedAt)
 
   const traySets = useTraySetStore(state => state.sets)
   const activeTraySet = useTraySetStore(state => state.activeId)
@@ -100,7 +100,8 @@ export default function StartPage() {
   const setNavPosition = useSettingsStore(state => state.setNavPosition)
   const activeTab = useStartPageStore(state => state.activeTab)
 
-  const DiceSetCard = ({ id, name }: { id: string; name: string }) => {
+  const DiceSetCard = ({ set }: { set: DiceSet }) => {
+    const { id, name, active } = set
     const canvasRef = useRef<HTMLCanvasElement>(null)
     useEffect(() => {
       const ctx = canvasRef.current?.getContext('2d')
@@ -114,8 +115,8 @@ export default function StartPage() {
     return (
       <div className="p-2 border rounded flex flex-col items-center gap-2">
         <canvas ref={canvasRef} width={50} height={50} />
-        <Button onClick={() => setActiveDiceSet(id)} disabled={activeDiceSet === id}>
-          {activeDiceSet === id ? 'Active' : 'Use'}
+        <Button onClick={() => activateDiceSet(id)} disabled={active}>
+          {active ? 'Active' : 'Use'}
         </Button>
         <div>{name}</div>
       </div>
@@ -164,8 +165,8 @@ export default function StartPage() {
         return (
           <Section title="Dices">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {diceSets.map(set => (
-                <DiceSetCard key={set.id} id={set.id} name={set.name} />
+              {sortedDiceSets.map(set => (
+                <DiceSetCard key={set.id} set={set} />
               ))}
             </div>
           </Section>
