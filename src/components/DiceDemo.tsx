@@ -8,10 +8,8 @@ import DiceToast from './DiceToast'
 
 export default function DiceDemo() {
   const canvasRef = useRef<HTMLDivElement>(null)
-  const toastRef = useRef<HTMLDivElement>(null)
   const toolbarRef = useRef<HTMLDivElement>(null)
   const settingsRef = useRef<HTMLDivElement>(null)
-  const [slowMo, setSlowMo] = useState(false)
   const [config, setConfig] = useState<DiceConfig>({
     baseColor: '#e991ff',
     emissiveColor: '#3a2bc4',
@@ -24,7 +22,7 @@ export default function DiceDemo() {
     fontSize: 68,
     fontColor: '#ffe8b0',
     strokeColor: '#ffb450',
-    strokeWidth: 10,
+    strokeWidth: 5,
     trayShape: 'hex',
     trayBaseColor: '#1b153d',
     trayEmissiveColor: '#221a55',
@@ -66,7 +64,6 @@ export default function DiceDemo() {
     toggleSettings,
   } = useDiceScene({
     app: canvasRef,
-    toast: toastRef,
     toolbar: toolbarRef,
     settings: settingsRef,
     config,
@@ -80,20 +77,13 @@ export default function DiceDemo() {
     throwAll(Date.now())
   }, [throwAll])
 
-  const handleToggleSlowMo = useCallback(() => {
-    setSlowMo((prev) => toggleSlowMoApi() ?? prev)
-  }, [toggleSlowMoApi])
-
   return (
     <>
       <DiceCanvas canvasRef={canvasRef} />
       <div id="ui">
-        <DiceToast toastRef={toastRef} />
         <DiceToolbar
           toolbarRef={toolbarRef}
           onThrow={handleThrow}
-          slowMo={slowMo}
-          onToggleSlowMo={handleToggleSlowMo}
           onResetView={resetView}
           onSetViewMode={setViewMode}
           onToggleSettings={toggleSettings}

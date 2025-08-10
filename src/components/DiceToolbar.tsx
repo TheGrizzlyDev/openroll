@@ -3,8 +3,6 @@ import { type RefObject } from 'react'
 interface DiceToolbarProps {
   toolbarRef: RefObject<HTMLDivElement | null>
   onThrow: () => void
-  slowMo: boolean
-  onToggleSlowMo: () => void
   onResetView: () => void
   onSetViewMode: (_mode: string) => void
   onToggleSettings: () => void
@@ -13,8 +11,6 @@ interface DiceToolbarProps {
 export default function DiceToolbar({
   toolbarRef,
   onThrow,
-  slowMo,
-  onToggleSlowMo,
   onResetView,
   onSetViewMode,
   onToggleSettings,
@@ -23,14 +19,6 @@ export default function DiceToolbar({
     <div className="toolbar" ref={toolbarRef}>
       <button id="throw" className="btn" type="button" onClick={onThrow}>
         Throw dice
-      </button>
-      <button
-        id="slowmo"
-        className="btn"
-        type="button"
-        onClick={onToggleSlowMo}
-      >
-        {`Slow-mo: ${slowMo ? 'on' : 'off'}`}
       </button>
       <button id="reset" className="btn" type="button" onClick={onResetView}>
         Reset view

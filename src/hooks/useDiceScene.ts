@@ -53,7 +53,6 @@ export interface DiceSceneApi {
 
 export default function useDiceScene({
   app,
-  toast,
   toolbar,
   settings,
   config,
@@ -61,10 +60,9 @@ export default function useDiceScene({
   const apiRef = useRef<ReturnType<typeof initDiceDemo> | null>(null)
 
   useEffect(() => {
-    if (app.current && toast.current && toolbar.current && settings.current) {
+    if (app.current && toolbar.current && settings.current) {
       apiRef.current = initDiceDemo({
         app: app.current,
-        toast: toast.current,
         toolbar: toolbar.current,
         settings: settings.current,
       })

@@ -2,7 +2,7 @@
 // @ts-nocheck
 import * as THREE from "three"
 
-export default function initDiceDemo({ app, toast, toolbar, settings }) {
+export default function initDiceDemo({ app, toolbar, settings }) {
   // Main entry point for the standalone Three.js dice demo.
   // Sets up rendering, physics simulation and UI bindings.
   // ===== Config =====
@@ -440,19 +440,7 @@ export default function initDiceDemo({ app, toast, toolbar, settings }) {
     }
   }
   // soft shadow
-  // Simple ground plane used to fake contact shadows beneath the dice.
-  const contactShadow = new THREE.Mesh(
-    new THREE.PlaneGeometry(14, 14),
-    new THREE.MeshStandardMaterial({
-      color: 0x000000,
-      opacity: 0.18,
-      transparent: true,
-    }),
-  )
-  contactShadow.rotation.x = -Math.PI / 2
-  contactShadow.position.y = world.floorY + 0.005
-  contactShadow.receiveShadow = true
-  scene.add(contactShadow)
+
   // Dice helpers
   // Render the numeric labels used on die faces.
   function makeNumberTexture(n) {
@@ -740,7 +728,22 @@ export default function initDiceDemo({ app, toast, toolbar, settings }) {
       snapping: false,
     }
   }
-  const dice = [makeDie("d20"), makeDie("d8"), makeDie("d6"), makeDie("d4")]
+  const dice = []
+  function buildDice(specs = [
+    { type: "d20", count: 1 },
+    { type: "d8", count: 1 },
+    { type: "d6", count: 1 },
+    { type: "d4", count: 1 },
+  ]) {
+    dice.forEach((d) => scene.remove(d.group))
+    dice.length = 0
+    specs.forEach(({ type, count }) => {
+      for (let i = 0; i < count; i++) {
+        dice.push(makeDie(type))
+      }
+    })
+  }
+  buildDice()
   // Randomize position, velocity and spin of a die.
   function throwDie(d, rng) {
     d.pos.set(
@@ -758,10 +761,10 @@ export default function initDiceDemo({ app, toast, toolbar, settings }) {
     d.snapping = false
   }
   // Throw all dice using a seeded RNG.
-  function throwAll(seed?) {
+  function throwAll(seed?, specs?) {
+    if (specs) buildDice(specs)
     const rng = makeRng(seed || (Math.random() * 1e9) | 0)
     dice.forEach((d) => throwDie(d, rng))
-    scheduleResultsToast()
   }
   // Gradually rotate a die so the face closest to up becomes perfectly aligned.
   function snapToNearestFace(d) {
@@ -953,18 +956,16 @@ export default function initDiceDemo({ app, toast, toolbar, settings }) {
   }
   // Loop
   // Main animation loop with optional slow motion.
-  let slowMo = false
   let lastTime = performance.now()
   function loop(now) {
-    const dtRaw = Math.max(0.001, Math.min(0.05, (now - lastTime) / 1000))
+    const dt = Math.max(0.001, Math.min(0.05, (now - lastTime) / 1000))
     lastTime = now
-    const dt = slowMo ? dtRaw * 0.333 : dtRaw
     integrate(dt)
     renderer.render(scene, camera)
     requestAnimationFrame(loop)
   }
-  // Values + toast
-  // Determine which face is up for display and show a transient toast.
+  // Values
+  // Determine which face is up for display.
   function valueOfDie(d) {
     const up = new THREE.Vector3(0, 1, 0)
     if (d.kind === "d4" && d.d4Verts && d.d4VNums) {
@@ -996,37 +997,10 @@ export default function initDiceDemo({ app, toast, toolbar, settings }) {
     }
     return bestN
   }
-  function scheduleResultsToast() {
-    clearTimeout(scheduleResultsToast._t)
-    scheduleResultsToast._t = setTimeout(() => showResultsToast(), 2200)
-  }
-  function showResultsToast() {
-    if (!toast) return
-    const vals = dice
-      .map((d) => `${d.kind.toUpperCase()}: ${valueOfDie(d)}`)
-      .join(" \u2022 ")
-    const div = document.createElement("div")
-    div.className = "toast"
-    div.textContent = vals
-    toast.appendChild(div)
-    requestAnimationFrame(() => {
-      div.style.opacity = "1"
-      div.style.transform = "translateY(0)"
-    })
-    setTimeout(() => {
-      div.style.opacity = "0"
-      div.style.transform = "translateY(-8px)"
-      setTimeout(() => div.remove(), 300)
-    }, 4000)
-  }
+
   // UI
   // Button and select handlers for user interaction are exposed via the
   // returned API rather than DOM listeners.
-
-  function toggleSlowMo() {
-    slowMo = !slowMo
-    return slowMo
-  }
 
   function toggleSettings() {
     settings.style.display =
@@ -1106,7 +1080,6 @@ export default function initDiceDemo({ app, toast, toolbar, settings }) {
   })
   return {
     throwAll,
-    toggleSlowMo,
     resetOrbit: orbit.reset,
     applyAppearanceAll,
     rebuildTray,
