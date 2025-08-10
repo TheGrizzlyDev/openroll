@@ -1,45 +1,12 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react'
-import initDiceDemo from '../diceDemo'
+import useDiceScene, { type DiceConfig } from '../hooks/useDiceScene'
 import '../DiceDemo.css'
-
-type DiceConfig = {
-  baseColor: string
-  emissiveColor: string
-  emissiveIntensity: number
-  glowColor: string
-  glowOpacity: number
-  textureKind: string
-  fontFamily: string
-  fontWeight: string
-  fontSize: number
-  fontColor: string
-  strokeColor: string
-  strokeWidth: number
-  trayShape: string
-  trayBaseColor: string
-  trayEmissiveColor: string
-  trayEmissiveIntensity: number
-  trayOpacity: number
-  trayTextureKind: string
-  floorEps: number
-  floorEpsD20: number
-  floorEpsD8: number
-  floorEpsD6: number
-  floorEpsD4: number
-  trayRimHeight: number
-  trayRimThickness: number
-  trayRimColor: string
-  trayRimEmissive: string
-  trayRimEmissiveIntensity: number
-  trayRimOpacity: number
-}
 
 export default function DiceDemo() {
   const canvasRef = useRef<HTMLDivElement>(null)
   const toastRef = useRef<HTMLDivElement>(null)
   const toolbarRef = useRef<HTMLDivElement>(null)
   const settingsRef = useRef<HTMLDivElement>(null)
-  const apiRef = useRef<ReturnType<typeof initDiceDemo> | null>(null)
   const [slowMo, setSlowMo] = useState(false)
   const [config, setConfig] = useState<DiceConfig>({
     baseColor: '#e991ff',
@@ -83,28 +50,28 @@ export default function DiceDemo() {
         : (e.target.value as unknown as DiceConfig[K])
       const newConfig = { ...config, [key]: value }
       setConfig(newConfig)
-      apiRef.current?.applyConfig(newConfig)
+      applyConfig(newConfig)
     }
 
-  /* eslint-disable react-hooks/exhaustive-deps */
+  const {
+    throwAll,
+    toggleSlowMo: toggleSlowMoApi,
+    applyConfig,
+    resetView,
+    setViewMode,
+    toggleSettings,
+  } = useDiceScene({
+    app: canvasRef,
+    toast: toastRef,
+    toolbar: toolbarRef,
+    settings: settingsRef,
+    config,
+  })
+
   useEffect(() => {
-    if (
-      canvasRef.current &&
-      toastRef.current &&
-      toolbarRef.current &&
-      settingsRef.current
-    ) {
-      apiRef.current = initDiceDemo({
-        app: canvasRef.current,
-        toast: toastRef.current,
-        toolbar: toolbarRef.current,
-        settings: settingsRef.current,
-      })
-      apiRef.current.applyConfig(config)
-      apiRef.current.throwAll(Date.now())
-    }
+    throwAll(Date.now())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  /* eslint-enable react-hooks/exhaustive-deps */
 
   return (
     <>
@@ -112,19 +79,16 @@ export default function DiceDemo() {
       <div id="ui">
         <div id="toast" ref={toastRef} />
         <div className="toolbar" ref={toolbarRef}>
-          <button
-            className="btn"
-            onClick={() => apiRef.current?.throwAll(Date.now())}
-          >
+          <button className="btn" onClick={() => throwAll(Date.now())}>
             Throw dice
           </button>
           <button
             className="btn"
-            onClick={() => setSlowMo(apiRef.current?.toggleSlowMo() ?? slowMo)}
+            onClick={() => setSlowMo(toggleSlowMoApi() ?? slowMo)}
           >
             {`Slow-mo: ${slowMo ? 'on' : 'off'}`}
           </button>
-          <button className="btn" onClick={() => apiRef.current?.resetOrbit()}>
+          <button className="btn" onClick={() => resetView()}>
             Reset view
           </button>
           <label
@@ -134,14 +98,14 @@ export default function DiceDemo() {
             View
             <select
               defaultValue="ortho"
-              onChange={(e) => apiRef.current?.setViewMode(e.target.value)}
+              onChange={(e) => setViewMode(e.target.value)}
             >
               <option value="ortho">Ortho (Game)</option>
               <option value="perspTop">Persp Top</option>
               <option value="perspFree">Persp Free</option>
             </select>
           </label>
-          <button className="btn" onClick={() => apiRef.current?.toggleSettings()}>
+          <button className="btn" onClick={() => toggleSettings()}>
             Settings
           </button>
         </div>
