@@ -1,8 +1,15 @@
 import { useState, type ChangeEvent } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
-import { Input, Select, HpBar, FormField, NumericAttribute, Button } from '../design-system'
-import { Dialog } from '@ark-ui/react'
+import {
+  Input,
+  Select,
+  HpBar,
+  FormField,
+  NumericAttribute,
+  Button,
+  Dialog
+} from '../design-system'
 import StatGrid from './StatGrid'
 import classes from './classes'
 import type { Sheet } from './sheet'
@@ -114,7 +121,7 @@ export default function CharacterSheet() {
 
         <Dialog.Root
           open={editingStat !== null}
-          onOpenChange={({ open }) => {
+          onOpenChange={open => {
             if (!open) setEditingStat(null)
           }}
         >

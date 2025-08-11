@@ -1,4 +1,4 @@
-import { Progress } from '@ark-ui/react'
+import * as Progress from '@radix-ui/react-progress'
 import { Button } from '.'
 
 interface HpBarProps {
@@ -39,20 +39,21 @@ export function HpBar({
 
   return (
     <div className="hp-bar select-none" aria-label="Hit Points">
-      <Progress.Root value={hp} max={maxHp} className="w-full">
-        <Progress.Track className="relative h-4 rounded border border-accent bg-bg-alt">
-          {tempEnabled && tempHp > 0 && (
-            <div
-              className="absolute inset-y-0 left-0 bg-blue-300/50"
-              style={{ width: `${tempPct * 100}%` }}
-            />
-          )}
-          <Progress.Range className={["absolute inset-y-0 left-0", barColor].join(" ")} />
-          <Progress.ValueText className="absolute inset-0 grid place-items-center text-xs font-bold">
-            {hp}/{maxHp}
-            {tempEnabled && tempHp ? ` (+${tempHp})` : ''}
-          </Progress.ValueText>
-        </Progress.Track>
+      <Progress.Root value={pct * 100} className="relative h-4 w-full rounded border border-accent bg-bg-alt">
+        {tempEnabled && tempHp > 0 && (
+          <div
+            className="absolute inset-y-0 left-0 bg-blue-300/50"
+            style={{ width: `${tempPct * 100}%` }}
+          />
+        )}
+        <Progress.Indicator
+          className={["absolute inset-y-0 left-0", barColor].join(" ")}
+          style={{ width: `${pct * 100}%` }}
+        />
+        <span className="absolute inset-0 grid place-items-center text-xs font-bold">
+          {hp}/{maxHp}
+          {tempEnabled && tempHp ? ` (+${tempHp})` : ''}
+        </span>
       </Progress.Root>
 
       <div className={`mt-1 grid grid-cols-${tempEnabled ? 3 : 2} gap-1`}>

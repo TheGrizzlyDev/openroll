@@ -7,7 +7,7 @@ import LogView from './LogView'
 import Notes from './Notes'
 import { useGameContext } from '../GameContext'
 import { Tabs, Button } from '../design-system'
-import { Dialog } from '@ark-ui/react'
+import { Dialog } from '../design-system'
 import { Canvas } from '@react-three/fiber'
 import Dice3D from './Dice3D'
 import DiceTray from './DiceTray'
@@ -47,7 +47,7 @@ export default function SheetPage() {
       <DiceRoller />
       <Tabs.Root
         value={activeTab}
-        onValueChange={({ value: tab }) => dispatch({ type: 'SET_ACTIVE_TAB', tab })}
+        onValueChange={tab => dispatch({ type: 'SET_ACTIVE_TAB', tab })}
       >
         <Section
           title={tabTitle}
@@ -81,7 +81,7 @@ export default function SheetPage() {
         {overlay.visible && (
           <Dialog.Root
             open={overlay.visible}
-            onOpenChange={({ open }) => {
+            onOpenChange={open => {
               if (!open) {
                 if (overlayTimeout) clearTimeout(overlayTimeout)
                 setOverlayTimeout(null)

@@ -1,22 +1,21 @@
 /* eslint-disable storybook/no-renderer-packages */
 import type { Meta, StoryObj } from '@storybook/react'
-import { Field } from '@ark-ui/react'
+import { FormField, Input } from '..'
 
-const meta: Meta<typeof Field.Root> = {
-  title: 'Ark UI/Field',
-  component: Field.Root,
+const meta: Meta<typeof FormField> = {
+  title: 'Design System/FormField',
+  component: FormField,
 }
 
 export default meta
 
-type Story = StoryObj<typeof Field.Root>
+type Story = StoryObj<typeof FormField>
 
 export const Default: Story = {
   render: () => (
-    <Field.Root>
-      <Field.Label htmlFor="example">Label</Field.Label>
-      <Field.Input id="example" placeholder="Enter text" />
-    </Field.Root>
+    <FormField label="Label" htmlFor="example">
+      <Input id="example" placeholder="Enter text" />
+    </FormField>
   ),
 }
 

@@ -1,13 +1,11 @@
 /* eslint-disable storybook/no-renderer-packages */
 import type { Meta, StoryObj } from '@storybook/react'
-import { ark } from '@ark-ui/react'
-
-const Button = ark.button
+import { Button } from '..'
 
 const meta: Meta<typeof Button> = {
-  title: 'Ark UI/Button',
+  title: 'Design System/Button',
   component: Button,
-  args: { children: 'Button' },
+  args: { children: 'Button' }
 }
 
 export default meta

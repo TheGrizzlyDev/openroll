@@ -1,7 +1,6 @@
-import { forwardRef, type CSSProperties } from 'react'
-import { ark, type HTMLArkProps } from '@ark-ui/react'
+import type { CSSProperties, HTMLAttributes } from 'react'
 
-export interface FlexProps extends HTMLArkProps<'div'> {
+export interface FlexProps extends HTMLAttributes<HTMLDivElement> {
   gap?: CSSProperties['gap']
   justify?: CSSProperties['justifyContent']
   align?: CSSProperties['alignItems']
@@ -9,10 +8,17 @@ export interface FlexProps extends HTMLArkProps<'div'> {
   wrap?: CSSProperties['flexWrap']
 }
 
-export const Flex = forwardRef<HTMLDivElement, FlexProps>(
-  ({ gap, justify, align, direction, wrap, style, ...props }, ref) => (
-    <ark.div
-      ref={ref}
+export function Flex({
+  gap,
+  justify,
+  align,
+  direction,
+  wrap,
+  style,
+  ...props
+}: FlexProps) {
+  return (
+    <div
       {...props}
       style={{
         display: 'flex',
@@ -25,6 +31,6 @@ export const Flex = forwardRef<HTMLDivElement, FlexProps>(
       }}
     />
   )
-)
+}
 
 export default Flex

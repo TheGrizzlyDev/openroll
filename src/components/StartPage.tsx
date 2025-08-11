@@ -2,8 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useGameContext } from '../GameContext'
 import { FileInput } from './FileInput'
-import { Button } from '../design-system'
-import { Dialog, ark } from '@ark-ui/react'
+import { Button, Dialog } from '../design-system'
 import { PageContainer, Section, Stack, Flex } from '../layout'
 import { sortCharactersByLastAccess } from '../sortCharactersByLastAccess'
 import { useDiceSetStore, type DiceSet } from '../diceSetStore'
@@ -204,26 +203,29 @@ export default function StartPage() {
               </>
             }
           >
-              <Stack
-                asChild
-                gap="0.5rem"
-                style={{ listStyle: 'none', margin: 0, padding: 0 }}
+              <ul
+                style={{
+                  listStyle: 'none',
+                  margin: 0,
+                  padding: 0,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.5rem'
+                }}
               >
-                <ark.ul>
-                  {sortedIndexes.map(originalIdx => (
-                    <Flex asChild key={originalIdx} gap="0.5rem">
-                      <ark.li>
-                        <Button onClick={() => handleLoad(originalIdx)}>
-                          {characters[originalIdx].name || `Character ${originalIdx + 1}`}
-                        </Button>
-                        <Button onClick={() => confirmDelete(originalIdx)}>
-                          Delete
-                        </Button>
-                      </ark.li>
+                {sortedIndexes.map(originalIdx => (
+                  <li key={originalIdx}>
+                    <Flex gap="0.5rem">
+                      <Button onClick={() => handleLoad(originalIdx)}>
+                        {characters[originalIdx].name || `Character ${originalIdx + 1}`}
+                      </Button>
+                      <Button onClick={() => confirmDelete(originalIdx)}>
+                        Delete
+                      </Button>
                     </Flex>
-                  ))}
-                </ark.ul>
-              </Stack>
+                  </li>
+                ))}
+              </ul>
           </Section>
         )
       case 'dices':
@@ -272,7 +274,7 @@ export default function StartPage() {
         {overlay.visible && (
           <Dialog.Root
             open={overlay.visible}
-            onOpenChange={({ open }) => {
+            onOpenChange={open => {
               if (!open) {
                 if (overlayTimeout) clearTimeout(overlayTimeout)
                 setOverlayTimeout(null)

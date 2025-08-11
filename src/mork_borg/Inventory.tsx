@@ -4,8 +4,7 @@ import SortableList from '../components/SortableList'
 import InventoryItem from '../components/InventoryItem'
 import { useGameContext, type Scroll } from '../GameContext'
 import SmartTextEditor from '../components/SmartTextEditor'
-import { Input, Select, Button } from '../design-system'
-import { Dialog } from '@ark-ui/react'
+import { Input, Select, Button, Dialog } from '../design-system'
 // eslint-disable-next-line react-refresh/only-export-components
 export function reorderScrolls(
   scrolls: Scroll[],
@@ -207,7 +206,7 @@ export default function Inventory() {
         {showItemPopup && (
           <Dialog.Root
             open={showItemPopup}
-            onOpenChange={({ open }) => {
+            onOpenChange={open => {
               if (!open) {
                 resetForm()
                 setShowItemPopup(false)
@@ -259,7 +258,7 @@ export default function Inventory() {
         {showScrollPopup && (
           <Dialog.Root
             open={showScrollPopup}
-            onOpenChange={({ open }) => {
+            onOpenChange={open => {
               if (!open) {
                 resetScrollForm()
                 setShowScrollPopup(false)

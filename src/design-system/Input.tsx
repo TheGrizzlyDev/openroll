@@ -1,3 +1,9 @@
-export { FieldInput as Input } from '@ark-ui/react'
-export type { FieldInputProps as InputProps } from '@ark-ui/react'
+import { forwardRef, type InputHTMLAttributes } from 'react'
 
+export type InputProps = InputHTMLAttributes<HTMLInputElement>
+
+export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => (
+  <input ref={ref} {...props} />
+))
+
+export default Input

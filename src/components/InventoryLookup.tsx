@@ -1,7 +1,12 @@
 import React, { useState } from 'react'
 import { useGameContext } from '../GameContext'
-import { Button } from '../design-system'
-import { Dialog } from '@ark-ui/react'
+import { Button, Dialog } from '../design-system'
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+  type ColumnDef
+} from '@tanstack/react-table'
 
 interface InventoryLookupProps {
   description?: string
@@ -26,30 +31,49 @@ export default function InventoryLookup({ description, attrs }: InventoryLookupP
     }
   }
 
+  const columns: ColumnDef<{ id: string | number; name: string }>[] = [
+    {
+      accessorKey: 'name',
+      header: 'Name',
+      cell: info => (
+        <Button type="button" onClick={() => setOpen(false)}>
+          {info.getValue<string>()}
+        </Button>
+      )
+    }
+  ]
+  const table = useReactTable({ data: items, columns, getCoreRowModel: getCoreRowModel() })
+
   return (
     <>
       <Button type="button" onClick={() => setOpen(true)}>
         {description || 'Inventory'}
       </Button>
-        {open && (
-          <Dialog.Root open={open} onOpenChange={({ open }) => !open && setOpen(false)}>
-            <Dialog.Backdrop />
-            <Dialog.Positioner>
-              <Dialog.Content>
-                <ul>
-                  {items.map(item => (
-                    <li key={item.id}>
-                      <Button type="button" onClick={() => setOpen(false)}>{item.name}</Button>
-                    </li>
+      {open && (
+        <Dialog.Root open={open} onOpenChange={open => !open && setOpen(false)}>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <table>
+                <tbody>
+                  {table.getRowModel().rows.map(row => (
+                    <tr key={row.id}>
+                      {row.getVisibleCells().map(cell => (
+                        <td key={cell.id}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </td>
+                      ))}
+                    </tr>
                   ))}
-                </ul>
-                <Dialog.CloseTrigger asChild>
-                  <Button type="button">×</Button>
-                </Dialog.CloseTrigger>
-              </Dialog.Content>
-            </Dialog.Positioner>
-          </Dialog.Root>
-        )}
-      </>
-    )
-  }
+                </tbody>
+              </table>
+              <Dialog.CloseTrigger asChild>
+                <Button type="button">×</Button>
+              </Dialog.CloseTrigger>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Dialog.Root>
+      )}
+    </>
+  )
+}

@@ -1,3 +1,9 @@
-export { FieldTextarea as Textarea } from '@ark-ui/react'
-export type { FieldTextareaProps as TextareaProps } from '@ark-ui/react'
+import { forwardRef, type TextareaHTMLAttributes } from 'react'
 
+export type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement>
+
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, ref) => (
+  <textarea ref={ref} {...props} />
+))
+
+export default Textarea

@@ -1,4 +1,3 @@
-import { NumberInput } from '@ark-ui/react'
 import { Button } from '.'
 
 interface NumericAttributeProps {
@@ -18,28 +17,41 @@ export function NumericAttribute({
   max,
   step = 1
 }: NumericAttributeProps) {
+  const clamp = (val: number) => {
+    if (typeof min === 'number') val = Math.max(min, val)
+    if (typeof max === 'number') val = Math.min(max, val)
+    return val
+  }
+  const change = (delta: number) => onChange(clamp(value + delta))
+
   return (
-      <NumberInput.Root
+    <div className="inline-flex items-center gap-2">
+      <Button
+        type="button"
+        aria-label={`Decrease ${id}`}
+        className="h-10 w-10"
+        onClick={() => change(-step)}
+      >
+        −
+      </Button>
+      <input
         id={id}
-        value={value.toString()}
-        onValueChange={details => onChange(details.valueAsNumber)}
+        type="number"
+        className="h-10 w-10 text-center border border-accent font-mono font-bold"
+        value={value}
         min={min}
         max={max}
         step={step}
+        onChange={e => onChange(clamp(e.target.valueAsNumber))}
+      />
+      <Button
+        type="button"
+        aria-label={`Increase ${id}`}
+        className="h-10 w-10"
+        onClick={() => change(step)}
       >
-      <NumberInput.Control className="inline-flex items-center gap-2">
-        <NumberInput.DecrementTrigger asChild>
-          <Button type="button" aria-label={`Decrease ${id}`} className="h-10 w-10">
-            −
-          </Button>
-        </NumberInput.DecrementTrigger>
-        <NumberInput.Input className="h-10 w-10 text-center border border-accent font-mono font-bold" />
-        <NumberInput.IncrementTrigger asChild>
-          <Button type="button" aria-label={`Increase ${id}`} className="h-10 w-10">
-            +
-          </Button>
-        </NumberInput.IncrementTrigger>
-      </NumberInput.Control>
-    </NumberInput.Root>
+        +
+      </Button>
+    </div>
   )
 }

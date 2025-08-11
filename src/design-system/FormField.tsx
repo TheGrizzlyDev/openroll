@@ -5,11 +5,7 @@ import {
   type ReactElement,
   type HTMLAttributes
 } from 'react'
-import {
-  FieldRoot as FormControl,
-  FieldLabel as FormLabel,
-  FieldErrorText as FormError,
-} from '@ark-ui/react'
+import { Label } from '@radix-ui/react-label'
 
 interface FormFieldProps {
   label: string
@@ -29,18 +25,19 @@ export function FormField({ label, htmlFor, error, children }: FormFieldProps) {
     : children
 
   return (
-    <FormControl
-      ids={{ control: htmlFor }}
-      invalid={Boolean(error)}
+    <div
       style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}
     >
-      <FormLabel>{label}</FormLabel>
+      <Label htmlFor={htmlFor}>{label}</Label>
       {control}
       {error && (
-        <FormError style={{ color: 'var(--color-error)', fontSize: '0.75rem' }}>
+        <span
+          id={describedBy}
+          style={{ color: 'var(--color-error)', fontSize: '0.75rem' }}
+        >
           {error}
-        </FormError>
+        </span>
       )}
-    </FormControl>
+    </div>
   )
 }
