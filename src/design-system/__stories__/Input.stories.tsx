@@ -1,9 +1,11 @@
 /* eslint-disable storybook/no-renderer-packages */
 import type { Meta, StoryObj } from '@storybook/react'
-import { Input } from '../Input'
+import { ark } from '@ark-ui/react'
+
+const Input = ark.input
 
 const meta: Meta<typeof Input> = {
-  title: 'Design System/Input',
+  title: 'Ark UI/Input',
   component: Input,
   args: { placeholder: 'Enter text' },
 }

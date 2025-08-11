@@ -1,9 +1,9 @@
 /* eslint-disable storybook/no-renderer-packages */
 import type { Meta, StoryObj } from '@storybook/react'
-import { Tabs } from '../Tabs'
+import { Tabs } from '@ark-ui/react'
 
 const meta: Meta<typeof Tabs.Root> = {
-  title: 'Design System/Tabs',
+  title: 'Ark UI/Tabs',
   component: Tabs.Root,
 }
 

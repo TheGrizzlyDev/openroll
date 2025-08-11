@@ -1,9 +1,11 @@
 /* eslint-disable storybook/no-renderer-packages */
 import type { Meta, StoryObj } from '@storybook/react'
-import { Textarea } from '../Textarea'
+import { ark } from '@ark-ui/react'
+
+const Textarea = ark.textarea
 
 const meta: Meta<typeof Textarea> = {
-  title: 'Design System/Textarea',
+  title: 'Ark UI/Textarea',
   component: Textarea,
   args: { placeholder: 'Enter text' },
 }

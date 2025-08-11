@@ -2,7 +2,8 @@ import {
   cloneElement,
   isValidElement,
   type ReactNode,
-  type ReactElement
+  type ReactElement,
+  type HTMLAttributes
 } from 'react'
 import {
   FieldRoot as FormControl,
@@ -19,13 +20,13 @@ interface FormFieldProps {
 
 export function FormField({ label, htmlFor, error, children }: FormFieldProps) {
   const describedBy = error ? `field::${htmlFor}::error-text` : undefined
-    const control = isValidElement(children)
-      ? cloneElement(children as ReactElement<Record<string, unknown>>, {
-          id: htmlFor,
-          'aria-describedby': describedBy,
-          'aria-invalid': error ? true : undefined,
-        } as Record<string, unknown>)
-      : children
+  const control = isValidElement(children)
+    ? cloneElement(children as ReactElement<HTMLAttributes<HTMLElement>>, {
+        id: htmlFor,
+        'aria-describedby': describedBy,
+        'aria-invalid': error ? true : undefined,
+      })
+    : children
 
   return (
     <FormControl

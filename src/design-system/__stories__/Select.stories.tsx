@@ -1,9 +1,11 @@
 /* eslint-disable storybook/no-renderer-packages */
 import type { Meta, StoryObj } from '@storybook/react'
-import { Select } from '../Select'
+import { ark } from '@ark-ui/react'
+
+const Select = ark.select
 
 const meta: Meta<typeof Select> = {
-  title: 'Design System/Select',
+  title: 'Ark UI/Select',
   component: Select,
 }
 
