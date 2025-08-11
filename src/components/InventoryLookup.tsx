@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useGameContext } from '../GameContext'
-import { Button, Dialog } from '../design-system'
+import { Button } from '../design-system'
+import { Dialog } from '@ark-ui/react'
 
 interface InventoryLookupProps {
   description?: string
@@ -30,17 +31,25 @@ export default function InventoryLookup({ description, attrs }: InventoryLookupP
       <Button type="button" onClick={() => setOpen(true)}>
         {description || 'Inventory'}
       </Button>
-      {open && (
-        <Dialog visible={open} onClose={() => setOpen(false)}>
-          <ul>
-            {items.map(item => (
-              <li key={item.id}>
-                <Button type="button" onClick={() => setOpen(false)}>{item.name}</Button>
-              </li>
-            ))}
-          </ul>
-        </Dialog>
-      )}
-    </>
-  )
-}
+        {open && (
+          <Dialog.Root open={open} onOpenChange={({ open }) => !open && setOpen(false)}>
+            <Dialog.Backdrop />
+            <Dialog.Positioner>
+              <Dialog.Content>
+                <ul>
+                  {items.map(item => (
+                    <li key={item.id}>
+                      <Button type="button" onClick={() => setOpen(false)}>{item.name}</Button>
+                    </li>
+                  ))}
+                </ul>
+                <Dialog.CloseTrigger asChild>
+                  <Button type="button">×</Button>
+                </Dialog.CloseTrigger>
+              </Dialog.Content>
+            </Dialog.Positioner>
+          </Dialog.Root>
+        )}
+      </>
+    )
+  }

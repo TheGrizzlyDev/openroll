@@ -1,7 +1,8 @@
 import { useState, type ChangeEvent } from 'react'
 import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from '../GameContext'
-import { Input, Select, HpBar, FormField, Dialog, NumericAttribute } from '../design-system'
+import { Input, Select, HpBar, FormField, NumericAttribute, Button } from '../design-system'
+import { Dialog } from '@ark-ui/react'
 import StatGrid from './StatGrid'
 import classes from './classes'
 import type { Sheet } from './sheet'
@@ -111,27 +112,41 @@ export default function CharacterSheet() {
         />
       </FormField>
 
-      <Dialog visible={editingStat !== null} onClose={() => setEditingStat(null)}>
-        {editingStat && (
-          <>
-            <FormField
-              label={`${editingStat.toUpperCase()} Dice`}
-              htmlFor="stat-dice"
-              error={statDiceErrors[editingStat]}
-            >
-              <Input
-                className={statDiceErrors[editingStat] ? 'error' : undefined}
-                value={statDiceValues[editingStat]}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                  updateStatDice(editingStat, e.target.value)
-                  setStatDiceErrors(prev => ({ ...prev, [editingStat]: '' }))
-                }}
-                placeholder="1d20"
-              />
-            </FormField>
-          </>
-        )}
-      </Dialog>
+        <Dialog.Root
+          open={editingStat !== null}
+          onOpenChange={({ open }) => {
+            if (!open) setEditingStat(null)
+          }}
+        >
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              {editingStat && (
+                <>
+                  <FormField
+                    label={`${editingStat.toUpperCase()} Dice`}
+                    htmlFor="stat-dice"
+                    error={statDiceErrors[editingStat]}
+                  >
+                    <Input
+                      id="stat-dice"
+                      className={statDiceErrors[editingStat] ? 'error' : undefined}
+                      value={statDiceValues[editingStat]}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        updateStatDice(editingStat, e.target.value)
+                        setStatDiceErrors(prev => ({ ...prev, [editingStat]: '' }))
+                      }}
+                      placeholder="1d20"
+                    />
+                  </FormField>
+                </>
+              )}
+              <Dialog.CloseTrigger asChild>
+                <Button type="button">×</Button>
+              </Dialog.CloseTrigger>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Dialog.Root>
       <div className="secondary-stats">
         <FormField label="Armor" htmlFor="armor">
           <NumericAttribute

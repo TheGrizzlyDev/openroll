@@ -4,7 +4,8 @@ import SortableList from '../components/SortableList'
 import InventoryItem from '../components/InventoryItem'
 import { useGameContext, type Scroll } from '../GameContext'
 import SmartTextEditor from '../components/SmartTextEditor'
-import { Input, Select, Button, Dialog } from '../design-system'
+import { Input, Select, Button } from '../design-system'
+import { Dialog } from '@ark-ui/react'
 // eslint-disable-next-line react-refresh/only-export-components
 export function reorderScrolls(
   scrolls: Scroll[],
@@ -203,18 +204,23 @@ export default function Inventory() {
             </InventoryItem>
           )}
         />
-      {showItemPopup && (
-        <Dialog
-          visible={showItemPopup}
-          onClose={() => {
-            resetForm()
-            setShowItemPopup(false)
-          }}
-        >
-          <div className="flex min-w-60 flex-col gap-2">
-            <div style={{ flex: 1 }}>
-              <Input
-                placeholder="Name"
+        {showItemPopup && (
+          <Dialog.Root
+            open={showItemPopup}
+            onOpenChange={({ open }) => {
+              if (!open) {
+                resetForm()
+                setShowItemPopup(false)
+              }
+            }}
+          >
+            <Dialog.Backdrop />
+            <Dialog.Positioner>
+              <Dialog.Content>
+                <div className="flex min-w-60 flex-col gap-2">
+                  <div style={{ flex: 1 }}>
+                    <Input
+                      placeholder="Name"
                 value={form.name}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   handleFormChange('name', e.target.value)
@@ -225,37 +231,47 @@ export default function Inventory() {
               value={form.notes}
               onChange={value => handleFormChange('notes', value)}
             />
-            <div className="flex justify-end gap-2">
-              {editingId ? (
-                <>
-                  <Button onClick={handleSave}>Save</Button>
-                  <Button
-                    onClick={() => {
-                      resetForm()
-                      setShowItemPopup(false)
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </>
-              ) : (
-                <Button onClick={handleAdd}>Add</Button>
-              )}
-            </div>
-          </div>
-        </Dialog>
-      )}
-      {showScrollPopup && (
-        <Dialog
-          visible={showScrollPopup}
-          onClose={() => {
-            resetScrollForm()
-            setShowScrollPopup(false)
-          }}
-        >
-          <div className="flex min-w-60 flex-col gap-2">
-            <Select
-              value={scrollForm.type}
+                  <div className="flex justify-end gap-2">
+                    {editingId ? (
+                      <>
+                        <Button onClick={handleSave}>Save</Button>
+                        <Button
+                          onClick={() => {
+                            resetForm()
+                            setShowItemPopup(false)
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <Button onClick={handleAdd}>Add</Button>
+                    )}
+                  </div>
+                </div>
+                <Dialog.CloseTrigger asChild>
+                  <Button type="button">×</Button>
+                </Dialog.CloseTrigger>
+              </Dialog.Content>
+            </Dialog.Positioner>
+          </Dialog.Root>
+        )}
+        {showScrollPopup && (
+          <Dialog.Root
+            open={showScrollPopup}
+            onOpenChange={({ open }) => {
+              if (!open) {
+                resetScrollForm()
+                setShowScrollPopup(false)
+              }
+            }}
+          >
+            <Dialog.Backdrop />
+            <Dialog.Positioner>
+              <Dialog.Content>
+                <div className="flex min-w-60 flex-col gap-2">
+                  <Select
+                    value={scrollForm.type}
               onChange={(e: ChangeEvent<HTMLSelectElement>) =>
                 handleScrollFormChange('type', e.target.value as ScrollForm['type'])
               }
@@ -286,26 +302,31 @@ export default function Inventory() {
               value={scrollForm.notes}
               onChange={value => handleScrollFormChange('notes', value)}
             />
-            <div className="flex justify-end gap-2">
-              {editingScrollId ? (
-                <>
-                  <Button onClick={handleSaveScroll}>Save</Button>
-                  <Button
-                    onClick={() => {
-                      resetScrollForm()
-                      setShowScrollPopup(false)
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </>
-              ) : (
-                <Button onClick={handleAddScroll}>Add</Button>
-              )}
-            </div>
-          </div>
-        </Dialog>
-      )}
+                  <div className="flex justify-end gap-2">
+                    {editingScrollId ? (
+                      <>
+                        <Button onClick={handleSaveScroll}>Save</Button>
+                        <Button
+                          onClick={() => {
+                            resetScrollForm()
+                            setShowScrollPopup(false)
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <Button onClick={handleAddScroll}>Add</Button>
+                    )}
+                  </div>
+                </div>
+                <Dialog.CloseTrigger asChild>
+                  <Button type="button">×</Button>
+                </Dialog.CloseTrigger>
+              </Dialog.Content>
+            </Dialog.Positioner>
+          </Dialog.Root>
+        )}
     </div>
   )
 }

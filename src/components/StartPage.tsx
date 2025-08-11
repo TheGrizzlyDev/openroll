@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useGameContext } from '../GameContext'
 import { FileInput } from './FileInput'
-import { Button, Dialog } from '../design-system'
+import { Button } from '../design-system'
+import { Dialog } from '@ark-ui/react'
 import { PageContainer, Section } from '../layout'
 import { sortCharactersByLastAccess } from '../sortCharactersByLastAccess'
 import { useDiceSetStore, type DiceSet } from '../diceSetStore'
@@ -236,18 +237,28 @@ export default function StartPage() {
         {renderTab()}
       </PageContainer>
 
-      {overlay.visible && (
-        <Dialog
-          visible={overlay.visible}
-          onClose={() => {
-            if (overlayTimeout) clearTimeout(overlayTimeout)
-            setOverlayTimeout(null)
-            dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } })
-          }}
-        >
-          <span>{overlay.message}</span>
-        </Dialog>
-      )}
+        {overlay.visible && (
+          <Dialog.Root
+            open={overlay.visible}
+            onOpenChange={({ open }) => {
+              if (!open) {
+                if (overlayTimeout) clearTimeout(overlayTimeout)
+                setOverlayTimeout(null)
+                dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } })
+              }
+            }}
+          >
+            <Dialog.Backdrop />
+            <Dialog.Positioner>
+              <Dialog.Content>
+                <span>{overlay.message}</span>
+                <Dialog.CloseTrigger asChild>
+                  <Button type="button">×</Button>
+                </Dialog.CloseTrigger>
+              </Dialog.Content>
+            </Dialog.Positioner>
+          </Dialog.Root>
+        )}
     </>
   )
 }
