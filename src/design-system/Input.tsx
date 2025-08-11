@@ -1,9 +1,10 @@
-import { forwardRef, type InputHTMLAttributes } from 'react'
+import { forwardRef, type ComponentPropsWithoutRef } from 'react'
+import { TextField } from '@radix-ui/themes'
 
-export type InputProps = InputHTMLAttributes<HTMLInputElement>
+export type InputProps = ComponentPropsWithoutRef<typeof TextField.Root>
 
 export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => (
-  <input ref={ref} {...props} />
+  <TextField.Root ref={ref} {...props} />
 ))
 
 export default Input

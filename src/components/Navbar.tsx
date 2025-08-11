@@ -3,6 +3,7 @@ import { Button } from '../design-system'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useSettingsStore } from '../settingsStore'
 import { useGameContext } from '../GameContext'
+import { Flex } from '@radix-ui/themes'
 
 type StartTab = 'characters' | 'dices' | 'trays' | 'settings'
 
@@ -25,39 +26,48 @@ export default function Navbar() {
     : (pathname.split('/')[1] as StartTab)
 
   const vertical = navPosition === 'left' || navPosition === 'right'
-  const positionClass = {
-    top: 'top-0 left-0 right-0 w-full',
-    bottom: 'bottom-0 left-0 right-0 w-full',
-    left: 'left-0 top-0 bottom-0 h-full',
-    right: 'right-0 top-0 bottom-0 h-full'
-  }[navPosition]
+
+  const style: React.CSSProperties = {
+    position: 'fixed',
+    zIndex: 10,
+    background: 'var(--color-background)',
+    padding: 'var(--space-2)',
+    gap: 'var(--space-2)',
+    ...(navPosition === 'top' && { top: 0, left: 0, right: 0 }),
+    ...(navPosition === 'bottom' && { bottom: 0, left: 0, right: 0 }),
+    ...(navPosition === 'left' && { left: 0, top: 0, bottom: 0 }),
+    ...(navPosition === 'right' && { right: 0, top: 0, bottom: 0 }),
+  }
 
   return (
-    <nav
-      className={`fixed z-10 bg-bg p-2 flex gap-2 justify-around ${
-        vertical ? 'flex-col ' : 'flex-row '
-      }${positionClass}`}
+    <Flex
+      asChild
+      direction={vertical ? 'column' : 'row'}
+      justify="between"
+      style={style}
     >
-      {tabs.map(tab => (
-        <Button
-          key={tab.id}
-          onClick={() => {
-            if (tab.id === 'characters') {
-              if (current !== null) {
-                navigate(`/sheet/${current}`)
+      <nav>
+        {tabs.map(tab => (
+          <Button
+            key={tab.id}
+            onClick={() => {
+              if (tab.id === 'characters') {
+                if (current !== null) {
+                  navigate(`/sheet/${current}`)
+                } else {
+                  navigate('/characters')
+                }
               } else {
-                navigate('/characters')
+                navigate('/' + tab.id)
               }
-            } else {
-              navigate('/' + tab.id)
-            }
-          }}
-          disabled={activeTab === tab.id}
-        >
-          {tab.label}
-        </Button>
-      ))}
-    </nav>
+            }}
+            disabled={activeTab === tab.id}
+          >
+            {tab.label}
+          </Button>
+        ))}
+      </nav>
+    </Flex>
   )
 }
 

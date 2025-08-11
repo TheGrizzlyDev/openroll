@@ -1,12 +1,12 @@
-import { useRef, type ButtonHTMLAttributes } from 'react'
-import { Button } from '../design-system'
+import { useRef } from 'react'
+import { Button, type ButtonProps } from '../design-system'
 
-interface FileInputProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> {
+interface FileInputProps extends Omit<ButtonProps, 'onClick'> {
   accept?: string
   onFileSelect: (_file: File) => void
 }
 
-export function FileInput({ accept, onFileSelect, children, className, ...buttonProps }: FileInputProps) {
+export function FileInput({ accept, onFileSelect, children, ...buttonProps }: FileInputProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleClick = () => {
@@ -25,7 +25,7 @@ export function FileInput({ accept, onFileSelect, children, className, ...button
   return (
     <>
       <input ref={inputRef} type="file" accept={accept} style={{ display: 'none' }} />
-      <Button className={className} onClick={handleClick} {...buttonProps}>
+      <Button onClick={handleClick} {...buttonProps}>
         {children}
       </Button>
     </>

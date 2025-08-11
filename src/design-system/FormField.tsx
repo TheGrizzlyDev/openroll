@@ -3,9 +3,10 @@ import {
   isValidElement,
   type ReactNode,
   type ReactElement,
-  type HTMLAttributes
+  type HTMLAttributes,
 } from 'react'
 import { Label } from '@radix-ui/react-label'
+import { Flex, Text } from '@radix-ui/themes'
 
 interface FormFieldProps {
   label: string
@@ -25,19 +26,14 @@ export function FormField({ label, htmlFor, error, children }: FormFieldProps) {
     : children
 
   return (
-    <div
-      style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}
-    >
+    <Flex direction="column" gap="2">
       <Label htmlFor={htmlFor}>{label}</Label>
       {control}
       {error && (
-        <span
-          id={describedBy}
-          style={{ color: 'var(--color-error)', fontSize: '0.75rem' }}
-        >
+        <Text id={describedBy} color="red" size="1">
           {error}
-        </span>
+        </Text>
       )}
-    </div>
+    </Flex>
   )
 }

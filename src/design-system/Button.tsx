@@ -1,11 +1,8 @@
-import { forwardRef, type ReactNode, type ButtonHTMLAttributes } from 'react'
+import { forwardRef } from 'react'
+import { Button as RadixButton, type ButtonProps as RadixButtonProps } from '@radix-ui/themes'
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children?: ReactNode
-}
+export type ButtonProps = RadixButtonProps
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, ...props }, ref) => (
-    <button ref={ref} {...props}>{children}</button>
-  )
-)
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
+  <RadixButton ref={ref} {...props} />
+))

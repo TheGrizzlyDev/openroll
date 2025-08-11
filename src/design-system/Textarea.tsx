@@ -1,9 +1,10 @@
-import { forwardRef, type TextareaHTMLAttributes } from 'react'
+import { forwardRef } from 'react'
+import { TextArea, type TextAreaProps } from '@radix-ui/themes'
 
-export type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement>
+export type TextareaProps = TextAreaProps
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>((props, ref) => (
-  <textarea ref={ref} {...props} />
+  <TextArea ref={ref} {...props} />
 ))
 
 export default Textarea
