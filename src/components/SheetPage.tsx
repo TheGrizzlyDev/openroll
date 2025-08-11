@@ -6,7 +6,7 @@ import CharacterSheet from '../mork_borg/CharacterSheet'
 import LogView from './LogView'
 import Notes from './Notes'
 import { useGameContext } from '../GameContext'
-import { Dialog, Tabs, TabList, Tab, TabPanel } from '../design-system'
+import { Dialog, Tabs } from '../design-system'
 import { Canvas } from '@react-three/fiber'
 import Dice3D from './Dice3D'
 import DiceTray from './DiceTray'
@@ -44,38 +44,38 @@ export default function SheetPage() {
       headerActions={<Link to="/">Characters</Link>}
     >
       <DiceRoller />
-      <Tabs
+      <Tabs.Root
         value={activeTab}
-        onValueChange={(tab) => dispatch({ type: 'SET_ACTIVE_TAB', tab })}
+        onValueChange={({ value: tab }) => dispatch({ type: 'SET_ACTIVE_TAB', tab })}
       >
         <Section
           title={tabTitle}
           actions={
-            <TabList>
-              <Tab value="character">Character</Tab>
-              <Tab value="inventory">Inventory</Tab>
-              <Tab value="notes">Notes</Tab>
-              <Tab value="log">Log</Tab>
-            </TabList>
+            <Tabs.List>
+              <Tabs.Trigger value="character">Character</Tabs.Trigger>
+              <Tabs.Trigger value="inventory">Inventory</Tabs.Trigger>
+              <Tabs.Trigger value="notes">Notes</Tabs.Trigger>
+              <Tabs.Trigger value="log">Log</Tabs.Trigger>
+            </Tabs.List>
           }
         >
-          <TabPanel value="character">
+          <Tabs.Content value="character">
             <CharacterSheet />
-          </TabPanel>
+          </Tabs.Content>
 
-          <TabPanel value="inventory">
+          <Tabs.Content value="inventory">
             <Inventory />
-          </TabPanel>
+          </Tabs.Content>
 
-          <TabPanel value="notes">
+          <Tabs.Content value="notes">
             <Notes />
-          </TabPanel>
+          </Tabs.Content>
 
-          <TabPanel value="log">
+          <Tabs.Content value="log">
             <LogView />
-          </TabPanel>
+          </Tabs.Content>
         </Section>
-      </Tabs>
+      </Tabs.Root>
 
       {overlay.visible && (
         <Dialog
