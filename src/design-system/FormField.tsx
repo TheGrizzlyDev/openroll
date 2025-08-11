@@ -1,4 +1,9 @@
-import { cloneElement, isValidElement, type ReactNode } from 'react'
+import {
+  cloneElement,
+  isValidElement,
+  type ReactNode,
+  type ReactElement
+} from 'react'
 import {
   FieldRoot as FormControl,
   FieldLabel as FormLabel,
@@ -15,7 +20,7 @@ interface FormFieldProps {
 export function FormField({ label, htmlFor, error, children }: FormFieldProps) {
   const describedBy = error ? `field::${htmlFor}::error-text` : undefined
   const control = isValidElement(children)
-    ? cloneElement(children as any, {
+    ? cloneElement(children as ReactElement<any>, {
         id: htmlFor,
         'aria-describedby': describedBy,
         'aria-invalid': error ? true : undefined,

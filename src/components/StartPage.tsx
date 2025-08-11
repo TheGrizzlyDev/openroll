@@ -3,8 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useGameContext } from '../GameContext'
 import { FileInput } from './FileInput'
 import { Button } from '../design-system'
-import { Dialog } from '@ark-ui/react'
-import { PageContainer, Section } from '../layout'
+import { Dialog, ark } from '@ark-ui/react'
+import { PageContainer, Section, Stack, Flex } from '../layout'
 import { sortCharactersByLastAccess } from '../sortCharactersByLastAccess'
 import { useDiceSetStore, type DiceSet } from '../diceSetStore'
 import { useTraySetStore } from '../traySetStore'
@@ -115,13 +115,21 @@ export default function StartPage() {
       ctx.fill()
     }, [])
     return (
-      <div className="p-2 border rounded flex flex-col items-center gap-2">
+      <Stack
+        gap="0.5rem"
+        style={{
+          padding: '0.5rem',
+          border: '1px solid',
+          borderRadius: '0.25rem',
+          alignItems: 'center'
+        }}
+      >
         <canvas ref={canvasRef} width={50} height={50} />
         <Button onClick={() => activateDiceSet(id)} disabled={active}>
           {active ? 'Active' : 'Use'}
         </Button>
         <div>{name}</div>
-      </div>
+      </Stack>
     )
   }
 
@@ -135,13 +143,21 @@ export default function StartPage() {
       ctx.fillRect(5, 5, 40, 40)
     }, [])
     return (
-      <div className="p-2 border rounded flex flex-col items-center gap-2">
+      <Stack
+        gap="0.5rem"
+        style={{
+          padding: '0.5rem',
+          border: '1px solid',
+          borderRadius: '0.25rem',
+          alignItems: 'center'
+        }}
+      >
         <canvas ref={canvasRef} width={50} height={50} />
         <Button onClick={() => setActiveTraySet(id)} disabled={activeTraySet === id}>
           {activeTraySet === id ? 'Active' : 'Use'}
         </Button>
         <div>{name}</div>
-      </div>
+      </Stack>
     )
   }
 
@@ -155,13 +171,21 @@ export default function StartPage() {
       ctx.fillRect(5, 5, 40, 40)
     }, [])
     return (
-      <div className="p-2 border rounded flex flex-col items-center gap-2">
+      <Stack
+        gap="0.5rem"
+        style={{
+          padding: '0.5rem',
+          border: '1px solid',
+          borderRadius: '0.25rem',
+          alignItems: 'center'
+        }}
+      >
         <canvas ref={canvasRef} width={50} height={50} />
         <Button onClick={() => setActiveTraySet(null)} disabled={activeTraySet === null}>
           {activeTraySet === null ? 'Active' : 'Use'}
         </Button>
         <div>No Tray</div>
-      </div>
+      </Stack>
     )
   }
   const renderTab = () => {
@@ -180,51 +204,59 @@ export default function StartPage() {
               </>
             }
           >
-              <ul className="character-list">
-                {sortedIndexes.map(originalIdx => (
-                  <li key={originalIdx}>
-                    <Button onClick={() => handleLoad(originalIdx)}>
-                      {characters[originalIdx].name || `Character ${originalIdx + 1}`}
-                    </Button>
-                    <Button onClick={() => confirmDelete(originalIdx)}>
-                      Delete
-                    </Button>
-                  </li>
-                ))}
-              </ul>
+              <Stack
+                asChild
+                gap="0.5rem"
+                style={{ listStyle: 'none', margin: 0, padding: 0 }}
+              >
+                <ark.ul>
+                  {sortedIndexes.map(originalIdx => (
+                    <Flex asChild key={originalIdx} gap="0.5rem">
+                      <ark.li>
+                        <Button onClick={() => handleLoad(originalIdx)}>
+                          {characters[originalIdx].name || `Character ${originalIdx + 1}`}
+                        </Button>
+                        <Button onClick={() => confirmDelete(originalIdx)}>
+                          Delete
+                        </Button>
+                      </ark.li>
+                    </Flex>
+                  ))}
+                </ark.ul>
+              </Stack>
           </Section>
         )
       case 'dices':
         return (
           <Section title="Dices">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <Flex gap="1rem" wrap="wrap">
               {sortedDiceSets.map(set => (
                 <DiceSetCard key={set.id} set={set} />
               ))}
-            </div>
+            </Flex>
           </Section>
         )
       case 'trays':
         return (
           <Section title="Trays">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <Flex gap="1rem" wrap="wrap">
               <NoTrayCard />
               {traySets.map(set => (
                 <TraySetCard key={set.id} id={set.id} name={set.name} />
               ))}
-            </div>
+            </Flex>
           </Section>
         )
       case 'settings':
         return (
           <Section title="Settings">
-            <div className="flex flex-col gap-4">
+            <Stack gap="1rem">
               <Section title="General Settings">
-                <div className="flex flex-col gap-4">
+                <Stack gap="1rem">
                   <GeneralSettings />
-                </div>
+                </Stack>
               </Section>
-            </div>
+            </Stack>
           </Section>
         )
       default:
@@ -233,7 +265,7 @@ export default function StartPage() {
   }
   return (
     <>
-      <PageContainer title="Open Roll" startScreen>
+      <PageContainer title="Open Roll">
         {renderTab()}
       </PageContainer>
 

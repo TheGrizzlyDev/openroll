@@ -35,7 +35,7 @@ export default function CharacterGenerator() {
   }
 
   return (
-    <PageContainer title="Character Generator" startScreen>
+    <PageContainer title="Character Generator">
       <Section
         title="Class"
         actions={<Button onClick={handleRollClass}>Roll Class</Button>}
