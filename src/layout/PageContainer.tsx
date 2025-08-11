@@ -14,7 +14,7 @@ export default function PageContainer({
   children
 }: PageContainerProps) {
   return (
-    <Stack style={{ marginInline: 'auto', maxWidth: '800px', padding: '1rem' }}>
+    <Stack style={{ marginInline: 'auto', maxWidth: '800px', padding: '1rem 1rem 0' }}>
       {(title || headerActions) && (
         <Flex justify="space-between" align="center">
           {title && <h1>{title}</h1>}
@@ -22,6 +22,10 @@ export default function PageContainer({
         </Flex>
       )}
       {children}
+      <div
+        aria-hidden="true"
+        style={{ height: 'calc(1rem + var(--navbar-padding-bottom, 0))' }}
+      />
     </Stack>
   )
 }

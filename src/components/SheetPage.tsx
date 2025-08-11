@@ -1,4 +1,4 @@
-import { useEffect, type CSSProperties, useState } from 'react'
+import { useEffect, type CSSProperties, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import DiceRoller from '../DiceRoller'
 import Inventory from '../mork_borg/Inventory'
@@ -25,6 +25,13 @@ export default function SheetPage() {
   } = useGameContext()
   const { id } = useParams()
 
+  const [editingName, setEditingName] = useState(false)
+  const nameInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (editingName) nameInputRef.current?.focus()
+  }, [editingName])
+
   useEffect(() => {
     if (id !== undefined) {
       loadCharacter(parseInt(id, 10))
@@ -43,14 +50,29 @@ export default function SheetPage() {
 
   const characterTitle = (
     <Flex align="center" gap="var(--space-2)">
-      <Input
-        value={sheet.name}
-        onChange={e =>
-          dispatch({ type: 'SET_SHEET', sheet: { ...sheet, name: e.target.value } })
-        }
-        aria-label="Character name"
-        style={{ width: 'auto' }}
-      />
+      {editingName ? (
+        <Input
+          ref={nameInputRef}
+          value={sheet.name}
+          onChange={e =>
+            dispatch({ type: 'SET_SHEET', sheet: { ...sheet, name: e.target.value } })
+          }
+          onBlur={() => setEditingName(false)}
+          onKeyDown={e => {
+            if (e.key === 'Enter') e.currentTarget.blur()
+          }}
+          aria-label="Character name"
+          style={{ width: 'auto' }}
+        />
+      ) : (
+        <button
+          type="button"
+          onClick={() => setEditingName(true)}
+          style={{ background: 'none', border: 0, padding: 0, cursor: 'pointer' }}
+        >
+          {sheet.name}
+        </button>
+      )}
       <span>– Mörk Borg</span>
     </Flex>
   )
@@ -213,63 +235,70 @@ function SheetTabsNav() {
   return (
     <div style={style}>
       <Tabs.List asChild>
-        <nav style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+        <nav
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}
+        >
           <Button variant="ghost" onClick={() => navigate('/characters')}>
             ← Back
           </Button>
-          <Tabs.Trigger asChild value="character">
-            <Button
-              {...buttonProps(
-                activeTab === 'character'
-                  ? navActiveButtonVariant
-                  : navButtonVariant,
-                true
-              )}
-            >
-              Character
-            </Button>
-          </Tabs.Trigger>
-          <Tabs.Trigger asChild value="inventory">
-            <Button
-              {...buttonProps(
-                activeTab === 'inventory'
-                  ? navActiveButtonVariant
-                  : navButtonVariant,
-                activeTab === 'inventory'
-              )}
-            >
-              Inventory
-            </Button>
-          </Tabs.Trigger>
-          <Tabs.Trigger asChild value="notes">
-            <Button
-              {...buttonProps(
-                activeTab === 'notes'
-                  ? navActiveButtonVariant
-                  : navButtonVariant,
-                activeTab === 'notes'
-              )}
-            >
-              Notes
-            </Button>
-          </Tabs.Trigger>
-          <Tabs.Trigger asChild value="log">
-            <Button
-              {...buttonProps(
-                activeTab === 'log'
-                  ? navActiveButtonVariant
-                  : navButtonVariant,
-                activeTab === 'log'
-              )}
-            >
-              Log
-            </Button>
-          </Tabs.Trigger>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+            <Tabs.Trigger asChild value="character">
+              <Button
+                {...buttonProps(
+                  activeTab === 'character'
+                    ? navActiveButtonVariant
+                    : navButtonVariant,
+                  true
+                )}
+              >
+                Character
+              </Button>
+            </Tabs.Trigger>
+            <Tabs.Trigger asChild value="inventory">
+              <Button
+                {...buttonProps(
+                  activeTab === 'inventory'
+                    ? navActiveButtonVariant
+                    : navButtonVariant,
+                  activeTab === 'inventory'
+                )}
+              >
+                Inventory
+              </Button>
+            </Tabs.Trigger>
+            <Tabs.Trigger asChild value="notes">
+              <Button
+                {...buttonProps(
+                  activeTab === 'notes'
+                    ? navActiveButtonVariant
+                    : navButtonVariant,
+                  activeTab === 'notes'
+                )}
+              >
+                Notes
+              </Button>
+            </Tabs.Trigger>
+            <Tabs.Trigger asChild value="log">
+              <Button
+                {...buttonProps(
+                  activeTab === 'log'
+                    ? navActiveButtonVariant
+                    : navButtonVariant,
+                  activeTab === 'log'
+                )}
+              >
+                Log
+              </Button>
+            </Tabs.Trigger>
+          </div>
+          <DiceRoller />
         </nav>
       </Tabs.List>
-      <div style={{ marginLeft: 'auto' }}>
-        <DiceRoller iconButton />
-      </div>
     </div>
   )
 }
