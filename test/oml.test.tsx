@@ -41,6 +41,14 @@ describe('oml parsing', () => {
     ])
   })
 
+  it('parses name tags', () => {
+    const nodes = parseOml('Hello [name]')
+    expect(nodes).toEqual([
+      { type: 'text', text: 'Hello ' },
+      { type: 'name' }
+    ])
+  })
+
   it('parses if blocks terminated by fi', () => {
     const nodes = parseOml('[if]hit[else]miss[fi]')
     expect(nodes).toMatchObject([
@@ -116,6 +124,16 @@ describe('oml rendering', () => {
     )
     const link = getByText('An example link') as HTMLAnchorElement
     expect(link.getAttribute('href')).toBe('https://example.com')
+  })
+
+  it('renders character name for name tags', () => {
+    const current = useGameContext.getState().state
+    useGameContext.setState({
+      state: { ...current, sheet: { ...current.sheet, name: 'Azure' } }
+    })
+    const Test = () => <div>{renderOml('I am [name]')}</div>
+    const { container } = render(<Test />)
+    expect(container.textContent).toBe('I am Azure')
   })
 
   it('renders active branch and fades inactive branch', () => {

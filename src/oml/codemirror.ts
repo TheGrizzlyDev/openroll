@@ -14,7 +14,7 @@ interface OmlState {
   tagName: string
 }
 
-const tagNames = ['dice', 'link', 'apply', 'inventory', 'if', 'elif', 'else', 'fi']
+const tagNames = ['dice', 'link', 'apply', 'inventory', 'name', 'if', 'elif', 'else', 'fi']
 
 export const omlParser: StreamParser<OmlState> = {
   startState() {
@@ -116,6 +116,7 @@ const tagAttributes: Record<string, string[]> = {
   link: ['url'],
   apply: ['target', 'value', 'subject'],
   inventory: ['type', 'owned'],
+  name: [],
   if: ['predicate']
 }
 

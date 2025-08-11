@@ -4,6 +4,7 @@ export type OmlNode =
   | { type: 'dice'; notation: string; description?: string; attrs: Record<string, string> }
   | { type: 'if'; branches: IfBranch[]; description?: string; attrs: Record<string, string> }
   | { type: 'inventory'; description?: string; attrs: Record<string, string> }
+  | { type: 'name' }
   | ApplyNode
 
 export interface ApplyNode {
@@ -139,6 +140,8 @@ export function parseOml(input: string): OmlNode[] {
             description: tag.description,
             attrs: tag.attrs
           })
+        } else if (tag.name === 'name') {
+          nodes.push({ type: 'name' })
         } else if (tag.name === 'link') {
           nodes.push({
             type: 'link',

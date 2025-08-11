@@ -67,6 +67,10 @@ export function renderNodes(
         />
       )
     }
+    if (node.type === 'name') {
+      const { state } = useGameContext.getState()
+      return <React.Fragment key={i}>{state.sheet.name}</React.Fragment>
+    }
     if (node.type === 'link') {
       const label = node.description ?? node.text
       return (
