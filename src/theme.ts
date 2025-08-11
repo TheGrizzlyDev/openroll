@@ -1,18 +1,36 @@
-export const theme = {
-  colors: {
-    bg: '#121212',
-    bgAlt: '#1e1e1e',
-    text: '#f5f5f5',
-    accent: '#9333ea',
-    error: '#dc2626',
+export const themes = {
+  light: {
+    colors: {
+      bg: '#ffffff',
+      bgAlt: '#f0f0f0',
+      text: '#000000',
+      accent: '#9333ea',
+      error: '#dc2626',
+    },
+    fonts: {
+      body: 'Cinzel, serif',
+    },
+    borderWidth: '1px',
   },
-  fonts: {
-    body: 'Cinzel, serif',
+  dark: {
+    colors: {
+      bg: '#121212',
+      bgAlt: '#1e1e1e',
+      text: '#f5f5f5',
+      accent: '#9333ea',
+      error: '#dc2626',
+    },
+    fonts: {
+      body: 'Cinzel, serif',
+    },
+    borderWidth: '1px',
   },
-  borderWidth: '1px',
 } as const
 
-export function applyTheme() {
+export type ThemeName = keyof typeof themes
+
+export function applyTheme(name: ThemeName) {
+  const theme = themes[name]
   const root = document.documentElement
   root.style.setProperty('--color-bg', theme.colors.bg)
   root.style.setProperty('--color-bg-alt', theme.colors.bgAlt)

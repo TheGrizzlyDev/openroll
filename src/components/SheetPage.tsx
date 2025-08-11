@@ -1,5 +1,5 @@
-import { useEffect, type CSSProperties } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useEffect, type CSSProperties, useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import DiceRoller from '../DiceRoller'
 import Inventory from '../mork_borg/Inventory'
 import CharacterSheet from '../mork_borg/CharacterSheet'
@@ -12,6 +12,8 @@ import { Canvas } from '@react-three/fiber'
 import Dice3D from './Dice3D'
 import DiceTray from './DiceTray'
 import { PageContainer, Section } from '../layout'
+import { useSettingsStore, type ButtonVariant } from '../settingsStore'
+import { Flex } from '@radix-ui/themes'
 
 export default function SheetPage() {
   const {
@@ -22,6 +24,7 @@ export default function SheetPage() {
     loadCharacter
   } = useGameContext()
   const { id } = useParams()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (id !== undefined) {
@@ -42,24 +45,19 @@ export default function SheetPage() {
   return (
     <PageContainer
       title="Open Roll"
-      headerActions={<Link to="/">Characters</Link>}
+      headerActions={
+        <Button variant="ghost" onClick={() => navigate('/characters')}>
+          ← Back
+        </Button>
+      }
     >
       <DiceRoller />
       <Tabs.Root
         value={activeTab}
         onValueChange={tab => dispatch({ type: 'SET_ACTIVE_TAB', tab })}
       >
-        <Section
-          title={tabTitle}
-          actions={
-            <Tabs.List>
-              <Tabs.Trigger value="character">Character</Tabs.Trigger>
-              <Tabs.Trigger value="inventory">Inventory</Tabs.Trigger>
-              <Tabs.Trigger value="notes">Notes</Tabs.Trigger>
-              <Tabs.Trigger value="log">Log</Tabs.Trigger>
-            </Tabs.List>
-          }
-        >
+        <SheetTabsNav />
+        <Section title={tabTitle}>
           <Tabs.Content value="character">
             <CharacterSheet />
           </Tabs.Content>
@@ -136,6 +134,144 @@ export default function SheetPage() {
         )}
     </PageContainer>
   )
+}
+
+function SheetTabsNav() {
+  const {
+    navBgColorLight,
+    navBgColorDark,
+    navBgOpacityLight,
+    navBgOpacityDark,
+    navCornerRadius,
+    navShadowColorLight,
+    navShadowColorDark,
+    navShadowOpacityLight,
+    navShadowOpacityDark,
+    navButtonVariant,
+    navActiveButtonVariant,
+    theme: themeMode,
+  } = useSettingsStore()
+  const {
+    state: { activeTab },
+  } = useGameContext()
+
+  const [appearance, setAppearance] = useState<'light' | 'dark'>('light')
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const apply = () => setAppearance(mq.matches ? 'dark' : 'light')
+    if (themeMode === 'auto') {
+      apply()
+      mq.addEventListener('change', apply)
+      return () => mq.removeEventListener('change', apply)
+    } else {
+      setAppearance(themeMode)
+    }
+  }, [themeMode])
+
+  const bgColor = appearance === 'dark' ? navBgColorDark : navBgColorLight
+  const opacity = appearance === 'dark' ? navBgOpacityDark : navBgOpacityLight
+  const background = `rgba(${hexToRgb(bgColor)}, ${opacity})`
+  const shadowColor =
+    appearance === 'dark' ? navShadowColorDark : navShadowColorLight
+  const shadowOpacity =
+    appearance === 'dark' ? navShadowOpacityDark : navShadowOpacityLight
+  const boxShadowColor = `rgba(${hexToRgb(shadowColor)}, ${shadowOpacity})`
+
+  const [stuck, setStuck] = useState(false)
+  useEffect(() => {
+    const onScroll = () => setStuck(window.scrollY > 0)
+    onScroll()
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  const style: CSSProperties = {
+    position: 'sticky',
+    top: 0,
+    zIndex: 5,
+    background,
+    padding: 'var(--space-2)',
+    borderTopLeftRadius: stuck ? 0 : `${navCornerRadius}px`,
+    borderTopRightRadius: stuck ? 0 : `${navCornerRadius}px`,
+    borderBottomLeftRadius: `${navCornerRadius}px`,
+    borderBottomRightRadius: `${navCornerRadius}px`,
+    transition: 'border-radius 200ms',
+    backdropFilter: 'blur(10px)',
+    marginBottom: 'var(--space-2)',
+    boxShadow: `0 2px 6px ${boxShadowColor}`,
+  }
+
+  return (
+    <Tabs.List asChild>
+      <Flex asChild justify="between" style={{ ...style, gap: 'var(--space-2)', width: '100%' }}>
+        <nav>
+          <Tabs.Trigger asChild value="character">
+            <Button
+              {...buttonProps(
+                activeTab === 'character'
+                  ? navActiveButtonVariant
+                  : navButtonVariant
+              )}
+            >
+              Character
+            </Button>
+          </Tabs.Trigger>
+          <Tabs.Trigger asChild value="inventory">
+            <Button
+              {...buttonProps(
+                activeTab === 'inventory'
+                  ? navActiveButtonVariant
+                  : navButtonVariant
+              )}
+            >
+              Inventory
+            </Button>
+          </Tabs.Trigger>
+          <Tabs.Trigger asChild value="notes">
+            <Button
+              {...buttonProps(
+                activeTab === 'notes'
+                  ? navActiveButtonVariant
+                  : navButtonVariant
+              )}
+            >
+              Notes
+            </Button>
+          </Tabs.Trigger>
+          <Tabs.Trigger asChild value="log">
+            <Button
+              {...buttonProps(
+                activeTab === 'log'
+                  ? navActiveButtonVariant
+                  : navButtonVariant
+              )}
+            >
+              Log
+            </Button>
+          </Tabs.Trigger>
+        </nav>
+      </Flex>
+    </Tabs.List>
+  )
+}
+
+function hexToRgb(hex: string) {
+  const normalized = hex.replace('#', '')
+  const num = parseInt(normalized, 16)
+  const r = (num >> 16) & 255
+  const g = (num >> 8) & 255
+  const b = num & 255
+  return `${r},${g},${b}`
+}
+
+function buttonProps(variant: ButtonVariant) {
+  if (variant === 'ghost') {
+    return {
+      variant: 'surface' as ButtonVariant,
+      style: { backgroundColor: 'transparent', boxShadow: 'none' },
+    }
+  }
+  return { variant }
 }
 
 const srOnly: CSSProperties = {
