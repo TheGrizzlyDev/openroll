@@ -1,5 +1,6 @@
 import * as Progress from '@radix-ui/react-progress'
 import { Button } from '.'
+import { useSettingsStore } from '../settingsStore'
 
 interface HpBarProps {
   hp: number
@@ -18,6 +19,7 @@ export function HpBar({
   onTempHpChange = null,
   onMaxHpChange
 }: HpBarProps) {
+  const hpBarVariant = useSettingsStore(state => state.hpBarVariant)
   const clamp = (v: number, min: number, max: number) =>
     Math.min(Math.max(v, min), max)
 
@@ -63,6 +65,7 @@ export function HpBar({
             aria-label="Decrease HP"
             onClick={() => changeHp(-1)}
             className="flex-1 px-2 py-1 text-xs"
+            variant={hpBarVariant}
           >
             − HP
           </Button>
@@ -71,6 +74,7 @@ export function HpBar({
             aria-label="Increase HP"
             onClick={() => changeHp(1)}
             className="ml-1 flex-1 px-2 py-1 text-xs"
+            variant={hpBarVariant}
           >
             + HP
           </Button>
@@ -83,6 +87,7 @@ export function HpBar({
               aria-label="Decrease temporary HP"
               onClick={() => changeTempHp(-1)}
               className="flex-1 px-2 py-1 text-xs"
+              variant={hpBarVariant}
             >
               − Temp
             </Button>
@@ -91,6 +96,7 @@ export function HpBar({
               aria-label="Increase temporary HP"
               onClick={() => changeTempHp(1)}
               className="ml-1 flex-1 px-2 py-1 text-xs"
+              variant={hpBarVariant}
             >
               + Temp
             </Button>
@@ -103,6 +109,7 @@ export function HpBar({
             aria-label="Decrease maximum HP"
             onClick={() => changeMaxHp(-1)}
             className="flex-1 px-2 py-1 text-xs"
+            variant={hpBarVariant}
           >
             − Max
           </Button>
@@ -111,6 +118,7 @@ export function HpBar({
             aria-label="Increase maximum HP"
             onClick={() => changeMaxHp(1)}
             className="ml-1 flex-1 px-2 py-1 text-xs"
+            variant={hpBarVariant}
           >
             + Max
           </Button>

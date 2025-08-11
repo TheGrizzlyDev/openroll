@@ -1,4 +1,5 @@
 import { Button } from '.'
+import { useSettingsStore } from '../settingsStore'
 
 interface NumericAttributeProps {
   id: string
@@ -17,6 +18,7 @@ export function NumericAttribute({
   max,
   step = 1
 }: NumericAttributeProps) {
+  const variant = useSettingsStore(state => state.navButtonVariant)
   const clamp = (val: number) => {
     if (typeof min === 'number') val = Math.max(min, val)
     if (typeof max === 'number') val = Math.min(max, val)
@@ -25,19 +27,20 @@ export function NumericAttribute({
   const change = (delta: number) => onChange(clamp(value + delta))
 
   return (
-    <div className="inline-flex items-center gap-2">
+    <div className="inline-flex items-center gap-1">
       <Button
         type="button"
         aria-label={`Decrease ${id}`}
-        className="h-10 w-10"
+        className="h-8 w-8"
         onClick={() => change(-step)}
+        variant={variant}
       >
         −
       </Button>
       <input
         id={id}
         type="number"
-        className="h-10 w-10 text-center border border-accent font-mono font-bold"
+        className="h-8 w-8 text-center border border-accent font-mono font-bold text-sm"
         value={value}
         min={min}
         max={max}
@@ -47,8 +50,9 @@ export function NumericAttribute({
       <Button
         type="button"
         aria-label={`Increase ${id}`}
-        className="h-10 w-10"
+        className="h-8 w-8"
         onClick={() => change(step)}
+        variant={variant}
       >
         +
       </Button>

@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react'
+import { type ReactNode } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import {
   useGameContext,
@@ -10,11 +10,10 @@ import { Button } from '../design-system'
 
 interface Props {
   item: Item | Scroll
-  children?: ReactNode
-  defaultExpanded?: boolean
+  actions?: ReactNode
 }
 
-export default function InventoryItem({ item, children, defaultExpanded }: Props) {
+export default function InventoryItem({ item, actions }: Props) {
   const {
     state: { inventory },
     dispatch,
@@ -22,7 +21,6 @@ export default function InventoryItem({ item, children, defaultExpanded }: Props
   } = useGameContext()
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: item.id })
-  const [expanded, setExpanded] = useState(defaultExpanded ?? false)
 
   const style = {
     transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
@@ -64,45 +62,42 @@ export default function InventoryItem({ item, children, defaultExpanded }: Props
       >
         ☰
       </span>
-      <div className="flex flex-1 items-center gap-2">
-        <button
-          type="button"
-          onClick={() => setExpanded(e => !e)}
-          aria-expanded={expanded}
-          className="flex-grow text-left font-semibold"
-        >
-          {'casts' in item
-            ? `${item.name} [${item.type}] (${item.casts})`
-            : item.name}
-        </button>
-        {hasQty && (
-          <span className="flex items-center gap-1">
-            <Button
-              type="button"
-              aria-label="Decrease quantity"
-              onClick={dec}
-              className="h-auto w-auto border-none bg-white/10 px-2 py-0.5 text-xs font-normal tracking-normal text-white hover:bg-white/20 hover:text-white normal-case"
-            >
-              -
-            </Button>
-            <span className="w-5 text-center">{item.qty}</span>
-            <Button
-              type="button"
-              aria-label="Increase quantity"
-              onClick={inc}
-              className="h-auto w-auto border-none bg-white/10 px-2 py-0.5 text-xs font-normal tracking-normal text-white hover:bg-white/20 hover:text-white normal-case"
-            >
-              +
-            </Button>
+      <div className="flex flex-1 flex-col gap-1">
+        <div className="flex items-center gap-2">
+          <span className="flex-grow font-semibold text-left">
+            {'casts' in item
+              ? `${item.name} [${item.type}] (${item.casts})`
+              : item.name}
           </span>
+          {hasQty && (
+            <span className="flex items-center gap-1">
+              <Button
+                type="button"
+                aria-label="Decrease quantity"
+                onClick={dec}
+                className="h-auto w-auto border-none bg-white/10 px-2 py-0.5 text-xs font-normal tracking-normal text-white hover:bg-white/20 hover:text-white normal-case"
+              >
+                -
+              </Button>
+              <span className="w-5 text-center">{item.qty}</span>
+              <Button
+                type="button"
+                aria-label="Increase quantity"
+                onClick={inc}
+                className="h-auto w-auto border-none bg-white/10 px-2 py-0.5 text-xs font-normal tracking-normal text-white hover:bg-white/20 hover:text-white normal-case"
+              >
+                +
+              </Button>
+            </span>
+          )}
+          {actions}
+        </div>
+        {item.notes && (
+          <div className="text-white/80">
+            {renderOml(item.notes, roll)}
+          </div>
         )}
       </div>
-      {expanded && (item.notes || children) && (
-        <div className="mt-2 rounded bg-white/10 p-2 text-white/80">
-          {item.notes && <div>{renderOml(item.notes, roll)}</div>}
-          {children}
-        </div>
-      )}
     </li>
   )
 }

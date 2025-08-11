@@ -37,6 +37,8 @@ interface SettingsState {
   setNavButtonVariant: (_variant: ButtonVariant) => void
   navActiveButtonVariant: ButtonVariant
   setNavActiveButtonVariant: (_variant: ButtonVariant) => void
+  hpBarVariant: ButtonVariant
+  setHpBarVariant: (_variant: ButtonVariant) => void
   theme: ThemeMode
   setTheme: (_mode: ThemeMode) => void
 }
@@ -78,6 +80,8 @@ export const useSettingsStore = create<SettingsState>()(
       navActiveButtonVariant: 'surface',
       setNavActiveButtonVariant: navActiveButtonVariant =>
         set({ navActiveButtonVariant }),
+      hpBarVariant: 'solid',
+      setHpBarVariant: hpBarVariant => set({ hpBarVariant }),
       theme: 'auto',
       setTheme: theme => set({ theme }),
     }),

@@ -41,6 +41,8 @@ export default function GeneralSettings() {
     setNavButtonVariant,
     navActiveButtonVariant,
     setNavActiveButtonVariant,
+    hpBarVariant,
+    setHpBarVariant,
   } = useSettingsStore()
 
   return (
@@ -211,6 +213,19 @@ export default function GeneralSettings() {
           <option value="surface">Surface</option>
           <option value="outline">Outline</option>
           <option value="solid">Solid</option>
+        </Select>
+      </FormField>
+
+      <FormField label="HP bar button style" htmlFor="hpbar-button-variant">
+        <Select
+          value={hpBarVariant}
+          onChange={e => setHpBarVariant(e.target.value as ButtonVariant)}
+        >
+          <option value="solid">Solid</option>
+          <option value="soft">Soft</option>
+          <option value="surface">Surface</option>
+          <option value="outline">Outline</option>
+          <option value="ghost">Ghost</option>
         </Select>
       </FormField>
     </div>

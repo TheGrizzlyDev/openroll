@@ -183,10 +183,16 @@ export default function Inventory() {
         items={items}
         onReorder={list => dispatch({ type: 'SET_INVENTORY', inventory: list })}
         renderItem={item => (
-          <InventoryItem key={item.id} item={item}>
-            <Button onClick={() => startEdit(item.id)}>Edit</Button>
-            <Button onClick={() => handleDelete(item.id)}>Delete</Button>
-          </InventoryItem>
+          <InventoryItem
+            key={item.id}
+            item={item}
+            actions={
+              <>
+                <Button onClick={() => startEdit(item.id)}>Edit</Button>
+                <Button onClick={() => handleDelete(item.id)}>Delete</Button>
+              </>
+            }
+          />
         )}
       />
       <h2>
@@ -196,11 +202,17 @@ export default function Inventory() {
           items={scrolls}
           onReorder={list => dispatch({ type: 'SET_SCROLLS', scrolls: list })}
           renderItem={scroll => (
-            <InventoryItem key={scroll.id} item={scroll}>
-              <Button onClick={() => handleCastScroll(scroll.id)}>Cast</Button>
-              <Button onClick={() => startScrollEdit(scroll.id)}>Edit</Button>
-              <Button onClick={() => handleDeleteScroll(scroll.id)}>Delete</Button>
-            </InventoryItem>
+            <InventoryItem
+              key={scroll.id}
+              item={scroll}
+              actions={
+                <>
+                  <Button onClick={() => handleCastScroll(scroll.id)}>Cast</Button>
+                  <Button onClick={() => startScrollEdit(scroll.id)}>Edit</Button>
+                  <Button onClick={() => handleDeleteScroll(scroll.id)}>Delete</Button>
+                </>
+              }
+            />
           )}
         />
         {showItemPopup && (

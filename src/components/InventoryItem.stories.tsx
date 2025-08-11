@@ -26,32 +26,15 @@ export const Default: Story = {
   )
 }
 
-export const Expanded: Story = {
-  render: () => (
-    <DndContext>
-      <SortableContext items={[1]}>
-        <ul>
-          <InventoryItem
-            item={{ id: 1, name: 'Shield', qty: 1, notes: 'Sturdy' }}
-            defaultExpanded
-          />
-        </ul>
-      </SortableContext>
-    </DndContext>
-  )
-}
-
-export const CustomAction: Story = {
+export const WithActions: Story = {
   render: () => (
     <DndContext>
       <SortableContext items={[1]}>
         <ul>
           <InventoryItem
             item={{ id: 1, name: 'Potion', qty: 1, notes: 'Heal 1d4' }}
-            defaultExpanded
-          >
-            <Button>Use</Button>
-          </InventoryItem>
+            actions={<Button>Use</Button>}
+          />
         </ul>
       </SortableContext>
     </DndContext>

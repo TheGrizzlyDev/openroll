@@ -1,12 +1,13 @@
 import { type ChangeEvent, type KeyboardEvent, useEffect, useRef } from 'react'
 import { Button } from '.'
+import { useSettingsStore } from '../settingsStore'
 
 interface StatProps {
   id: string
   value: number
   onChange: (_value: number) => void
   onRoll: () => void
-  onEdit: () => void
+  onEdit?: () => void
   onRollAdv?: () => void
   onInfo?: () => void
 }
@@ -20,6 +21,7 @@ export function Stat({
   onRollAdv,
   onInfo
 }: StatProps) {
+  const variant = useSettingsStore(state => state.navButtonVariant)
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null)
   const liveRef = useRef<HTMLDivElement | null>(null)
 
@@ -63,8 +65,8 @@ export function Stat({
   const hintId = `${id}-hint`
 
   return (
-    <div className="p-3 border border-accent bg-bg rounded-[var(--border-radius)] flex items-center justify-between">
-      <div className="group inline-flex items-center gap-2" role="group" aria-labelledby={labelId}>
+    <div className="p-2 border border-accent bg-bg rounded-[var(--border-radius)] flex items-center justify-between">
+      <div className="group inline-flex items-center gap-1" role="group" aria-labelledby={labelId}>
         {/* Visual label is optional; we keep it screen-reader only by default */}
         <span id={labelId} className="sr-only">{id.toUpperCase()} stat</span>
 
@@ -74,7 +76,8 @@ export function Stat({
             type="button"
             aria-label={`${id.toUpperCase()} info`}
             onClick={onInfo}
-            className="h-10 w-10 p-2"
+            className="h-8 w-8 p-1"
+            variant={variant}
             title="Info"
           >
             ℹ️
@@ -86,14 +89,15 @@ export function Stat({
           type="button"
           aria-label={`Decrease ${id.toUpperCase()}`}
           onClick={() => onChange(value - 1)}
-          className="h-10 w-10 p-0 active:translate-y-px"
+          className="h-8 w-8 p-0 active:translate-y-px"
           title={`Decrease ${id.toUpperCase()}`}
+          variant={variant}
         >
           −
         </Button>
 
         {/* Value input (type=number exposes native spinbutton semantics to SRs) */}
-        <div className="w-10 text-center tabular-nums">
+        <div className="w-8 text-center tabular-nums">
           <label htmlFor={id} className="sr-only">
             {id.toUpperCase()} value
           </label>
@@ -105,7 +109,7 @@ export function Stat({
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               onChange(Number(e.target.value))
             }
-            className="h-10 w-full rounded border border-accent bg-transparent text-center text-base font-extrabold font-mono text-text tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="h-8 w-full rounded border border-accent bg-transparent text-center text-sm font-extrabold font-mono text-text tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-describedby={hintId}
           />
         </div>
@@ -115,8 +119,9 @@ export function Stat({
           type="button"
           aria-label={`Increase ${id.toUpperCase()}`}
           onClick={() => onChange(value + 1)}
-          className="h-10 w-10 p-0 active:translate-y-px"
+          className="h-8 w-8 p-0 active:translate-y-px"
           title={`Increase ${id.toUpperCase()}`}
+          variant={variant}
         >
           +
         </Button>
@@ -134,23 +139,27 @@ export function Stat({
           onTouchEnd={end}
           onTouchCancel={end}
           onKeyDown={onRollKeyDown}
-          className={`h-10 w-10 p-2 active:translate-y-px ${
+          className={`h-8 w-8 p-1 active:translate-y-px ${
             onRollAdv ? 'border-error focus-visible:ring-error' : ''
           }`}
+          variant={variant}
         >
           🎲
         </Button>
 
         {/* Edit */}
-        <Button
-          type="button"
-          aria-label={`Edit ${id.toUpperCase()} notation`}
-          onClick={onEdit}
-          className="h-10 w-10 p-2 active:translate-y-px"
-          title="Edit notation"
-        >
-          ✏️
-        </Button>
+        {onEdit && (
+          <Button
+            type="button"
+            aria-label={`Edit ${id.toUpperCase()} notation`}
+            onClick={onEdit}
+            className="h-8 w-8 p-1 active:translate-y-px"
+            title="Edit notation"
+            variant={variant}
+          >
+            ✏️
+          </Button>
+        )}
 
         {/* SR-only hint + live region */}
         <span id={hintId} className="sr-only">
