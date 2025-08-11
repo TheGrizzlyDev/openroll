@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Button } from './Button'
+import { Button } from '.'
 
 interface DialogProps {
   visible: boolean

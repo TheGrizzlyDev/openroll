@@ -1,7 +1,7 @@
 /* eslint-disable storybook/no-renderer-packages */
 import type { Meta, StoryObj } from '@storybook/react'
 import { PageContainer, Section } from '../../layout'
-import { Button } from '../Button'
+import { Button } from '..'
 
 const meta: Meta<typeof PageContainer> = {
   title: 'Design System/Layout',

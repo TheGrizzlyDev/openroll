@@ -27,7 +27,7 @@ export default function InventoryLookup({ description, attrs }: InventoryLookupP
 
   return (
     <>
-      <Button type="button" variant="pill" onClick={() => setOpen(true)}>
+      <Button type="button" onClick={() => setOpen(true)}>
         {description || 'Inventory'}
       </Button>
       {open && (

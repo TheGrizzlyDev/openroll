@@ -13,12 +13,7 @@ export function renderNodes(
     if (node.type === 'dice') {
       const label = node.description ?? node.notation
       return (
-        <Button
-          type="button"
-          key={i}
-          variant="pill"
-          onClick={() => ctx.roll(node.notation)}
-        >
+        <Button type="button" key={i} onClick={() => ctx.roll(node.notation)}>
           {label}
         </Button>
       )
@@ -26,12 +21,7 @@ export function renderNodes(
     if (node.type === 'apply') {
       const label = node.description ?? `${node.target} ${node.value}`
       return (
-        <Button
-          type="button"
-          key={i}
-          variant="pill"
-          onClick={() => ctx.applyEffect(node)}
-        >
+        <Button type="button" key={i} onClick={() => ctx.applyEffect(node)}>
           {label}
         </Button>
       )

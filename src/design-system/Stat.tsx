@@ -1,5 +1,5 @@
 import { type ChangeEvent, type KeyboardEvent, useEffect, useRef } from 'react'
-import { Button } from './Button'
+import { Button } from '.'
 
 interface StatProps {
   id: string

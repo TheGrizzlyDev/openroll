@@ -1,8 +1,8 @@
 /* eslint-disable storybook/no-renderer-packages */
 import type { Meta, StoryObj } from '@storybook/react'
-import { Dialog } from '../Dialog'
-import { Button } from '../Button'
-import { Input } from '../Input'
+import { Dialog } from '..'
+import { Button } from '..'
+import { Input } from '..'
 import { useState } from 'react'
 
 const meta: Meta<typeof Dialog> = {

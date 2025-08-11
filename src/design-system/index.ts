@@ -1,4 +1,4 @@
-export { Button } from './Button'
+export { Button, type ButtonProps } from './Button'
 export { Input } from './Input'
 export { Select } from './Select'
 export { Textarea } from './Textarea'
