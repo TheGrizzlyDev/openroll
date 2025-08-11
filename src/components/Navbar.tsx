@@ -26,9 +26,7 @@ export default function Navbar() {
     navShadowColorDark,
     navShadowOpacityLight,
     navShadowOpacityDark,
-    navHideDelay,
     navAnimationDuration,
-    navAnimationStyle,
     navButtonVariant,
     navActiveButtonVariant,
     theme: themeMode,
@@ -43,9 +41,7 @@ export default function Navbar() {
     navShadowColorDark: state.navShadowColorDark,
     navShadowOpacityLight: state.navShadowOpacityLight,
     navShadowOpacityDark: state.navShadowOpacityDark,
-    navHideDelay: state.navHideDelay,
     navAnimationDuration: state.navAnimationDuration,
-    navAnimationStyle: state.navAnimationStyle,
     navButtonVariant: state.navButtonVariant,
     navActiveButtonVariant: state.navActiveButtonVariant,
     theme: state.theme,
@@ -84,27 +80,29 @@ export default function Navbar() {
     appearance === 'dark' ? navShadowOpacityDark : navShadowOpacityLight
   const boxShadowColor = `rgba(${hexToRgb(shadowColor)}, ${shadowOpacity})`
 
-  const isMobile =
-    typeof navigator !== 'undefined' &&
-    /Mobi|Android|iP(ad|hone|od)/i.test(navigator.userAgent)
-
-  const [visible, setVisible] = useState(true)
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
-
+  const navRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    if (!isMobile) return
-    const reset = () => {
-      setVisible(true)
-      if (timer.current) clearTimeout(timer.current)
-      timer.current = setTimeout(() => setVisible(false), navHideDelay)
+    const update = () => {
+      if (navRef.current) {
+        const styles = getComputedStyle(navRef.current)
+        const footprint =
+          navRef.current.offsetHeight +
+          parseFloat(styles.marginTop) +
+          parseFloat(styles.marginBottom)
+        document.documentElement.style.setProperty(
+          '--navbar-footprint',
+          `${footprint}px`
+        )
+        document.documentElement.style.setProperty(
+          '--navbar-padding-bottom',
+          navPosition === 'bottom' ? `${footprint * 2}px` : '0px'
+        )
+      }
     }
-    reset()
-    window.addEventListener('scroll', reset)
-    return () => {
-      window.removeEventListener('scroll', reset)
-      if (timer.current) clearTimeout(timer.current)
-    }
-  }, [navHideDelay, isMobile])
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [navPosition])
 
   let style: React.CSSProperties = {
     position: 'fixed',
@@ -119,7 +117,6 @@ export default function Navbar() {
   }
 
   let visibleTransform = ''
-  let hiddenTransform = ''
   if (navPosition === 'top') {
     style = {
       ...style,
@@ -129,7 +126,6 @@ export default function Navbar() {
       maxWidth: '800px',
     }
     visibleTransform = 'translateX(-50%)'
-    hiddenTransform = 'translateX(-50%) translateY(-100%)'
   } else if (navPosition === 'bottom') {
     style = {
       ...style,
@@ -139,30 +135,19 @@ export default function Navbar() {
       maxWidth: '800px',
     }
     visibleTransform = 'translateX(-50%)'
-    hiddenTransform = 'translateX(-50%) translateY(100%)'
   } else if (navPosition === 'left') {
     style = { ...style, left: '1rem', top: '50%' }
     visibleTransform = 'translateY(-50%)'
-    hiddenTransform = 'translateY(-50%) translateX(-100%)'
   } else if (navPosition === 'right') {
     style = { ...style, right: '1rem', top: '50%' }
     visibleTransform = 'translateY(-50%)'
-    hiddenTransform = 'translateY(-50%) translateX(100%)'
   }
 
   style.transform = visibleTransform
 
-  if (isMobile && !visible) {
-    if (navAnimationStyle !== 'fade') {
-      style.transform = hiddenTransform
-    }
-    if (navAnimationStyle !== 'slide') {
-      style.opacity = 0
-    }
-  }
-
   return (
     <Flex
+      ref={navRef}
       asChild
       direction={vertical ? 'column' : 'row'}
       justify="between"
@@ -173,7 +158,10 @@ export default function Navbar() {
           <Button
             key={tab.id}
             {...buttonProps(
-              activeTab === tab.id ? navActiveButtonVariant : navButtonVariant
+              activeTab === tab.id
+                ? navActiveButtonVariant
+                : navButtonVariant,
+              activeTab === tab.id
             )}
             aria-current={activeTab === tab.id ? 'page' : undefined}
             onClick={() => {
@@ -205,11 +193,15 @@ function hexToRgb(hex: string) {
   return `${r},${g},${b}`
 }
 
-function buttonProps(variant: ButtonVariant) {
+function buttonProps(variant: ButtonVariant, active = false) {
   if (variant === 'ghost') {
     return {
       variant: 'surface' as ButtonVariant,
-      style: { backgroundColor: 'transparent', boxShadow: 'none' },
+      style: {
+        backgroundColor: active ? 'var(--accent-9)' : 'transparent',
+        boxShadow: 'none',
+        color: active ? 'var(--accent-1)' : 'inherit',
+      },
     }
   }
   return { variant }

@@ -13,7 +13,7 @@ export default function AppRoutes() {
   const navPosition = useSettingsStore(state => state.navPosition)
   const offsetClass = {
     top: 'mt-16',
-    bottom: 'mb-16',
+    bottom: '',
     left: 'ml-24',
     right: 'mr-24'
   }[navPosition]

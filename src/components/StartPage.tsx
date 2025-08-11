@@ -267,11 +267,9 @@ export default function StartPage() {
   }
   return (
     <>
-      <PageContainer title="Open Roll">
-        {renderTab()}
-      </PageContainer>
+      <PageContainer>{renderTab()}</PageContainer>
 
-        {overlay.visible && (
+      {overlay.visible && (
           <Dialog.Root
             open={overlay.visible}
             onOpenChange={open => {

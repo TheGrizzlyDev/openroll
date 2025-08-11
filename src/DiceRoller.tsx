@@ -8,7 +8,11 @@ import { Parser } from '@dice-roller/rpg-dice-roller'
 import { useGameContext } from './GameContext'
 import { Input, Button } from './design-system'
 
-export default function DiceRoller() {
+interface DiceRollerProps {
+  iconButton?: boolean
+}
+
+export default function DiceRoller({ iconButton = false }: DiceRollerProps) {
   const { roll } = useGameContext()
   const [notation, setNotation] = useState('1d20')
   const [error, setError] = useState('')
@@ -37,8 +41,14 @@ export default function DiceRoller() {
     }
   }
 
+  const containerClass = iconButton
+    ? 'flex items-center gap-2'
+    : 'dice-roller mb-4 flex items-center gap-2 max-[400px]:flex-col max-[400px]:items-stretch max-[400px]:gap-1'
+
+  const buttonClass = iconButton ? undefined : 'max-[400px]:w-full'
+
   return (
-    <div className="mb-4 flex items-center gap-2 max-[400px]:flex-col max-[400px]:items-stretch max-[400px]:gap-1">
+    <div className={containerClass}>
       <Input
         type="text"
         value={notation}
@@ -55,10 +65,10 @@ export default function DiceRoller() {
         placeholder="1d20"
         className={error ? 'border-error' : undefined}
       />
-      <Button onClick={handleRoll} className="max-[400px]:w-full">
-        Roll
+      <Button onClick={handleRoll} className={buttonClass} aria-label="Roll">
+        {iconButton ? '🎲' : 'Roll'}
       </Button>
-        {error && <span className="text-error text-xs">{error}</span>}
+      {error && <span className="text-error text-xs">{error}</span>}
       {result !== null && (
         <span style={srOnly} aria-live="polite">
           {result.output}

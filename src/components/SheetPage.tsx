@@ -6,7 +6,7 @@ import CharacterSheet from '../mork_borg/CharacterSheet'
 import LogView from './LogView'
 import Notes from './Notes'
 import { useGameContext } from '../GameContext'
-import { Tabs, Button } from '../design-system'
+import { Tabs, Button, Input } from '../design-system'
 import { Dialog } from '../design-system'
 import { Canvas } from '@react-three/fiber'
 import Dice3D from './Dice3D'
@@ -17,14 +17,13 @@ import { Flex } from '@radix-ui/themes'
 
 export default function SheetPage() {
   const {
-    state: { activeTab, overlay },
+    state: { activeTab, overlay, sheet },
     dispatch,
     overlayTimeout,
     setOverlayTimeout,
     loadCharacter
   } = useGameContext()
   const { id } = useParams()
-  const navigate = useNavigate()
 
   useEffect(() => {
     if (id !== undefined) {
@@ -42,16 +41,22 @@ export default function SheetPage() {
           ? 'Notes'
           : 'Log'
 
+  const characterTitle = (
+    <Flex align="center" gap="var(--space-2)">
+      <Input
+        value={sheet.name}
+        onChange={e =>
+          dispatch({ type: 'SET_SHEET', sheet: { ...sheet, name: e.target.value } })
+        }
+        aria-label="Character name"
+        style={{ width: 'auto' }}
+      />
+      <span>– Mörk Borg</span>
+    </Flex>
+  )
+
   return (
-    <PageContainer
-      title="Open Roll"
-      headerActions={
-        <Button variant="ghost" onClick={() => navigate('/characters')}>
-          ← Back
-        </Button>
-      }
-    >
-      <DiceRoller />
+    <PageContainer title={characterTitle}>
       <Tabs.Root
         value={activeTab}
         onValueChange={tab => dispatch({ type: 'SET_ACTIVE_TAB', tab })}
@@ -154,6 +159,7 @@ function SheetTabsNav() {
   const {
     state: { activeTab },
   } = useGameContext()
+  const navigate = useNavigate()
 
   const [appearance, setAppearance] = useState<'light' | 'dark'>('light')
   useEffect(() => {
@@ -195,22 +201,29 @@ function SheetTabsNav() {
     borderTopRightRadius: stuck ? 0 : `${navCornerRadius}px`,
     borderBottomLeftRadius: `${navCornerRadius}px`,
     borderBottomRightRadius: `${navCornerRadius}px`,
-    transition: 'border-radius 200ms',
+    transition: 'border-radius 200ms, padding-left 200ms',
     backdropFilter: 'blur(10px)',
     marginBottom: 'var(--space-2)',
     boxShadow: `0 2px 6px ${boxShadowColor}`,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'var(--space-2)',
   }
 
   return (
-    <Tabs.List asChild>
-      <Flex asChild justify="between" style={{ ...style, gap: 'var(--space-2)', width: '100%' }}>
-        <nav>
+    <div style={style}>
+      <Tabs.List asChild>
+        <nav style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+          <Button variant="ghost" onClick={() => navigate('/characters')}>
+            ← Back
+          </Button>
           <Tabs.Trigger asChild value="character">
             <Button
               {...buttonProps(
                 activeTab === 'character'
                   ? navActiveButtonVariant
-                  : navButtonVariant
+                  : navButtonVariant,
+                true
               )}
             >
               Character
@@ -221,7 +234,8 @@ function SheetTabsNav() {
               {...buttonProps(
                 activeTab === 'inventory'
                   ? navActiveButtonVariant
-                  : navButtonVariant
+                  : navButtonVariant,
+                activeTab === 'inventory'
               )}
             >
               Inventory
@@ -232,7 +246,8 @@ function SheetTabsNav() {
               {...buttonProps(
                 activeTab === 'notes'
                   ? navActiveButtonVariant
-                  : navButtonVariant
+                  : navButtonVariant,
+                activeTab === 'notes'
               )}
             >
               Notes
@@ -243,15 +258,19 @@ function SheetTabsNav() {
               {...buttonProps(
                 activeTab === 'log'
                   ? navActiveButtonVariant
-                  : navButtonVariant
+                  : navButtonVariant,
+                activeTab === 'log'
               )}
             >
               Log
             </Button>
           </Tabs.Trigger>
         </nav>
-      </Flex>
-    </Tabs.List>
+      </Tabs.List>
+      <div style={{ marginLeft: 'auto' }}>
+        <DiceRoller iconButton />
+      </div>
+    </div>
   )
 }
 
@@ -264,11 +283,15 @@ function hexToRgb(hex: string) {
   return `${r},${g},${b}`
 }
 
-function buttonProps(variant: ButtonVariant) {
+function buttonProps(variant: ButtonVariant, active = false) {
   if (variant === 'ghost') {
     return {
       variant: 'surface' as ButtonVariant,
-      style: { backgroundColor: 'transparent', boxShadow: 'none' },
+      style: {
+        backgroundColor: active ? 'var(--accent-9)' : 'transparent',
+        boxShadow: 'none',
+        color: active ? 'var(--accent-1)' : 'inherit',
+      },
     }
   }
   return { variant }

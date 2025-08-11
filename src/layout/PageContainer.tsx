@@ -3,7 +3,7 @@ import Stack from './Stack'
 import Flex from './Flex'
 
 interface PageContainerProps {
-  title: string
+  title?: ReactNode
   headerActions?: ReactNode
   children: ReactNode
 }
@@ -15,10 +15,12 @@ export default function PageContainer({
 }: PageContainerProps) {
   return (
     <Stack style={{ marginInline: 'auto', maxWidth: '800px', padding: '1rem' }}>
-      <Flex justify="space-between" align="center">
-        <h1>{title}</h1>
-        {headerActions && <Flex gap="0.5rem">{headerActions}</Flex>}
-      </Flex>
+      {(title || headerActions) && (
+        <Flex justify="space-between" align="center">
+          {title && <h1>{title}</h1>}
+          {headerActions && <Flex gap="0.5rem">{headerActions}</Flex>}
+        </Flex>
+      )}
       {children}
     </Stack>
   )
