@@ -76,14 +76,12 @@ export default function CharacterSheet() {
       
       <FormField label="Character" htmlFor="character">
         <Input
-          id="character"
           value={sheet.name}
           onChange={(e: ChangeEvent<HTMLInputElement>) => updateField('name', e.target.value)}
         />
       </FormField>
       <FormField label="Class" htmlFor="class">
         <Select
-          id="class"
           value={sheet.class}
           onChange={(e: ChangeEvent<HTMLSelectElement>) =>
             updateField('class', e.target.value)
@@ -98,7 +96,6 @@ export default function CharacterSheet() {
 
       <FormField label="Trait" htmlFor="trait">
         <Input
-          id="trait"
           value={sheet.trait}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             updateField('trait', e.target.value)
@@ -107,7 +104,6 @@ export default function CharacterSheet() {
       </FormField>
       <FormField label="Background" htmlFor="background">
         <Input
-          id="background"
           value={sheet.background}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             updateField('background', e.target.value)
@@ -124,7 +120,6 @@ export default function CharacterSheet() {
               error={statDiceErrors[editingStat]}
             >
               <Input
-                id="stat-dice"
                 className={statDiceErrors[editingStat] ? 'error' : undefined}
                 value={statDiceValues[editingStat]}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {

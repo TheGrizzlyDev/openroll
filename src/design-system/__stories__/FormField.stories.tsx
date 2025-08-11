@@ -9,7 +9,7 @@ const meta: Meta<typeof FormField> = {
   args: {
     label: 'Label',
     htmlFor: 'example',
-    children: <Input id="example" placeholder="Enter text" />
+    children: <Input placeholder="Enter text" />
   }
 }
 

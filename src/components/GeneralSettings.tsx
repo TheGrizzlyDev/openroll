@@ -9,7 +9,6 @@ export default function GeneralSettings() {
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <FormField label="Navbar position" htmlFor="nav-position">
         <Select
-          id="nav-position"
           value={navPosition}
           onChange={e => setNavPosition(e.target.value as NavPosition)}
         >

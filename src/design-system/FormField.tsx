@@ -1,4 +1,9 @@
-import { type ReactNode } from 'react'
+import { cloneElement, isValidElement, type ReactNode } from 'react'
+import {
+  FieldRoot as FormControl,
+  FieldLabel as FormLabel,
+  FieldErrorText as FormError,
+} from '@ark-ui/react'
 
 interface FormFieldProps {
   label: string
@@ -8,11 +13,28 @@ interface FormFieldProps {
 }
 
 export function FormField({ label, htmlFor, error, children }: FormFieldProps) {
+  const describedBy = error ? `field::${htmlFor}::error-text` : undefined
+  const control = isValidElement(children)
+    ? cloneElement(children as any, {
+        id: htmlFor,
+        'aria-describedby': describedBy,
+        'aria-invalid': error ? true : undefined,
+      })
+    : children
+
   return (
-    <div className="flex flex-col">
-      <label htmlFor={htmlFor}>{label}</label>
-      {children}
-      {error && <span className="text-error text-xs">{error}</span>}
-    </div>
+    <FormControl
+      ids={{ control: htmlFor }}
+      invalid={Boolean(error)}
+      style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}
+    >
+      <FormLabel>{label}</FormLabel>
+      {control}
+      {error && (
+        <FormError style={{ color: 'var(--color-error)', fontSize: '0.75rem' }}>
+          {error}
+        </FormError>
+      )}
+    </FormControl>
   )
 }
