@@ -54,10 +54,10 @@ export default function DiceRoller() {
         }}
         placeholder="1d20"
         className={error ? 'border-error' : undefined}
-        />
-        <Button icon="roll" onClick={handleRoll} className="max-[400px]:w-full">
-          Roll
-        </Button>
+      />
+      <Button onClick={handleRoll} className="max-[400px]:w-full">
+        Roll
+      </Button>
         {error && <span className="text-error text-xs">{error}</span>}
       {result !== null && (
         <span style={srOnly} aria-live="polite">

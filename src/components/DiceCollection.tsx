@@ -1,17 +1,13 @@
 import { Button } from '../design-system'
-import { useTheme } from '../theme/ThemeProvider'
 import { useDiceStore, type Die } from '../diceStore'
 
 function DieItem({ die, onEdit, onDelete }: { die: Die; onEdit: () => void; onDelete: () => void }) {
-  const { icons } = useTheme()
   return (
     <div className="die-item">
-      <span className="die-preview">{icons.dice}</span>
+      <span className="die-preview">🎲</span>
       <span className="die-name">{die.name}</span>
       <div className="die-actions">
-        <Button icon="edit" onClick={onEdit}>
-          Edit
-        </Button>
+        <Button onClick={onEdit}>Edit</Button>
         <Button onClick={onDelete}>Delete</Button>
       </div>
     </div>

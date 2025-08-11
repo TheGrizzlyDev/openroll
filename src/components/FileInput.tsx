@@ -4,10 +4,9 @@ import { Button } from '../design-system'
 interface FileInputProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> {
   accept?: string
   onFileSelect: (_file: File) => void
-  icon?: string
 }
 
-export function FileInput({ accept, onFileSelect, children, icon, className, ...buttonProps }: FileInputProps) {
+export function FileInput({ accept, onFileSelect, children, className, ...buttonProps }: FileInputProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleClick = () => {
@@ -26,7 +25,7 @@ export function FileInput({ accept, onFileSelect, children, icon, className, ...
   return (
     <>
       <input ref={inputRef} type="file" accept={accept} style={{ display: 'none' }} />
-      <Button icon={icon} className={className} onClick={handleClick} {...buttonProps}>
+      <Button className={className} onClick={handleClick} {...buttonProps}>
         {children}
       </Button>
     </>

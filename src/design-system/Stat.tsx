@@ -124,7 +124,6 @@ export function Stat({
         {/* Roll (click = normal; hold 500ms = adv; Shift+Enter = adv) */}
         <Button
           type="button"
-          icon="dice"
           aria-label={`Roll ${id.toUpperCase()}${onRollAdv ? ' (Shift+Enter for advantage or long-press)' : ''}`}
           title={onRollAdv ? 'Enter: Roll • Shift+Enter: Advantage • Long-press: Advantage' : 'Enter: Roll'}
           aria-keyshortcuts={onRollAdv ? 'Enter, Shift+Enter' : 'Enter'}
@@ -138,17 +137,20 @@ export function Stat({
           className={`h-10 w-10 p-2 active:translate-y-px ${
             onRollAdv ? 'border-error focus-visible:ring-error' : ''
           }`}
-        />
+        >
+          🎲
+        </Button>
 
         {/* Edit */}
         <Button
           type="button"
-          icon="edit"
           aria-label={`Edit ${id.toUpperCase()} notation`}
           onClick={onEdit}
           className="h-10 w-10 p-2 active:translate-y-px"
           title="Edit notation"
-        />
+        >
+          ✏️
+        </Button>
 
         {/* SR-only hint + live region */}
         <span id={hintId} className="sr-only">

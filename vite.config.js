@@ -76,7 +76,6 @@ export default defineConfig(({ base = '/' }) => ({
         start_url: base,
         display: 'standalone',
         background_color: '#ffffff',
-        theme_color: '#222222',
         icons: [
           {
             src: `${base}icon-192.png`,
