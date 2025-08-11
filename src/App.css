@@ -4,25 +4,6 @@ h1, h2 {
   text-align: center;
 }
 
-.sheet label {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.log ul {
-  list-style: none;
-  padding: 0;
-}
-
-.log li {
-  margin-bottom: 0.25rem;
-}
-
-.log button {
-  margin-bottom: 0.5rem;
-  width: auto;
-}
-
 .dice-preview {
   height: 300px;
   width: 300px;

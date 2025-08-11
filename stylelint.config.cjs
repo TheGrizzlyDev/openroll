@@ -15,12 +15,7 @@ module.exports = {
         'order/properties-alphabetical-order': true,
         'no-descending-specificity': null,
         'selector-class-pattern': null,
-        'at-rule-no-unknown': [
-          true,
-          {
-            ignoreAtRules: ['tailwind']
-          }
-        ],
+        'at-rule-no-unknown': true,
         'selector-pseudo-class-no-unknown': [
           true,
           {

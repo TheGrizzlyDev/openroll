@@ -19,13 +19,13 @@ interface FormFieldProps {
 
 export function FormField({ label, htmlFor, error, children }: FormFieldProps) {
   const describedBy = error ? `field::${htmlFor}::error-text` : undefined
-  const control = isValidElement(children)
-    ? cloneElement(children as ReactElement<any>, {
-        id: htmlFor,
-        'aria-describedby': describedBy,
-        'aria-invalid': error ? true : undefined,
-      })
-    : children
+    const control = isValidElement(children)
+      ? cloneElement(children as ReactElement<Record<string, unknown>>, {
+          id: htmlFor,
+          'aria-describedby': describedBy,
+          'aria-invalid': error ? true : undefined,
+        } as Record<string, unknown>)
+      : children
 
   return (
     <FormControl

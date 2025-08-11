@@ -5,6 +5,9 @@ import './index.css'
 import App from './App'
 import { BrowserRouter } from 'react-router-dom'
 import { registerSW } from 'virtual:pwa-register'
+import { applyTheme } from './theme'
+
+applyTheme()
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
