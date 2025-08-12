@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useGameContext } from '../GameContext'
 import { FileInput } from './FileInput'
@@ -25,6 +25,8 @@ export default function StartPage() {
   } = useGameContext()
   const navigate = useNavigate()
   const location = useLocation()
+
+  const [deleteIdx, setDeleteIdx] = useState<number | null>(null)
 
   const handleExport = () => {
     const data = exportCharacters()
@@ -74,8 +76,7 @@ export default function StartPage() {
     reader.readAsText(file)
   }
 
-  const confirmDelete = (idx: number) =>
-    window.confirm('Delete this character?') && deleteCharacter(idx)
+  const confirmDelete = (idx: number) => setDeleteIdx(idx)
 
   const handleLoad = (idx: number) => {
     loadCharacter(idx)
@@ -268,6 +269,37 @@ export default function StartPage() {
   return (
     <>
       <PageContainer>{renderTab()}</PageContainer>
+
+      {deleteIdx !== null && (
+        <Dialog.Root
+          open
+          onOpenChange={open => {
+            if (!open) setDeleteIdx(null)
+          }}
+        >
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <p>Delete this character?</p>
+              <Flex justify="end" gap="var(--space-2)">
+                <Dialog.CloseTrigger asChild>
+                  <Button type="button">Cancel</Button>
+                </Dialog.CloseTrigger>
+                <Dialog.CloseTrigger asChild>
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      if (deleteIdx !== null) deleteCharacter(deleteIdx)
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </Dialog.CloseTrigger>
+              </Flex>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Dialog.Root>
+      )}
 
       {overlay.visible && (
           <Dialog.Root

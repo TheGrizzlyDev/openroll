@@ -253,7 +253,7 @@ function SheetTabsNav() {
                   activeTab === 'character'
                     ? navActiveButtonVariant
                     : navButtonVariant,
-                  true
+                  activeTab === 'character'
                 )}
               >
                 Character
