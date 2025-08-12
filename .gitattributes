@@ -1,6 +1,7 @@
 public/** filter=lfs diff=lfs merge=lfs -text
 public/.gitignore -filter -diff -merge
 public/*.html -filter -diff -merge
+public/*.js -filter -diff -merge
 *.png filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
 *.jpeg filter=lfs diff=lfs merge=lfs -text
