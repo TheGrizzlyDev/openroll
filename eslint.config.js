@@ -10,7 +10,7 @@ import tsPlugin from '@typescript-eslint/eslint-plugin'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'third_party']),
+  globalIgnores(['dist', 'third_party', 'public']),
   {
     files: ['**/*.{js,jsx}'],
     extends: [
@@ -29,6 +29,12 @@ export default defineConfig([
     },
     rules: {
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^_' }],
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: ['**/character-sheet/design-system/*'],
+        },
+      ],
     },
   },
   {
@@ -53,6 +59,18 @@ export default defineConfig([
     rules: {
       ...tsPlugin.configs.recommended.rules,
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^_' }],
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: ['**/character-sheet/design-system/*'],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/character-sheet/**/*.{js,jsx,ts,tsx}'],
+    rules: {
+      'no-restricted-imports': 'off',
     },
   },
   {
