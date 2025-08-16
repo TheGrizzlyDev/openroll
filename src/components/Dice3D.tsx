@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Edges } from '@react-three/drei'
-import { useBox } from '@react-three/cannon/dist/index.js'
+import { useBox } from '@react-three/cannon'
 import * as THREE from 'three'
 
 export interface Dice3DProps {

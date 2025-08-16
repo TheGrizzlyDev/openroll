@@ -1,5 +1,5 @@
 import { ReactNode, useMemo } from 'react'
-import { Physics, useBox, usePlane } from '@react-three/cannon/dist/index.js'
+import { Physics, useBox, usePlane } from '@react-three/cannon'
 import * as THREE from 'three'
 
 export interface DiceTrayProps {
