@@ -127,9 +127,9 @@ describe('oml rendering', () => {
   })
 
   it('renders character name for name tags', () => {
-    const current = useGameContext.getState().state
+    const initial = useGameContext.getInitialState().state
     useGameContext.setState({
-      state: { ...current, sheet: { ...current.sheet, name: 'Azure' } }
+      state: { ...initial, sheet: { ...initial.sheet, name: 'Azure' } }
     })
     const Test = () => <div>{renderOml('I am [name]')}</div>
     const { container } = render(<Test />)
@@ -137,9 +137,9 @@ describe('oml rendering', () => {
   })
 
   it('renders active branch and fades inactive branch', () => {
-    const current = useGameContext.getState().state
+    const initial = useGameContext.getInitialState().state
     useGameContext.setState({
-      state: { ...current, sheet: { ...current.sheet, hp: 5 } }
+      state: { ...initial, sheet: { ...initial.sheet, hp: 5 } }
     })
     const Test = () => <div>{renderOml('[if hp>0]Alive[else]Dead[fi]')}</div>
     const { container } = render(<Test />)
@@ -149,9 +149,9 @@ describe('oml rendering', () => {
   })
 
   it('renders else branch when predicate is false', () => {
-    const current = useGameContext.getState().state
+    const initial = useGameContext.getInitialState().state
     useGameContext.setState({
-      state: { ...current, sheet: { ...current.sheet, hp: 0 } }
+      state: { ...initial, sheet: { ...initial.sheet, hp: 0 } }
     })
     const Test = () => <div>{renderOml('[if hp>0]Alive[else]Dead[fi]')}</div>
     const { container } = render(<Test />)
@@ -161,9 +161,9 @@ describe('oml rendering', () => {
   })
 
   it('handles nested conditionals', () => {
-    const current = useGameContext.getState().state
+    const initial = useGameContext.getInitialState().state
     useGameContext.setState({
-      state: { ...current, sheet: { ...current.sheet, hp: 5, omens: 0 } }
+      state: { ...initial, sheet: { ...initial.sheet, hp: 5, omens: 0 } }
     })
     const text =
       '[if hp>0]live[if omens>0] omen [else] none [fi][else]dead[fi]'

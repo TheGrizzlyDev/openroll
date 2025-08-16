@@ -3,6 +3,7 @@ import process from 'node:process'
 import * as matchers from '@testing-library/jest-dom/matchers'
 import http from 'node:http'
 import https from 'node:https'
+import { useGameContext } from '../src/GameContext'
 
 expect.extend(matchers)
 
@@ -19,6 +20,11 @@ afterEach(ctx => {
   if (typeof timeout === 'number' && typeof duration === 'number' && duration > timeout) {
     console.warn(`⚠️ Test "${task.name}" exceeded timeout of ${timeout}ms (took ${duration}ms)`)
   }
+})
+
+afterEach(() => {
+  useGameContext.setState(useGameContext.getInitialState(), true)
+  useGameContext.persist.clearStorage()
 })
 
 process.on('unhandledRejection', reason => {

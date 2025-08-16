@@ -1,26 +1,21 @@
 import { describe, it, expect, afterEach } from 'vitest'
 import { NumberGenerator } from '@dice-roller/rpg-dice-roller'
 import { useGameContext, type GameState } from '../src/GameContext'
-import { createSheet } from '../src/mork_borg/sheet'
 
 const resetStore = (state: Partial<GameState> = {}) => {
-  const base: GameState = {
-    characters: [],
-    lastAccess: {},
-    current: null,
-    sheet: createSheet(),
-    inventory: [],
-    scrolls: [],
-    log: [],
-    activeTab: 'character',
-    overlay: { message: '', roll: null, visible: false }
-  }
-  useGameContext.setState({ state: { ...base, ...state }, overlayTimeout: null })
+  const initial = useGameContext.getInitialState()
+  useGameContext.setState(
+    {
+      ...initial,
+      state: { ...initial.state, ...state },
+      overlayTimeout: null
+    },
+    true,
+  )
 }
 
 afterEach(() => {
   NumberGenerator.generator.engine = NumberGenerator.engines.nativeMath
-  resetStore()
 })
 
 describe('GameContext roll breakdown', () => {
