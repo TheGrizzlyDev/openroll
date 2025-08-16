@@ -5,7 +5,7 @@ import {
   type InventoryItem as Item,
   type Scroll
 } from '../stores/GameContext'
-import { renderOml } from '../oml/render'
+import { RenderOml } from '../oml/render'
 import { Button } from './ui'
 
 interface Props {
@@ -94,7 +94,7 @@ export default function InventoryItem({ item, actions }: Props) {
         </div>
         {item.notes && (
           <div className="text-white/80">
-            {renderOml(item.notes, roll)}
+            {RenderOml(item.notes, roll)}
           </div>
         )}
       </div>

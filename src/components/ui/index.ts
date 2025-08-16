@@ -4,6 +4,12 @@ export { Select, type SelectProps } from './Select'
 export { HpBar } from './HpBar'
 export { Stat } from './Stat'
 export { FormField } from './FormField'
-export { Tabs } from './Tabs'
+export { TabsRoot, TabsList, TabsTrigger, TabsContent } from './Tabs'
 export { NumericAttribute } from './NumericAttribute'
-export { Dialog } from './Dialog'
+export {
+  DialogRoot,
+  DialogBackdrop,
+  DialogPositioner,
+  DialogContent,
+  DialogCloseTrigger
+} from './Dialog'

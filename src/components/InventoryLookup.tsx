@@ -1,6 +1,13 @@
 import React, { useState } from 'react'
 import { useGameContext } from '../stores/GameContext'
-import { Button, Dialog } from './ui'
+import {
+  Button,
+  DialogRoot,
+  DialogBackdrop,
+  DialogPositioner,
+  DialogContent,
+  DialogCloseTrigger,
+} from './ui'
 import {
   useReactTable,
   getCoreRowModel,
@@ -50,10 +57,10 @@ export default function InventoryLookup({ description, attrs }: InventoryLookupP
         {description || 'Inventory'}
       </Button>
       {open && (
-        <Dialog.Root open={open} onOpenChange={open => !open && setOpen(false)}>
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content>
+        <DialogRoot open={open} onOpenChange={open => !open && setOpen(false)}>
+          <DialogBackdrop />
+          <DialogPositioner>
+            <DialogContent>
               <table>
                 <tbody>
                   {table.getRowModel().rows.map(row => (
@@ -67,12 +74,12 @@ export default function InventoryLookup({ description, attrs }: InventoryLookupP
                   ))}
                 </tbody>
               </table>
-              <Dialog.CloseTrigger asChild>
+              <DialogCloseTrigger asChild>
                 <Button type="button">×</Button>
-              </Dialog.CloseTrigger>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Dialog.Root>
+              </DialogCloseTrigger>
+            </DialogContent>
+          </DialogPositioner>
+        </DialogRoot>
       )}
     </>
   )

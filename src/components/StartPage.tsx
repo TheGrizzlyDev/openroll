@@ -2,7 +2,14 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useGameContext } from '../stores/GameContext'
 import { FileInput } from './FileInput'
-import { Button, Dialog } from './ui'
+import {
+  Button,
+  DialogRoot,
+  DialogBackdrop,
+  DialogPositioner,
+  DialogContent,
+  DialogCloseTrigger,
+} from './ui'
 import { PageContainer, Section, Stack, Flex } from '../layout'
 import { sortCharactersByLastAccess } from '../sortCharactersByLastAccess'
 import { useDiceSetStore, type DiceSet } from '../stores/diceSetStore'
@@ -271,21 +278,21 @@ export default function StartPage() {
       <PageContainer>{renderTab()}</PageContainer>
 
       {deleteIdx !== null && (
-        <Dialog.Root
+        <DialogRoot
           open
           onOpenChange={open => {
             if (!open) setDeleteIdx(null)
           }}
         >
-          <Dialog.Backdrop />
-          <Dialog.Positioner>
-            <Dialog.Content>
+          <DialogBackdrop />
+          <DialogPositioner>
+            <DialogContent>
               <p>Delete this character?</p>
               <Flex justify="end" gap="var(--space-2)">
-                <Dialog.CloseTrigger asChild>
+                <DialogCloseTrigger asChild>
                   <Button type="button">Cancel</Button>
-                </Dialog.CloseTrigger>
-                <Dialog.CloseTrigger asChild>
+                </DialogCloseTrigger>
+                <DialogCloseTrigger asChild>
                   <Button
                     type="button"
                     onClick={() => {
@@ -294,15 +301,15 @@ export default function StartPage() {
                   >
                     Delete
                   </Button>
-                </Dialog.CloseTrigger>
+                </DialogCloseTrigger>
               </Flex>
-            </Dialog.Content>
-          </Dialog.Positioner>
-        </Dialog.Root>
+            </DialogContent>
+          </DialogPositioner>
+        </DialogRoot>
       )}
 
       {overlay.visible && (
-          <Dialog.Root
+          <DialogRoot
             open={overlay.visible}
             onOpenChange={open => {
               if (!open) {
@@ -312,16 +319,16 @@ export default function StartPage() {
               }
             }}
           >
-            <Dialog.Backdrop />
-            <Dialog.Positioner>
-              <Dialog.Content>
+            <DialogBackdrop />
+            <DialogPositioner>
+              <DialogContent>
                 <span>{overlay.message}</span>
-                <Dialog.CloseTrigger asChild>
+                <DialogCloseTrigger asChild>
                   <Button type="button">×</Button>
-                </Dialog.CloseTrigger>
-              </Dialog.Content>
-            </Dialog.Positioner>
-          </Dialog.Root>
+                </DialogCloseTrigger>
+              </DialogContent>
+            </DialogPositioner>
+          </DialogRoot>
         )}
     </>
   )

@@ -1,20 +1,18 @@
 import { useState, type ChangeEvent } from 'react'
-import { arrayMove } from '@dnd-kit/sortable'
 import SortableList from '../components/SortableList'
 import InventoryItem from '../components/InventoryItem'
 import { useGameContext, type Scroll } from '../stores/GameContext'
 import SmartTextEditor from '../components/SmartTextEditor'
-import { Input, Select, Button, Dialog } from '../components/ui'
-// eslint-disable-next-line react-refresh/only-export-components
-export function reorderScrolls(
-  scrolls: Scroll[],
-  activeId: number,
-  overId: number
-) {
-  const oldIndex = scrolls.findIndex(s => s.id === activeId)
-  const newIndex = scrolls.findIndex(s => s.id === overId)
-  return arrayMove(scrolls, oldIndex, newIndex)
-}
+import {
+  Input,
+  Select,
+  Button,
+  DialogRoot,
+  DialogBackdrop,
+  DialogPositioner,
+  DialogContent,
+  DialogCloseTrigger,
+} from '../components/ui'
 
 export default function Inventory() {
   const {
@@ -216,7 +214,7 @@ export default function Inventory() {
           )}
         />
         {showItemPopup && (
-          <Dialog.Root
+          <DialogRoot
             open={showItemPopup}
             onOpenChange={open => {
               if (!open) {
@@ -225,9 +223,9 @@ export default function Inventory() {
               }
             }}
           >
-            <Dialog.Backdrop />
-            <Dialog.Positioner>
-              <Dialog.Content>
+            <DialogBackdrop />
+            <DialogPositioner>
+              <DialogContent>
                 <div className="flex min-w-60 flex-col gap-2">
                   <div style={{ flex: 1 }}>
                     <Input
@@ -260,15 +258,15 @@ export default function Inventory() {
                     )}
                   </div>
                 </div>
-                <Dialog.CloseTrigger asChild>
+                <DialogCloseTrigger asChild>
                   <Button type="button">×</Button>
-                </Dialog.CloseTrigger>
-              </Dialog.Content>
-            </Dialog.Positioner>
-          </Dialog.Root>
+                </DialogCloseTrigger>
+              </DialogContent>
+            </DialogPositioner>
+          </DialogRoot>
         )}
         {showScrollPopup && (
-          <Dialog.Root
+          <DialogRoot
             open={showScrollPopup}
             onOpenChange={open => {
               if (!open) {
@@ -277,9 +275,9 @@ export default function Inventory() {
               }
             }}
           >
-            <Dialog.Backdrop />
-            <Dialog.Positioner>
-              <Dialog.Content>
+            <DialogBackdrop />
+            <DialogPositioner>
+              <DialogContent>
                 <div className="flex min-w-60 flex-col gap-2">
                   <Select
                     value={scrollForm.type}
@@ -331,12 +329,12 @@ export default function Inventory() {
                     )}
                   </div>
                 </div>
-                <Dialog.CloseTrigger asChild>
+                <DialogCloseTrigger asChild>
                   <Button type="button">×</Button>
-                </Dialog.CloseTrigger>
-              </Dialog.Content>
-            </Dialog.Positioner>
-          </Dialog.Root>
+                </DialogCloseTrigger>
+              </DialogContent>
+            </DialogPositioner>
+          </DialogRoot>
         )}
     </div>
   )

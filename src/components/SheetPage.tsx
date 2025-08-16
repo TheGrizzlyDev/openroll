@@ -6,7 +6,19 @@ import CharacterSheet from '../mork_borg/CharacterSheet'
 import LogView from './LogView'
 import Notes from './Notes'
 import { useGameContext } from '../stores/GameContext'
-import { Tabs, Button, Input, Dialog } from './ui'
+import {
+  Button,
+  Input,
+  TabsRoot,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+  DialogRoot,
+  DialogBackdrop,
+  DialogPositioner,
+  DialogContent,
+  DialogCloseTrigger,
+} from './ui'
 import { Canvas } from '@react-three/fiber'
 import Dice3D from './Dice3D'
 import DiceTray from './DiceTray'
@@ -77,32 +89,32 @@ export default function SheetPage() {
 
   return (
     <PageContainer title={characterTitle}>
-      <Tabs.Root
+      <TabsRoot
         value={activeTab}
         onValueChange={tab => dispatch({ type: 'SET_ACTIVE_TAB', tab })}
       >
         <SheetTabsNav />
         <Section title={tabTitle}>
-          <Tabs.Content value="character">
+          <TabsContent value="character">
             <CharacterSheet />
-          </Tabs.Content>
+          </TabsContent>
 
-          <Tabs.Content value="inventory">
+          <TabsContent value="inventory">
             <Inventory />
-          </Tabs.Content>
+          </TabsContent>
 
-          <Tabs.Content value="notes">
+          <TabsContent value="notes">
             <Notes />
-          </Tabs.Content>
+          </TabsContent>
 
-          <Tabs.Content value="log">
+          <TabsContent value="log">
             <LogView />
-          </Tabs.Content>
+          </TabsContent>
         </Section>
-      </Tabs.Root>
+      </TabsRoot>
 
         {overlay.visible && (
-          <Dialog.Root
+          <DialogRoot
             open={overlay.visible}
             onOpenChange={open => {
               if (!open) {
@@ -115,9 +127,9 @@ export default function SheetPage() {
               }
             }}
           >
-            <Dialog.Backdrop />
-            <Dialog.Positioner>
-              <Dialog.Content>
+            <DialogBackdrop />
+            <DialogPositioner>
+              <DialogContent>
                 {overlay.roll ? (
                   <>
                     <Canvas
@@ -150,12 +162,12 @@ export default function SheetPage() {
                 ) : (
                   <span>{overlay.message}</span>
                 )}
-                <Dialog.CloseTrigger asChild>
+                <DialogCloseTrigger asChild>
                   <Button type="button">×</Button>
-                </Dialog.CloseTrigger>
-              </Dialog.Content>
-            </Dialog.Positioner>
-          </Dialog.Root>
+                </DialogCloseTrigger>
+              </DialogContent>
+            </DialogPositioner>
+          </DialogRoot>
         )}
     </PageContainer>
   )
@@ -232,7 +244,7 @@ function SheetTabsNav() {
 
   return (
     <div style={style}>
-      <Tabs.List asChild>
+      <TabsList asChild>
         <nav
           style={{
             display: 'flex',
@@ -245,7 +257,7 @@ function SheetTabsNav() {
             ← Back
           </Button>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-            <Tabs.Trigger asChild value="character">
+            <TabsTrigger asChild value="character">
               <Button
                 {...buttonProps(
                   activeTab === 'character'
@@ -256,8 +268,8 @@ function SheetTabsNav() {
               >
                 Character
               </Button>
-            </Tabs.Trigger>
-            <Tabs.Trigger asChild value="inventory">
+            </TabsTrigger>
+            <TabsTrigger asChild value="inventory">
               <Button
                 {...buttonProps(
                   activeTab === 'inventory'
@@ -268,8 +280,8 @@ function SheetTabsNav() {
               >
                 Inventory
               </Button>
-            </Tabs.Trigger>
-            <Tabs.Trigger asChild value="notes">
+            </TabsTrigger>
+            <TabsTrigger asChild value="notes">
               <Button
                 {...buttonProps(
                   activeTab === 'notes'
@@ -280,8 +292,8 @@ function SheetTabsNav() {
               >
                 Notes
               </Button>
-            </Tabs.Trigger>
-            <Tabs.Trigger asChild value="log">
+            </TabsTrigger>
+            <TabsTrigger asChild value="log">
               <Button
                 {...buttonProps(
                   activeTab === 'log'
@@ -292,11 +304,11 @@ function SheetTabsNav() {
               >
                 Log
               </Button>
-            </Tabs.Trigger>
+            </TabsTrigger>
           </div>
           <DiceRoller />
         </nav>
-      </Tabs.List>
+      </TabsList>
     </div>
   )
 }

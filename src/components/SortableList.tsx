@@ -10,18 +10,8 @@ import {
   type DragEndEvent,
   type UniqueIdentifier
 } from '@dnd-kit/core'
-import { SortableContext, arrayMove } from '@dnd-kit/sortable'
-
-// eslint-disable-next-line react-refresh/only-export-components
-export function reorderItems<T extends { id: UniqueIdentifier }>(
-  items: T[],
-  activeId: UniqueIdentifier,
-  overId: UniqueIdentifier
-) {
-  const oldIndex = items.findIndex(i => i.id === activeId)
-  const newIndex = items.findIndex(i => i.id === overId)
-  return arrayMove(items, oldIndex, newIndex)
-}
+import { SortableContext } from '@dnd-kit/sortable'
+import { reorderItems } from '../utils/reorderItems'
 
 interface SortableListProps<T extends { id: UniqueIdentifier }> {
   items: T[]

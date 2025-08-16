@@ -1,11 +1,11 @@
-/* eslint react-refresh/only-export-components: off, react-hooks/rules-of-hooks: off */
+/* eslint react-hooks/rules-of-hooks: off */
 import { useGameContext } from '../stores/GameContext'
 import { parseOml, type OmlNode, type ApplyNode } from './parser'
 import React from 'react'
 import InventoryLookup from '../components/InventoryLookup'
 import { Button } from '../components/ui'
 
-export function renderNodes(
+export function RenderNodes(
   nodes: OmlNode[],
   ctx: { roll: (_notation: string) => unknown; applyEffect: (_node: ApplyNode) => unknown }
 ) {
@@ -52,7 +52,7 @@ export function renderNodes(
         <React.Fragment key={i}>
           {node.branches.map((br, idx) => (
             <span key={idx} style={idx === active ? undefined : { opacity: 0.5 }}>
-              {renderNodes(br.children, ctx)}
+              {RenderNodes(br.children, ctx)}
             </span>
           ))}
         </React.Fragment>
@@ -90,11 +90,10 @@ export function renderNodes(
   })
 }
 
-export function renderOml(text: string, rollFn?: (_notation: string) => unknown) {
+export function RenderOml(text: string, rollFn?: (_notation: string) => unknown) {
   const { roll, applyEffect } = useGameContext.getState()
   const doRoll = rollFn ?? roll
   const nodes = parseOml(text.trim())
-  return <>{renderNodes(nodes, { roll: doRoll, applyEffect })}</>
+  return <>{RenderNodes(nodes, { roll: doRoll, applyEffect })}</>
 }
 
-export { parseOml, type OmlNode } from './parser'

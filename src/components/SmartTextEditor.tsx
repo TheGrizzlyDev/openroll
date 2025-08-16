@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { renderOml } from '../oml/render'
+import { RenderOml } from '../oml/render'
 import { useGameContext } from '../stores/GameContext'
 import CodeMirror from '@uiw/react-codemirror'
 import { autocompletion } from '@codemirror/autocomplete'
@@ -51,7 +51,7 @@ export default function SmartTextEditor({ value, onChange }: SmartTextEditorProp
           onChange={value => setDraft(value)}
         />
       ) : (
-        <div>{renderOml(value, roll)}</div>
+        <div>{RenderOml(value, roll)}</div>
       )}
       <div className="flex gap-2 justify-end">
         <Button type="button" onClick={handleToggle}>

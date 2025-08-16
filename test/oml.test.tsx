@@ -1,7 +1,8 @@
 import React from 'react'
 import { render, fireEvent, cleanup } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { parseOml, renderOml, renderNodes, type OmlNode } from '../src/oml/render'
+import { RenderOml, RenderNodes } from '../src/oml/render'
+import { parseOml, type OmlNode } from '../src/oml/parser'
 import { useGameContext } from '../src/stores/GameContext'
 
 describe('oml parsing', () => {
@@ -82,14 +83,14 @@ describe('oml rendering', () => {
   it('renders correctly', () => {
     const roll = vi.fn()
     useGameContext.setState({ roll })
-    const Test = () => <div>{renderOml('Roll [dice "1d4" 1d4] now')}</div>
+    const Test = () => <div>{RenderOml('Roll [dice "1d4" 1d4] now')}</div>
     render(<Test />)
   })
 
   it('renders spans and clickable dice badges', () => {
     const roll = vi.fn()
     useGameContext.setState({ roll })
-    const Test = () => <div>{renderOml('Roll [dice "1d4" 1d4] now')}</div>
+    const Test = () => <div>{RenderOml('Roll [dice "1d4" 1d4] now')}</div>
     const { getByText, container } = render(<Test />)
     const badge = getByText('1d4')
     fireEvent.click(badge)
@@ -103,7 +104,7 @@ describe('oml rendering', () => {
       { type: 'dice', notation: '1d4', description: 'a d4', attrs: {} }
     ]
     const { getByText } = render(
-      <div>{renderNodes(nodes, { roll, applyEffect: vi.fn() })}</div>
+      <div>{RenderNodes(nodes, { roll, applyEffect: vi.fn() })}</div>
     )
     const badge = getByText('a d4')
     fireEvent.click(badge)
@@ -120,7 +121,7 @@ describe('oml rendering', () => {
       }
     ]
     const { getByText } = render(
-      <div>{renderNodes(nodes, { roll: vi.fn(), applyEffect: vi.fn() })}</div>
+      <div>{RenderNodes(nodes, { roll: vi.fn(), applyEffect: vi.fn() })}</div>
     )
     const link = getByText('An example link') as HTMLAnchorElement
     expect(link.getAttribute('href')).toBe('https://example.com')
@@ -131,7 +132,7 @@ describe('oml rendering', () => {
     useGameContext.setState({
       state: { ...initial, sheet: { ...initial.sheet, name: 'Azure' } }
     })
-    const Test = () => <div>{renderOml('I am [name]')}</div>
+    const Test = () => <div>{RenderOml('I am [name]')}</div>
     const { container } = render(<Test />)
     expect(container.textContent).toBe('I am Azure')
   })
@@ -141,7 +142,7 @@ describe('oml rendering', () => {
     useGameContext.setState({
       state: { ...initial, sheet: { ...initial.sheet, hp: 5 } }
     })
-    const Test = () => <div>{renderOml('[if hp>0]Alive[else]Dead[fi]')}</div>
+    const Test = () => <div>{RenderOml('[if hp>0]Alive[else]Dead[fi]')}</div>
     const { container } = render(<Test />)
     const styled = Array.from(container.querySelectorAll('span[style*="opacity"]'))
     expect(styled).toHaveLength(1)
@@ -153,7 +154,7 @@ describe('oml rendering', () => {
     useGameContext.setState({
       state: { ...initial, sheet: { ...initial.sheet, hp: 0 } }
     })
-    const Test = () => <div>{renderOml('[if hp>0]Alive[else]Dead[fi]')}</div>
+    const Test = () => <div>{RenderOml('[if hp>0]Alive[else]Dead[fi]')}</div>
     const { container } = render(<Test />)
     const styled = Array.from(container.querySelectorAll('span[style*="opacity"]'))
     expect(styled).toHaveLength(1)
@@ -167,7 +168,7 @@ describe('oml rendering', () => {
     })
     const text =
       '[if hp>0]live[if omens>0] omen [else] none [fi][else]dead[fi]'
-    const Test = () => <div>{renderOml(text)}</div>
+    const Test = () => <div>{RenderOml(text)}</div>
     const { container } = render(<Test />)
     const styledTexts = Array.from(
       container.querySelectorAll('span[style*="opacity"]')
@@ -179,13 +180,13 @@ describe('oml rendering', () => {
   })
 
   it('preserves newline characters within text but trims those at the edges', () => {
-    const Test = () => <div>{renderOml('\nline1\nline2\n')}</div>
+    const Test = () => <div>{RenderOml('\nline1\nline2\n')}</div>
     const { container } = render(<Test />)
     expect(container.querySelectorAll('br')).toHaveLength(1)
   })
 
   it('trims edge whitespace while preserving internal spaces', () => {
-    const Test = () => <div>{renderOml('  foo   bar  ')}</div>
+    const Test = () => <div>{RenderOml('  foo   bar  ')}</div>
     const { container } = render(<Test />)
     expect(container.textContent).toBe('foo   bar')
     const span = container.querySelector('span') as HTMLSpanElement | null
