@@ -82,15 +82,17 @@ describe('oml rendering', () => {
   afterEach(() => cleanup())
   it('renders correctly', () => {
     const roll = vi.fn()
-    useGameContext.setState({ roll })
-    const Test = () => <div>{RenderOml('Roll [dice "1d4" 1d4] now')}</div>
+    const Test = () => (
+      <div>{RenderOml('Roll [dice "1d4" 1d4] now', roll)}</div>
+    )
     render(<Test />)
   })
 
   it('renders spans and clickable dice badges', () => {
     const roll = vi.fn()
-    useGameContext.setState({ roll })
-    const Test = () => <div>{RenderOml('Roll [dice "1d4" 1d4] now')}</div>
+    const Test = () => (
+      <div>{RenderOml('Roll [dice "1d4" 1d4] now', roll)}</div>
+    )
     const { getByText, container } = render(<Test />)
     const badge = getByText('1d4')
     fireEvent.click(badge)

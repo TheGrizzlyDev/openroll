@@ -16,6 +16,7 @@ const resetStore = (state: Partial<GameState> = {}) => {
 
 afterEach(() => {
   NumberGenerator.generator.engine = NumberGenerator.engines.nativeMath
+  resetStore()
 })
 
 describe('GameContext roll breakdown', () => {
