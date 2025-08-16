@@ -1,6 +1,6 @@
 import { type ChangeEvent, type KeyboardEvent, useEffect, useRef } from 'react'
 import { Button } from '.'
-import { useSettingsStore } from '../stores/settingsStore'
+import { useSettingsStore } from '../../stores/settingsStore'
 
 interface StatProps {
   id: string

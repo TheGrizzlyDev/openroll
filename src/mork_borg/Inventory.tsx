@@ -4,7 +4,7 @@ import SortableList from '../components/SortableList'
 import InventoryItem from '../components/InventoryItem'
 import { useGameContext, type Scroll } from '../stores/GameContext'
 import SmartTextEditor from '../components/SmartTextEditor'
-import { Input, Select, Button, Dialog } from '../design-system'
+import { Input, Select, Button, Dialog } from '../components/ui'
 // eslint-disable-next-line react-refresh/only-export-components
 export function reorderScrolls(
   scrolls: Scroll[],

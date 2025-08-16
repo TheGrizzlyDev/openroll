@@ -6,7 +6,7 @@ import {
   HpBar,
   FormField,
   NumericAttribute,
-} from '../design-system'
+} from '../components/ui'
 import StatGrid from './StatGrid'
 import classes from './classes'
 import type { Sheet } from './sheet'

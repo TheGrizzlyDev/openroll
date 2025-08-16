@@ -1,4 +1,4 @@
-import { FormField, Select, Input } from '../design-system'
+import { FormField, Select, Input } from './ui'
 import {
   useSettingsStore,
   type NavPosition,

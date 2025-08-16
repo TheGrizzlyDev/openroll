@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Button, type ButtonProps } from '../design-system'
+import { Button, type ButtonProps } from './ui'
 
 interface FileInputProps extends Omit<ButtonProps, 'onClick'> {
   accept?: string

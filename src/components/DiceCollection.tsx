@@ -1,4 +1,4 @@
-import { Button } from '../design-system'
+import { Button } from './ui'
 import { useDiceStore, type Die } from '../stores/diceStore'
 
 function DieItem({ die, onEdit, onDelete }: { die: Die; onEdit: () => void; onDelete: () => void }) {

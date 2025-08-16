@@ -1,6 +1,6 @@
 import { useState, type CSSProperties } from 'react'
 import { useGameContext } from './stores/GameContext'
-import { Button } from './design-system'
+import { Button } from './components/ui'
 
 export default function DiceRoller() {
   const { roll } = useGameContext()

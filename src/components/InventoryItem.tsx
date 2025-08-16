@@ -6,7 +6,7 @@ import {
   type Scroll
 } from '../stores/GameContext'
 import { renderOml } from '../oml/render'
-import { Button } from '../design-system'
+import { Button } from './ui'
 
 interface Props {
   item: Item | Scroll

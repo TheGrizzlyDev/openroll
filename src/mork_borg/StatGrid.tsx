@@ -1,4 +1,4 @@
-import { FormField, Stat } from '../design-system'
+import { FormField, Stat } from '../components/ui'
 import type { Sheet } from './sheet'
 
 type StatKey = 'str' | 'agi' | 'pre' | 'tou'

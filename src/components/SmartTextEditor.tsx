@@ -9,7 +9,7 @@ import {
   omlTheme,
   omlHighlight
 } from '../oml/codemirror'
-import { Button } from '../design-system'
+import { Button } from './ui'
 
 interface SmartTextEditorProps {
   value: string

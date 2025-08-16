@@ -1,5 +1,5 @@
 import { Button } from '.'
-import { useSettingsStore } from '../stores/settingsStore'
+import { useSettingsStore } from '../../stores/settingsStore'
 
 interface NumericAttributeProps {
   id: string

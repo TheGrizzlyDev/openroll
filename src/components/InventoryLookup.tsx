@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useGameContext } from '../stores/GameContext'
-import { Button, Dialog } from '../design-system'
+import { Button, Dialog } from './ui'
 import {
   useReactTable,
   getCoreRowModel,

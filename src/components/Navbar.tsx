@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Button } from '../design-system'
+import { Button } from './ui'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useSettingsStore, type ButtonVariant } from '../stores/settingsStore'
 import { useGameContext } from '../stores/GameContext'
