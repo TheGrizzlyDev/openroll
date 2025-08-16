@@ -35,8 +35,7 @@ export default function SheetPage() {
     if (id !== undefined) {
       loadCharacter(parseInt(id, 10))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id])
+  }, [id, loadCharacter])
 
   const tabTitle =
     activeTab === 'character'

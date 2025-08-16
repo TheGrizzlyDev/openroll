@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import SmartTextEditor from './SmartTextEditor'
 import { useGameContext } from '../stores/GameContext'
 
@@ -8,8 +8,11 @@ export default function Notes() {
     dispatch
   } = useGameContext()
 
-  const updateNotes = (value: string) =>
-    dispatch({ type: 'SET_SHEET', sheet: { ...sheet, notes: value } })
+  const updateNotes = useCallback(
+    (value: string) =>
+      dispatch({ type: 'SET_SHEET', sheet: { ...sheet, notes: value } }),
+    [dispatch, sheet]
+  )
 
   useEffect(() => {
     const stored = localStorage.getItem('presets')
@@ -19,16 +22,15 @@ export default function Notes() {
       if (Array.isArray(presets) && presets.length) {
         const lines = presets
           .map(p => `[dice "${p.notation}" ${p.notation}]`)
-          .join('\n')
-        const newNotes = sheet.notes ? `${sheet.notes}\n${lines}` : lines
+          .join('\\n')
+        const newNotes = sheet.notes ? `${sheet.notes}\\n${lines}` : lines
         updateNotes(newNotes)
       }
     } catch {
       // ignore malformed presets
     }
     localStorage.removeItem('presets')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [sheet, updateNotes])
 
   return (
     <div className="notes">

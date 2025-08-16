@@ -65,13 +65,11 @@ export default function useDiceScene({
         toolbar: toolbar.current,
         settings: settings.current,
       })
-      apiRef.current.applyConfig(config)
     }
     return () => {
       apiRef.current = null
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [app, toolbar, settings])
 
   useEffect(() => {
     apiRef.current?.applyConfig(config)
