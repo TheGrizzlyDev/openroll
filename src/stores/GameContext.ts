@@ -1,9 +1,9 @@
 import { create, type StateCreator } from 'zustand'
 import { devtools, persist, createJSONStorage, type NamedSet } from 'zustand/middleware'
 import { DiceRoller as DiceParser, type DiceRoll } from '@dice-roller/rpg-dice-roller'
-import { createSheet, type Sheet } from './mork_borg/sheet'
-import { generateCharacter } from './mork_borg/generateCharacter'
-import type { ApplyNode } from './oml/parser'
+import { createSheet, type Sheet } from '../mork_borg/sheet'
+import { generateCharacter } from '../mork_borg/generateCharacter'
+import type { ApplyNode } from '../oml/parser'
 
 export interface InventoryItem {
   id: number

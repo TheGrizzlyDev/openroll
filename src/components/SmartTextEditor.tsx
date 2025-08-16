@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { renderOml } from '../oml/render'
-import { useGameContext } from '../GameContext'
+import { useGameContext } from '../stores/GameContext'
 import CodeMirror from '@uiw/react-codemirror'
 import { autocompletion } from '@codemirror/autocomplete'
 import {

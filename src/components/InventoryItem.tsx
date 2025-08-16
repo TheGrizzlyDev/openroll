@@ -4,7 +4,7 @@ import {
   useGameContext,
   type InventoryItem as Item,
   type Scroll
-} from '../GameContext'
+} from '../stores/GameContext'
 import { renderOml } from '../oml/render'
 import { Button } from '../design-system'
 

@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { Suspense, lazy } from 'react'
 import Navbar from './components/Navbar'
-import { useSettingsStore } from './settingsStore'
+import { useSettingsStore } from './stores/settingsStore'
 
 const StartPage = lazy(() => import('./components/StartPage'))
 const SheetPage = lazy(() => import('./components/SheetPage'))

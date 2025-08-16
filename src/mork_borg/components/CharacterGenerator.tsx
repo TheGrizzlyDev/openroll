@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import type { ChangeEvent } from 'react'
-import { useGameContext } from '../../GameContext'
+import { useGameContext } from '../../stores/GameContext'
 import { Select, Button } from '../../design-system'
 import { PageContainer, Section } from '../../layout'
 import classes from '../classes'

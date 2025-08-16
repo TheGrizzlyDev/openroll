@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useGameContext } from '../GameContext'
+import { useGameContext } from '../stores/GameContext'
 import { Button, Dialog } from '../design-system'
 import {
   useReactTable,

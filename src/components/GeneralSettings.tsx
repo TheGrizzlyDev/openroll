@@ -5,7 +5,7 @@ import {
   type AnimationStyle,
   type ThemeMode,
   type ButtonVariant,
-} from '../settingsStore'
+} from '../stores/settingsStore'
 
 export default function GeneralSettings() {
   const {

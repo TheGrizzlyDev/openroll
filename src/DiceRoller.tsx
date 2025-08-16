@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from 'react'
-import { useGameContext } from './GameContext'
+import { useGameContext } from './stores/GameContext'
 import { Button } from './design-system'
 
 export default function DiceRoller() {

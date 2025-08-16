@@ -2,7 +2,7 @@ import React from 'react'
 import { render, fireEvent, cleanup } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { parseOml, renderOml, renderNodes, type OmlNode } from '../src/oml/render'
-import { useGameContext } from '../src/GameContext'
+import { useGameContext } from '../src/stores/GameContext'
 
 describe('oml parsing', () => {
   it('tokenizes text and dice tags with descriptions and attrs', () => {

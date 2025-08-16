@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Button } from '../design-system'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useSettingsStore, type ButtonVariant } from '../settingsStore'
-import { useGameContext } from '../GameContext'
+import { useSettingsStore, type ButtonVariant } from '../stores/settingsStore'
+import { useGameContext } from '../stores/GameContext'
 import { Flex } from '@radix-ui/themes'
 
 type StartTab = 'characters' | 'dices' | 'trays' | 'settings'

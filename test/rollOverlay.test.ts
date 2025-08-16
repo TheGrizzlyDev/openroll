@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest'
 import { NumberGenerator } from '@dice-roller/rpg-dice-roller'
-import { useGameContext, type GameState } from '../src/GameContext'
+import { useGameContext, type GameState } from '../src/stores/GameContext'
 
 const resetStore = (state: Partial<GameState> = {}) => {
   const initial = useGameContext.getInitialState()

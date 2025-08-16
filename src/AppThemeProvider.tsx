@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react'
 import { Theme } from '@radix-ui/themes'
-import { useSettingsStore } from './settingsStore'
+import { useSettingsStore } from './stores/settingsStore'
 import { applyTheme } from './theme'
 
 export default function AppThemeProvider({ children }: { children: ReactNode }) {

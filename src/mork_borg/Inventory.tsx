@@ -2,7 +2,7 @@ import { useState, type ChangeEvent } from 'react'
 import { arrayMove } from '@dnd-kit/sortable'
 import SortableList from '../components/SortableList'
 import InventoryItem from '../components/InventoryItem'
-import { useGameContext, type Scroll } from '../GameContext'
+import { useGameContext, type Scroll } from '../stores/GameContext'
 import SmartTextEditor from '../components/SmartTextEditor'
 import { Input, Select, Button, Dialog } from '../design-system'
 // eslint-disable-next-line react-refresh/only-export-components

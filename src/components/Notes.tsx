@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import SmartTextEditor from './SmartTextEditor'
-import { useGameContext } from '../GameContext'
+import { useGameContext } from '../stores/GameContext'
 
 export default function Notes() {
   const {

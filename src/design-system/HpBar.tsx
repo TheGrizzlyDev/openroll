@@ -1,6 +1,6 @@
 import * as Progress from '@radix-ui/react-progress'
 import { Button } from '.'
-import { useSettingsStore } from '../settingsStore'
+import { useSettingsStore } from '../stores/settingsStore'
 
 interface HpBarProps {
   hp: number

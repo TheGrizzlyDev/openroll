@@ -1,4 +1,4 @@
-import type { Character } from './GameContext'
+import type { Character } from './stores/GameContext'
 
 export function sortCharactersByLastAccess(
   characters: Character[],

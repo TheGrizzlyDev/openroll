@@ -1,5 +1,5 @@
 /* eslint react-refresh/only-export-components: off, react-hooks/rules-of-hooks: off */
-import { useGameContext } from '../GameContext'
+import { useGameContext } from '../stores/GameContext'
 import { parseOml, type OmlNode, type ApplyNode } from './parser'
 import React from 'react'
 import InventoryLookup from '../components/InventoryLookup'

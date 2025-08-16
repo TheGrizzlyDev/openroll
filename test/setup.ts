@@ -3,7 +3,7 @@ import process from 'node:process'
 import * as matchers from '@testing-library/jest-dom/matchers'
 import http from 'node:http'
 import https from 'node:https'
-import { useGameContext } from '../src/GameContext'
+import { useGameContext } from '../src/stores/GameContext'
 
 expect.extend(matchers)
 
