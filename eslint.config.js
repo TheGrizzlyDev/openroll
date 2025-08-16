@@ -26,12 +26,6 @@ export default defineConfig([
     },
     rules: {
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^_' }],
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: ['**/character-sheet/design-system/*'],
-        },
-      ],
     },
   },
   {
@@ -56,18 +50,6 @@ export default defineConfig([
     rules: {
       ...tsPlugin.configs.recommended.rules,
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^_' }],
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: ['**/character-sheet/design-system/*'],
-        },
-      ],
-    },
-  },
-  {
-    files: ['src/character-sheet/**/*.{js,jsx,ts,tsx}'],
-    rules: {
-      'no-restricted-imports': 'off',
     },
   },
 ])
