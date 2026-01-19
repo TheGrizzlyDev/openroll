@@ -1,110 +1,93 @@
-import { type ChangeEvent } from 'react'
-import { useGameContext } from '../stores/GameContext'
-import {
-  Input,
-  Select,
-  HpBar,
-  FormField,
-  NumericAttribute,
-} from '../components/ui'
-import StatGrid from './StatGrid'
-import classes from './classes'
-import type { Sheet } from './sheet'
-
-type StatKey = 'str' | 'agi' | 'pre' | 'tou'
+import { useGameContext } from "../../stores/GameContext";
 
 export default function CharacterSheet() {
   const {
     state: { sheet },
-    dispatch,
-    roll
-  } = useGameContext()
-  const updateField = <K extends keyof Sheet>(field: K, value: Sheet[K]) =>
-    dispatch({ type: 'SET_SHEET', sheet: { ...sheet, [field]: value } })
-
-  const rollStat = (stat: StatKey, advantage = false) => {
-    const mod = Number(sheet[stat]) || 0
-    const notation = advantage ? '2d20kh1' : '1d20'
-    const fullNotation = mod ? `${notation}${mod >= 0 ? `+${mod}` : mod}` : notation
-    roll(fullNotation, stat.toUpperCase())
-  }
+  } = useGameContext();
 
   return (
-    <div className="sheet">
-      <HpBar
-        hp={sheet.hp}
-        tempHp={sheet.tempHp}
-        maxHp={sheet.maxHp}
-        onHpChange={val => updateField('hp', val)}
-        onTempHpChange={val => updateField('tempHp', val)}
-        onMaxHpChange={val => updateField('maxHp', val)}
-      />
-
-      <StatGrid sheet={sheet} updateField={updateField} rollStat={rollStat} />
-      
-      <FormField label="Character" htmlFor="character">
-        <Input
-          value={sheet.name}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => updateField('name', e.target.value)}
-        />
-      </FormField>
-      <FormField label="Class" htmlFor="class">
-        <Select
-          value={sheet.class}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-            updateField('class', e.target.value)
-          }
-        >
-          <option value="">No class</option>
-          {classes.map(cls => (
-            <option key={cls} value={cls}>{cls}</option>
-          ))}
-        </Select>
-      </FormField>
-
-      <FormField label="Trait" htmlFor="trait">
-        <Input
-          value={sheet.trait}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            updateField('trait', e.target.value)
-          }
-        />
-      </FormField>
-      <FormField label="Background" htmlFor="background">
-        <Input
-          value={sheet.background}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            updateField('background', e.target.value)
-          }
-        />
-      </FormField>
-
-      <div className="secondary-stats">
-        <FormField label="Armor" htmlFor="armor">
-          <NumericAttribute
-            id="armor"
-            value={sheet.armor}
-            onChange={val => updateField('armor', val)}
-            min={0}
-          />
-        </FormField>
-        <FormField label="Omens" htmlFor="omens">
-          <NumericAttribute
-            id="omens"
-            value={sheet.omens}
-            onChange={val => updateField('omens', val)}
-            min={0}
-          />
-        </FormField>
-        <FormField label="Silver" htmlFor="silver">
-          <NumericAttribute
-            id="silver"
-            value={sheet.silver}
-            onChange={val => updateField('silver', val)}
-            min={0}
-          />
-        </FormField>
-      </div>
-    </div>
-  )
+    <main className="flex-1 overflow-y-auto px-4 pt-4 pb-24 space-y-8 scroll-smooth">
+      <section className="flex flex-col items-center text-center">
+        <h2 className="text-6xl font-extrabold uppercase jagged-title leading-none mb-1 text-primary">
+          {sheet.name || "Vile Snot-Eater"}
+        </h2>
+        <p className="text-primary/80 italic text-sm">
+          {sheet.class || "Gutterborn Scum"}
+        </p>
+      </section>
+      <section className="grid grid-cols-2 gap-4">
+        <div className="relative flex flex-col items-center justify-center p-6 bg-primary text-black">
+          <div className="absolute top-2 left-2 opacity-30">
+            <span className="material-symbols-outlined text-sm">favorite</span>
+          </div>
+          <p className="text-xs font-black uppercase tracking-tighter mb-1">
+            Hit Points
+          </p>
+          <p className="text-5xl font-black leading-none tracking-tighter">
+            {String(sheet.hp).padStart(2, "0")}
+            <span className="text-2xl opacity-60">/{sheet.maxHp}</span>
+          </p>
+        </div>
+        <div className="relative flex flex-col items-center justify-center p-6 bg-black border-4 border-primary text-primary">
+          <div className="absolute top-2 left-2 opacity-50">
+            <span className="material-symbols-outlined text-sm">
+              auto_fix_high
+            </span>
+          </div>
+          <p className="text-xs font-black uppercase tracking-tighter mb-1">
+            Omens
+          </p>
+          <p className="text-5xl font-black leading-none tracking-tighter">
+            {String(sheet.omens).padStart(2, "0")}
+          </p>
+        </div>
+      </section>
+      <section className="grid grid-cols-2 gap-3">
+        <div className="stat-card p-4 flex flex-col items-start bg-card-dark border-l-8 border-l-primary">
+          <span className="material-symbols-outlined text-primary mb-2 text-xl">
+            swords
+          </span>
+          <h3 className="text-[10px] font-bold text-primary/70 uppercase tracking-widest">
+            Strength
+          </h3>
+          <p className="text-4xl font-black tracking-tighter text-white">
+            {sheet.str}
+          </p>
+        </div>
+        <div className="stat-card p-4 flex flex-col items-start bg-card-dark border-l-8 border-l-primary">
+          <span className="material-symbols-outlined text-primary mb-2 text-xl">
+            bolt
+          </span>
+          <h3 className="text-[10px] font-bold text-primary/70 uppercase tracking-widest">
+            Agility
+          </h3>
+          <p className="text-4xl font-black tracking-tighter text-white">
+            {sheet.agi}
+          </p>
+        </div>
+        <div className="stat-card p-4 flex flex-col items-start bg-card-dark border-l-8 border-l-primary">
+          <span className="material-symbols-outlined text-primary mb-2 text-xl">
+            visibility
+          </span>
+          <h3 className="text-[10px] font-bold text-primary/70 uppercase tracking-widest">
+            Presence
+          </h3>
+          <p className="text-4xl font-black tracking-tighter text-white">
+            {sheet.pre}
+          </p>
+        </div>
+        <div className="stat-card p-4 flex flex-col items-start bg-card-dark border-l-8 border-l-primary">
+          <span className="material-symbols-outlined text-primary mb-2 text-xl">
+            shield
+          </span>
+          <h3 className="text-[10px] font-bold text-primary/70 uppercase tracking-widest">
+            Toughness
+          </h3>
+          <p className="text-4xl font-black tracking-tighter text-white">
+            {sheet.tou}
+          </p>
+        </div>
+      </section>
+    </main>
+  );
 }

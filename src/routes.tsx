@@ -1,42 +1,89 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
-import { Suspense, lazy } from 'react'
-import Navbar from './components/Navbar'
-import { useSettingsStore } from './stores/settingsStore'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Suspense, lazy } from "react";
+import { MainLayout } from "./layout/MainLayout";
 
-const StartPage = lazy(() => import('./components/StartPage'))
-const SheetPage = lazy(() => import('./components/SheetPage'))
-const LogView = lazy(() => import('./components/LogView'))
-const CharacterGenerator = lazy(() => import('./mork_borg/components/CharacterGenerator'))
-const DiceDemo = lazy(() => import('./components/DiceDemo'))
+const RosterPage = lazy(() =>
+  import("./pages/RosterPage").then((module) => ({
+    default: module.RosterPage,
+  }))
+);
+const ArmoryPage = lazy(() =>
+  import("./pages/ArmoryPage").then((module) => ({
+    default: module.ArmoryPage,
+  }))
+);
+const SettingsPage = lazy(() =>
+  import("./pages/SettingsPage").then((module) => ({
+    default: module.SettingsPage,
+  }))
+);
+const CharacterGenerator = lazy(
+  () => import("./mork_borg/components/CharacterGenerator")
+);
+const SheetPage = lazy(() => import("./components/SheetPage"));
+const SystemSelectionPage = lazy(() =>
+  import("./pages/SystemSelectionPage").then((module) => ({
+    default: module.SystemSelectionPage,
+  }))
+);
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <MainLayout />,
+    children: [
+      {
+        index: true,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <RosterPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "armory",
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <ArmoryPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "settings",
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <SettingsPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "generator",
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <CharacterGenerator />
+          </Suspense>
+        ),
+      },
+      {
+        path: "sheet/:id",
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <SheetPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "select-system",
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <SystemSelectionPage />
+          </Suspense>
+        ),
+      },
+    ],
+  },
+]);
 
 export default function AppRoutes() {
-  const navPosition = useSettingsStore(state => state.navPosition)
-  const offsetClass = {
-    top: 'mt-16',
-    bottom: '',
-    left: 'ml-24',
-    right: 'mr-24'
-  }[navPosition]
-
-  return (
-    <>
-      <Navbar />
-      <div className={offsetClass}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Routes>
-            <Route path="/" element={<Navigate to="/characters" replace />} />
-            <Route path="/characters" element={<StartPage />} />
-            <Route path="/dices" element={<StartPage />} />
-            <Route path="/trays" element={<StartPage />} />
-            <Route path="/settings" element={<StartPage />} />
-            <Route path="/generator" element={<CharacterGenerator />} />
-            <Route path="/sheet/:id" element={<SheetPage />} />
-            <Route path="/log" element={<LogView />} />
-            <Route path="/dice-demo" element={<DiceDemo />} />
-            <Route path="*" element={<Navigate to="/characters" replace />} />
-          </Routes>
-        </Suspense>
-      </div>
-    </>
-  )
+  return <RouterProvider router={router} />;
 }
