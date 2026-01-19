@@ -24,16 +24,15 @@ export default function AppRoutes() {
       <div className={offsetClass}>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-            <Route path="/" element={<Navigate to="/characters" replace />} />
-            <Route path="/characters" element={<StartPage />} />
-            <Route path="/dices" element={<StartPage />} />
-            <Route path="/trays" element={<StartPage />} />
+            <Route path="/" element={<Navigate to="/roster" replace />} />
+            <Route path="/roster" element={<StartPage />} />
+            <Route path="/armory" element={<StartPage />} />
             <Route path="/settings" element={<StartPage />} />
             <Route path="/generator" element={<CharacterGenerator />} />
             <Route path="/sheet/:id" element={<SheetPage />} />
             <Route path="/log" element={<LogView />} />
             <Route path="/dice-demo" element={<DiceDemo />} />
-            <Route path="*" element={<Navigate to="/characters" replace />} />
+            <Route path="*" element={<Navigate to="/roster" replace />} />
           </Routes>
         </Suspense>
       </div>

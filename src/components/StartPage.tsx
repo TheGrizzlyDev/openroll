@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useGameContext } from '../stores/GameContext'
 import { FileInput } from './FileInput'
@@ -12,20 +12,17 @@ import {
 } from './ui'
 import { PageContainer, Section, Stack, Flex } from '../layout'
 import { sortCharactersByLastAccess } from '../sortCharactersByLastAccess'
-import { useDiceSetStore, type DiceSet } from '../stores/diceSetStore'
-import { useTraySetStore } from '../stores/traySetStore'
-import GeneralSettings from './GeneralSettings'
 
-type StartTab = 'characters' | 'dices' | 'trays' | 'settings'
+type StartTab = 'roster' | 'armory' | 'settings'
 
 export default function StartPage() {
-    const {
-      state: { characters, lastAccess, overlay },
-      dispatch,
-      loadCharacter,
-      deleteCharacter,
-      createCharacter,
-      exportCharacters,
+  const {
+    state: { characters, lastAccess, overlay },
+    dispatch,
+    loadCharacter,
+    deleteCharacter,
+    createCharacter,
+    exportCharacters,
     importCharacters,
     overlayTimeout,
     setOverlayTimeout
@@ -95,112 +92,19 @@ export default function StartPage() {
     navigate('/generator')
   }
 
-    const sortedIndexes = sortCharactersByLastAccess(characters, lastAccess)
+  const sortedIndexes = sortCharactersByLastAccess(characters, lastAccess)
 
-  const diceSets = useDiceSetStore(state => state.sets)
-  const activateDiceSet = useDiceSetStore(state => state.activateSet)
-  const sortedDiceSets = [...diceSets].sort((a, b) => b.updatedAt - a.updatedAt)
-
-  const { sets: traySets, setActive: setActiveTraySet } = useTraySetStore(state => ({
-    sets: state.sets,
-    setActive: state.setActive
-  }))
-  const activeTraySet = traySets.find(s => s.active)?.id ?? null
-
-  const activeTab = location.pathname.split('/')[1] as StartTab
-
-  const DiceSetCard = ({ set }: { set: DiceSet }) => {
-    const { id, name, active } = set
-    const canvasRef = useRef<HTMLCanvasElement>(null)
-    useEffect(() => {
-      const ctx = canvasRef.current?.getContext('2d')
-      if (!ctx) return
-      const color = `hsl(${Math.floor(Math.random() * 360)} 70% 50%)`
-      ctx.fillStyle = color
-      ctx.beginPath()
-      ctx.arc(25, 25, 20, 0, Math.PI * 2)
-      ctx.fill()
-    }, [])
-    return (
-      <Stack
-        gap="0.5rem"
-        style={{
-          padding: '0.5rem',
-          border: '1px solid',
-          borderRadius: '0.25rem',
-          alignItems: 'center'
-        }}
-      >
-        <canvas ref={canvasRef} width={50} height={50} />
-        <Button onClick={() => activateDiceSet(id)} disabled={active}>
-          {active ? 'Active' : 'Use'}
-        </Button>
-        <div>{name}</div>
-      </Stack>
-    )
-  }
-
-  const TraySetCard = ({ id, name }: { id: string; name: string }) => {
-    const canvasRef = useRef<HTMLCanvasElement>(null)
-    useEffect(() => {
-      const ctx = canvasRef.current?.getContext('2d')
-      if (!ctx) return
-      const color = `hsl(${Math.floor(Math.random() * 360)} 70% 50%)`
-      ctx.fillStyle = color
-      ctx.fillRect(5, 5, 40, 40)
-    }, [])
-    return (
-      <Stack
-        gap="0.5rem"
-        style={{
-          padding: '0.5rem',
-          border: '1px solid',
-          borderRadius: '0.25rem',
-          alignItems: 'center'
-        }}
-      >
-        <canvas ref={canvasRef} width={50} height={50} />
-        <Button onClick={() => setActiveTraySet(id)} disabled={activeTraySet === id}>
-          {activeTraySet === id ? 'Active' : 'Use'}
-        </Button>
-        <div>{name}</div>
-      </Stack>
-    )
-  }
-
-  const NoTrayCard = () => {
-    const canvasRef = useRef<HTMLCanvasElement>(null)
-    useEffect(() => {
-      const ctx = canvasRef.current?.getContext('2d')
-      if (!ctx) return
-      const color = `hsl(${Math.floor(Math.random() * 360)} 70% 50%)`
-      ctx.fillStyle = color
-      ctx.fillRect(5, 5, 40, 40)
-    }, [])
-    return (
-      <Stack
-        gap="0.5rem"
-        style={{
-          padding: '0.5rem',
-          border: '1px solid',
-          borderRadius: '0.25rem',
-          alignItems: 'center'
-        }}
-      >
-        <canvas ref={canvasRef} width={50} height={50} />
-        <Button onClick={() => setActiveTraySet(null)} disabled={activeTraySet === null}>
-          {activeTraySet === null ? 'Active' : 'Use'}
-        </Button>
-        <div>No Tray</div>
-      </Stack>
-    )
-  }
+  const pathTab = location.pathname.split('/')[1]
+  const activeTab: StartTab =
+    pathTab === 'roster' || pathTab === 'armory' || pathTab === 'settings'
+      ? pathTab
+      : 'roster'
   const renderTab = () => {
     switch (activeTab) {
-      case 'characters':
+      case 'roster':
         return (
           <Section
-            title="Characters"
+            title="Roster"
             actions={
               <>
                 <Button onClick={handleCreate}>Create New</Button>
@@ -211,6 +115,9 @@ export default function StartPage() {
               </>
             }
           >
+            {sortedIndexes.length === 0 ? (
+              <p>No characters yet. Create a new one to get started.</p>
+            ) : (
               <ul
                 style={{
                   listStyle: 'none',
@@ -234,38 +141,24 @@ export default function StartPage() {
                   </li>
                 ))}
               </ul>
+            )}
           </Section>
         )
-      case 'dices':
+      case 'armory':
         return (
-          <Section title="Dices">
-            <Flex gap="1rem" wrap="wrap">
-              {sortedDiceSets.map(set => (
-                <DiceSetCard key={set.id} set={set} />
-              ))}
-            </Flex>
-          </Section>
-        )
-      case 'trays':
-        return (
-          <Section title="Trays">
-            <Flex gap="1rem" wrap="wrap">
-              <NoTrayCard />
-              {traySets.map(set => (
-                <TraySetCard key={set.id} id={set.id} name={set.name} />
-              ))}
-            </Flex>
+          <Section title="Armory">
+            <Stack gap="0.5rem">
+              <p>Armory tools and loadouts are coming soon.</p>
+              <p>Check back for equipment presets and shared loadouts.</p>
+            </Stack>
           </Section>
         )
       case 'settings':
         return (
           <Section title="Settings">
-            <Stack gap="1rem">
-              <Section title="General Settings">
-                <Stack gap="1rem">
-                  <GeneralSettings />
-                </Stack>
-              </Section>
+            <Stack gap="0.5rem">
+              <p>Settings customization is on the way.</p>
+              <p>We will add profile and theme controls in a future update.</p>
             </Stack>
           </Section>
         )
@@ -309,27 +202,27 @@ export default function StartPage() {
       )}
 
       {overlay.visible && (
-          <DialogRoot
-            open={overlay.visible}
-            onOpenChange={open => {
-              if (!open) {
-                if (overlayTimeout) clearTimeout(overlayTimeout)
-                setOverlayTimeout(null)
-                dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } })
-              }
-            }}
-          >
-            <DialogBackdrop />
-            <DialogPositioner>
-              <DialogContent>
-                <span>{overlay.message}</span>
-                <DialogCloseTrigger asChild>
-                  <Button type="button">×</Button>
-                </DialogCloseTrigger>
-              </DialogContent>
-            </DialogPositioner>
-          </DialogRoot>
-        )}
+        <DialogRoot
+          open={overlay.visible}
+          onOpenChange={open => {
+            if (!open) {
+              if (overlayTimeout) clearTimeout(overlayTimeout)
+              setOverlayTimeout(null)
+              dispatch({ type: 'SET_OVERLAY', overlay: { ...overlay, visible: false } })
+            }
+          }}
+        >
+          <DialogBackdrop />
+          <DialogPositioner>
+            <DialogContent>
+              <span>{overlay.message}</span>
+              <DialogCloseTrigger asChild>
+                <Button type="button">×</Button>
+              </DialogCloseTrigger>
+            </DialogContent>
+          </DialogPositioner>
+        </DialogRoot>
+      )}
     </>
   )
 }
