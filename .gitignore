@@ -28,3 +28,6 @@ dist-ssr
 
 *storybook.log
 storybook-static
+
+# Test results
+test-results

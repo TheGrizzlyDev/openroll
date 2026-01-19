@@ -14,3 +14,13 @@ utilities to help run sessions at the table or online.
 - Persistent notes and character sheets.
 - Animated 3D dice rolls with customizable appearance.
 
+## Playwright E2E with Nix
+
+If you have Nix installed, you can use the provided flake to run Playwright
+tests with the browser binaries supplied by Nix (no downloads required).
+
+```bash
+nix develop
+npm install
+npm run test:e2e
+```

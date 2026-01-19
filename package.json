@@ -16,6 +16,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:e2e": "playwright test",
+    "test:e2e:update-snapshots": "playwright test --update-snapshots",
     "typecheck": "tsc --noEmit",
     "update-submodules": "git submodule update --init --recursive && git submodule sync"
   },
