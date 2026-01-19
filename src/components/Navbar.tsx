@@ -5,12 +5,11 @@ import { useSettingsStore, type ButtonVariant } from '../stores/settingsStore'
 import { useGameContext } from '../stores/GameContext'
 import { Flex } from '@radix-ui/themes'
 
-type StartTab = 'characters' | 'dices' | 'trays' | 'settings'
+type StartTab = 'roster' | 'armory' | 'settings'
 
 const tabs: { id: StartTab; label: string }[] = [
-  { id: 'characters', label: 'Characters' },
-  { id: 'dices', label: 'Dices' },
-  { id: 'trays', label: 'Trays' },
+  { id: 'roster', label: 'Roster' },
+  { id: 'armory', label: 'Armory' },
   { id: 'settings', label: 'Settings' }
 ]
 
@@ -53,7 +52,7 @@ export default function Navbar() {
   const { current } = state
   const pathname = location.pathname
   const activeTab = pathname.startsWith('/sheet/')
-    ? 'characters'
+    ? 'roster'
     : (pathname.split('/')[1] as StartTab)
 
   const vertical = navPosition === 'left' || navPosition === 'right'
@@ -165,11 +164,11 @@ export default function Navbar() {
             )}
             aria-current={activeTab === tab.id ? 'page' : undefined}
             onClick={() => {
-              if (tab.id === 'characters') {
+              if (tab.id === 'roster') {
                 if (current !== null) {
                   navigate(`/sheet/${current}`)
                 } else {
-                  navigate('/characters')
+                  navigate('/roster')
                 }
               } else {
                 navigate('/' + tab.id)
@@ -206,4 +205,3 @@ function buttonProps(variant: ButtonVariant, active = false) {
   }
   return { variant }
 }
-

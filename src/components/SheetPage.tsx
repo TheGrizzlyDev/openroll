@@ -253,7 +253,7 @@ function SheetTabsNav() {
             width: '100%',
           }}
         >
-          <Button variant="ghost" onClick={() => navigate('/characters')}>
+          <Button variant="ghost" onClick={() => navigate('/roster')}>
             ← Back
           </Button>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
