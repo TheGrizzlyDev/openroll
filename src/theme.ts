@@ -25,6 +25,19 @@ export const themes = {
     },
     borderWidth: '1px',
   },
+  nexus: {
+    colors: {
+      bg: '#121212',
+      bgAlt: '#1e1e1e',
+      text: '#f5f5f5',
+      accent: '#9333ea',
+      error: '#dc2626',
+    },
+    fonts: {
+      body: 'Cinzel, serif',
+    },
+    borderWidth: '1px',
+  },
 } as const
 
 export type ThemeName = keyof typeof themes
