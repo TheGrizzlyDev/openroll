@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { describe, it, expect, beforeAll, afterEach } from 'vitest'
+import { render, screen, cleanup } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import AppRoutes from '../src/routes'
 
@@ -26,6 +26,10 @@ beforeAll(() => {
   }
 })
 
+afterEach(() => {
+  cleanup()
+})
+
 describe('route destinations', () => {
   it('renders roster screen for /roster', async () => {
     renderWithRoute('/roster')
@@ -50,5 +54,23 @@ describe('route destinations', () => {
 
     const rosterHeadings = await screen.findAllByRole('heading', { name: 'Roster' })
     expect(rosterHeadings.length).toBeGreaterThan(0)
+  })
+})
+
+describe('navbar visibility', () => {
+  it('renders navbar buttons on Nexus routes', async () => {
+    renderWithRoute('/roster')
+
+    expect(await screen.findByRole('button', { name: 'Armory' })).toBeTruthy()
+    expect(await screen.findByRole('button', { name: 'Settings' })).toBeTruthy()
+  })
+
+  it('hides navbar buttons on Realm routes', async () => {
+    renderWithRoute('/generator')
+
+    expect(await screen.findByRole('heading', { name: /Character Generator/ }))
+      .toBeTruthy()
+    expect(screen.queryByRole('button', { name: 'Armory' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Settings' })).toBeNull()
   })
 })

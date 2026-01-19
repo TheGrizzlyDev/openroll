@@ -2,7 +2,8 @@ import { useNavigate } from 'react-router-dom'
 import type { ChangeEvent } from 'react'
 import { useGameContext } from '../../stores/GameContext'
 import { Select, Button } from '../../components/ui'
-import { PageContainer, Section } from '../../layout'
+import { Flex, PageContainer, Section } from '../../layout'
+import RealmBackButton from '../../components/RealmBackButton'
 import classes from '../classes'
 import type { InventoryItem, Scroll } from '../generateCharacter'
 
@@ -35,7 +36,14 @@ export default function CharacterGenerator() {
   }
 
   return (
-    <PageContainer title="Character Generator">
+    <PageContainer
+      title={
+        <Flex align="center" gap="0.5rem">
+          <RealmBackButton />
+          <span>Character Generator</span>
+        </Flex>
+      }
+    >
       <Section
         title="Class"
         actions={<Button onClick={handleRollClass}>Roll Class</Button>}

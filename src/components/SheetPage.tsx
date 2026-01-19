@@ -1,11 +1,12 @@
 import { useEffect, type CSSProperties, useState, useRef } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import DiceRoller from '../DiceRoller'
 import Inventory from '../mork_borg/Inventory'
 import CharacterSheet from '../mork_borg/CharacterSheet'
 import LogView from './LogView'
 import Notes from './Notes'
 import { useGameContext } from '../stores/GameContext'
+import RealmBackButton from './RealmBackButton'
 import {
   Button,
   Input,
@@ -60,30 +61,33 @@ export default function SheetPage() {
 
   const characterTitle = (
     <Flex align="center" gap="var(--space-2)">
-      {editingName ? (
-        <Input
-          ref={nameInputRef}
-          value={sheet.name}
-          onChange={e =>
-            dispatch({ type: 'SET_SHEET', sheet: { ...sheet, name: e.target.value } })
-          }
-          onBlur={() => setEditingName(false)}
-          onKeyDown={e => {
-            if (e.key === 'Enter') e.currentTarget.blur()
-          }}
-          aria-label="Character name"
-          style={{ width: 'auto' }}
-        />
-      ) : (
-        <button
-          type="button"
-          onClick={() => setEditingName(true)}
-          style={{ background: 'none', border: 0, padding: 0, cursor: 'pointer' }}
-        >
-          {sheet.name}
-        </button>
-      )}
-      <span>– Mörk Borg</span>
+      <RealmBackButton />
+      <Flex align="center" gap="var(--space-2)">
+        {editingName ? (
+          <Input
+            ref={nameInputRef}
+            value={sheet.name}
+            onChange={e =>
+              dispatch({ type: 'SET_SHEET', sheet: { ...sheet, name: e.target.value } })
+            }
+            onBlur={() => setEditingName(false)}
+            onKeyDown={e => {
+              if (e.key === 'Enter') e.currentTarget.blur()
+            }}
+            aria-label="Character name"
+            style={{ width: 'auto' }}
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={() => setEditingName(true)}
+            style={{ background: 'none', border: 0, padding: 0, cursor: 'pointer' }}
+          >
+            {sheet.name}
+          </button>
+        )}
+        <span>– Mörk Borg</span>
+      </Flex>
     </Flex>
   )
 
@@ -191,8 +195,6 @@ function SheetTabsNav() {
   const {
     state: { activeTab },
   } = useGameContext()
-  const navigate = useNavigate()
-
   const [appearance, setAppearance] = useState<'light' | 'dark'>('light')
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
@@ -253,9 +255,6 @@ function SheetTabsNav() {
             width: '100%',
           }}
         >
-          <Button variant="ghost" onClick={() => navigate('/roster')}>
-            ← Back
-          </Button>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
             <TabsTrigger asChild value="character">
               <Button

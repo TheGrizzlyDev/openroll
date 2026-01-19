@@ -1,5 +1,5 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
-import { Suspense, lazy } from 'react'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { Suspense, lazy, useEffect } from 'react'
 import Navbar from './components/Navbar'
 import { useSettingsStore } from './stores/settingsStore'
 
@@ -11,17 +11,29 @@ const DiceDemo = lazy(() => import('./components/DiceDemo'))
 
 export default function AppRoutes() {
   const navPosition = useSettingsStore(state => state.navPosition)
+  const location = useLocation()
+  const isNexusRoute = ['/roster', '/armory', '/settings'].some(route =>
+    location.pathname === route || location.pathname.startsWith(`${route}/`)
+  )
   const offsetClass = {
     top: 'mt-16',
     bottom: '',
     left: 'ml-24',
     right: 'mr-24'
   }[navPosition]
+  const contentOffsetClass = isNexusRoute ? offsetClass : ''
+
+  useEffect(() => {
+    if (!isNexusRoute) {
+      document.documentElement.style.setProperty('--navbar-footprint', '0px')
+      document.documentElement.style.setProperty('--navbar-padding-bottom', '0px')
+    }
+  }, [isNexusRoute])
 
   return (
     <>
-      <Navbar />
-      <div className={offsetClass}>
+      {isNexusRoute && <Navbar />}
+      <div className={contentOffsetClass}>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             <Route path="/" element={<Navigate to="/roster" replace />} />
