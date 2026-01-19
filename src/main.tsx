@@ -3,17 +3,14 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import '@radix-ui/themes/styles.css'
 import App from './App'
-import { BrowserRouter } from 'react-router-dom'
 import { registerSW } from 'virtual:pwa-register'
 import AppThemeProvider from './AppThemeProvider'
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
-    <BrowserRouter basename={import.meta.env.BASE_URL || '/'}>
-      <AppThemeProvider>
-        <App />
-      </AppThemeProvider>
-    </BrowserRouter>
+    <AppThemeProvider>
+      <App />
+    </AppThemeProvider>
   </StrictMode>,
 )
 
