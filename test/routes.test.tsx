@@ -41,12 +41,16 @@ describe('route destinations', () => {
     renderWithRoute('/armory')
 
     expect(await screen.findByRole('heading', { name: 'Armory' })).toBeTruthy()
+    expect(await screen.findByTestId('under-construction')).toBeTruthy()
+    expect(await screen.findByRole('heading', { name: 'Under Construction' })).toBeTruthy()
   })
 
   it('renders settings screen for /settings', async () => {
     renderWithRoute('/settings')
 
     expect(await screen.findByRole('heading', { name: 'Settings' })).toBeTruthy()
+    expect(await screen.findByTestId('under-construction')).toBeTruthy()
+    expect(await screen.findByRole('heading', { name: 'Under Construction' })).toBeTruthy()
   })
 
   it('redirects the root route to roster', async () => {

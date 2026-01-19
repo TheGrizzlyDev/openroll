@@ -34,14 +34,16 @@ test.describe('Nexus visual states', () => {
   test('Armory placeholder', async ({ page }) => {
     await page.goto('/armory')
     await expect(page.getByRole('heading', { name: 'Armory' })).toBeVisible()
-    await expect(page.getByText('Armory tools and loadouts are coming soon.')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Under Construction' })).toBeVisible()
+    await expect(page.getByText("We're building the next set of tools for this space.")).toBeVisible()
     await expect(page).toHaveScreenshot('armory-placeholder.png')
   })
 
   test('Settings placeholder', async ({ page }) => {
     await page.goto('/settings')
     await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
-    await expect(page.getByText('Settings customization is on the way.')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Under Construction' })).toBeVisible()
+    await expect(page.getByText("We're building the next set of tools for this space.")).toBeVisible()
     await expect(page).toHaveScreenshot('settings-placeholder.png')
   })
 })

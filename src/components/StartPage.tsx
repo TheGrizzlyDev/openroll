@@ -10,8 +10,9 @@ import {
   DialogContent,
   DialogCloseTrigger,
 } from './ui'
-import { PageContainer, Section, Stack, Flex } from '../layout'
+import { PageContainer, Section, Flex } from '../layout'
 import { sortCharactersByLastAccess } from '../sortCharactersByLastAccess'
+import UnderConstruction from './UnderConstruction'
 
 type StartTab = 'roster' | 'armory' | 'settings'
 
@@ -145,23 +146,9 @@ export default function StartPage() {
           </Section>
         )
       case 'armory':
-        return (
-          <Section title="Armory">
-            <Stack gap="0.5rem">
-              <p>Armory tools and loadouts are coming soon.</p>
-              <p>Check back for equipment presets and shared loadouts.</p>
-            </Stack>
-          </Section>
-        )
+        return <UnderConstruction title="Armory" />
       case 'settings':
-        return (
-          <Section title="Settings">
-            <Stack gap="0.5rem">
-              <p>Settings customization is on the way.</p>
-              <p>We will add profile and theme controls in a future update.</p>
-            </Stack>
-          </Section>
-        )
+        return <UnderConstruction title="Settings" />
       default:
         return null
     }
