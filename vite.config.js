@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { visualizer } from 'rollup-plugin-visualizer';
 
@@ -48,6 +49,7 @@ export default defineConfig(({ base = '/' }) => ({
   base,
   plugins: [
     react(),
+    tailwindcss(),
     nameBundle(),
 
     {
