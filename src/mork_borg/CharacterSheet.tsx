@@ -4,6 +4,7 @@ import { useGameContext } from '../stores/GameContext'
 import type { Sheet } from './sheet'
 import styles from './CharacterSheet.module.css'
 import SmartTextEditor from '../components/SmartTextEditor'
+import { MorkBorgOmlButton } from './MorkBorgOmlButton'
 import {
   DialogRoot,
   DialogBackdrop,
@@ -87,10 +88,10 @@ export default function CharacterSheet() {
   }
 
   const stats: { key: StatKey; label: string }[] = [
-    { key: 'str', label: 'Strength' },
-    { key: 'agi', label: 'Agility' },
-    { key: 'pre', label: 'Presence' },
-    { key: 'tou', label: 'Toughness' },
+    { key: 'str', label: 'STR' },
+    { key: 'agi', label: 'AGI' },
+    { key: 'pre', label: 'PRE' },
+    { key: 'tou', label: 'TOU' },
   ]
 
   const armors = [
@@ -129,7 +130,7 @@ export default function CharacterSheet() {
               className={`${styles.currentHp} ${vitalityFocus === 'hp' ? styles.focused : ''}`}
               onClick={() => setVitalityFocus('hp')}
             >
-              {sheet.hp.toString().padStart(2, '0')}
+              {sheet.hp}
             </span>
             <span
               className={`${styles.maxHp} ${vitalityFocus === 'maxHp' ? styles.focused : ''}`}
@@ -143,12 +144,25 @@ export default function CharacterSheet() {
       </div>
 
       {/* Armor Card */}
-      <div className={styles.armorCard} onClick={() => setIsArmorOverlayOpen(true)}>
-        <div className={styles.armorInfo}>
-          <h3>Armor</h3>
-          <p>{currentArmor.name}</p>
+      <div className={styles.armorCard}>
+        <div className={styles.armorMain} onClick={() => setIsArmorOverlayOpen(true)}>
+          <div className={styles.armorInfo}>
+            <h3>Armor</h3>
+            <p>{currentArmor.name}</p>
+          </div>
+          <div className={styles.armorDie}>{currentArmor.die}</div>
         </div>
-        <div className={styles.armorDie}>{currentArmor.die}</div>
+        {currentArmor.tier > 0 && (
+          <button
+            className={styles.armorRollBtn}
+            onClick={(e) => {
+              e.stopPropagation()
+              roll(`1${currentArmor.die.toLowerCase()}`, 'ARMOR')
+            }}
+          >
+            ⚄
+          </button>
+        )}
       </div>
 
       <div className={styles.statsSection}>
@@ -231,7 +245,8 @@ export default function CharacterSheet() {
                         fontWeight: 900,
                         marginBottom: '0.5rem',
                         textTransform: 'uppercase',
-                        fontFamily: 'inherit'
+                        fontFamily: 'inherit',
+                        color: '#000'
                       }}
                     />
                     <textarea
@@ -245,7 +260,8 @@ export default function CharacterSheet() {
                         marginTop: '0.5rem',
                         fontFamily: 'inherit',
                         padding: '1rem',
-                        fontWeight: 700
+                        fontWeight: 700,
+                        color: '#000'
                       }}
                     />
                     <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
@@ -265,31 +281,47 @@ export default function CharacterSheet() {
                         SAVE
                       </button>
                       <button
-                        onClick={() => handleDeleteItem(item.id)}
+                        onClick={() => setEditingItemId(null)}
                         style={{
                           flex: 1,
-                          background: '#000',
-                          color: '#E61E8D',
+                          background: 'transparent',
+                          color: '#000',
+                          border: '4px solid #000',
                           fontWeight: 950,
                           padding: '0.75rem',
-                          border: 'none',
                           cursor: 'pointer',
                           textTransform: 'uppercase'
                         }}
                       >
-                        DELETE
+                        CANCEL
                       </button>
                     </div>
                   </div>
                 ) : (
-                  <div onClick={() => setEditingItemId(item.id)}>
+                  <div style={{ flex: 1 }}>
                     <h4>{item.name}</h4>
                     <div className={styles.gearDescription}>
-                      {RenderOml(item.notes || '', roll)}
+                      {RenderOml(item.notes || '', roll, { Button: MorkBorgOmlButton })}
                     </div>
                   </div>
                 )}
               </div>
+              {editingItemId !== item.id && (
+                <div style={{ display: 'flex', gap: '0.5rem', marginLeft: '1rem' }}>
+                  <button
+                    className={styles.gearEditBtn}
+                    onClick={() => setEditingItemId(item.id)}
+                  >
+                    ✎
+                  </button>
+                  <button
+                    className={styles.gearRemoveBtn}
+                    onClick={() => handleDeleteItem(item.id)}
+                  >
+                    🗑
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>

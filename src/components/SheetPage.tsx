@@ -72,12 +72,12 @@ export default function SheetPage() {
             background: 'none',
             border: 'none',
             color: '#FFFFFF',
-            fontSize: '0.9rem',
+            fontSize: '1.25rem',
             fontWeight: '900',
             cursor: 'pointer',
-            padding: '0.25rem 0',
+            padding: '0.5rem 0.75rem',
             textTransform: 'uppercase',
-            textDecoration: 'underline'
+            textDecoration: 'none'
           }}
         >
           ← ROSTER

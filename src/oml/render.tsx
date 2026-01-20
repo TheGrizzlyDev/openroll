@@ -5,25 +5,34 @@ import React from 'react'
 import InventoryLookup from '../components/InventoryLookup'
 import { Button } from '../components/ui'
 
+export interface OmlComponents {
+  Button?: React.ComponentType<{ onClick: () => void; children: React.ReactNode }>
+  Link?: React.ComponentType<{ href: string; children: React.ReactNode }>
+}
+
 export function RenderNodes(
   nodes: OmlNode[],
-  ctx: { roll: (_notation: string) => unknown; applyEffect: (_node: ApplyNode) => unknown }
+  ctx: { roll: (_notation: string) => unknown; applyEffect: (_node: ApplyNode) => unknown },
+  components?: OmlComponents
 ) {
+  const ButtonComponent = components?.Button || Button
+  const LinkComponent = components?.Link || (({ href, children }) => <a href={href}>{children}</a>)
+
   return nodes.map((node, i) => {
     if (node.type === 'dice') {
       const label = node.description ?? node.notation
       return (
-        <Button type="button" key={i} onClick={() => ctx.roll(node.notation)}>
+        <ButtonComponent key={i} onClick={() => ctx.roll(node.notation)}>
           {label}
-        </Button>
+        </ButtonComponent>
       )
     }
     if (node.type === 'apply') {
       const label = node.description ?? `${node.target} ${node.value}`
       return (
-        <Button type="button" key={i} onClick={() => ctx.applyEffect(node)}>
+        <ButtonComponent key={i} onClick={() => ctx.applyEffect(node)}>
           {label}
-        </Button>
+        </ButtonComponent>
       )
     }
     if (node.type === 'if') {
@@ -52,7 +61,7 @@ export function RenderNodes(
         <React.Fragment key={i}>
           {node.branches.map((br, idx) => (
             <span key={idx} style={idx === active ? undefined : { opacity: 0.5 }}>
-              {RenderNodes(br.children, ctx)}
+              {RenderNodes(br.children, ctx, components)}
             </span>
           ))}
         </React.Fragment>
@@ -74,9 +83,9 @@ export function RenderNodes(
     if (node.type === 'link') {
       const label = node.description ?? node.text
       return (
-        <a key={i} href={node.url}>
+        <LinkComponent key={i} href={node.url}>
           {label}
-        </a>
+        </LinkComponent>
       )
     }
     const parts = node.text.split(/(\r?\n)/)
@@ -90,10 +99,14 @@ export function RenderNodes(
   })
 }
 
-export function RenderOml(text: string, rollFn?: (_notation: string) => unknown) {
+export function RenderOml(
+  text: string,
+  rollFn?: (_notation: string) => unknown,
+  components?: OmlComponents
+) {
   const { roll, applyEffect } = useGameContext.getState()
   const doRoll = rollFn ?? roll
   const nodes = parseOml((text || '').trim())
-  return <>{RenderNodes(nodes, { roll: doRoll, applyEffect })}</>
+  return <>{RenderNodes(nodes, { roll: doRoll, applyEffect }, components)}</>
 }
 
