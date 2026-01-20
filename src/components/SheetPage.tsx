@@ -1,9 +1,10 @@
 import { useEffect, type CSSProperties, useState, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { applyTheme } from '../theme'
 import DiceRoller from '../DiceRoller'
 import Inventory from '../mork_borg/Inventory'
 import CharacterSheet from '../mork_borg/CharacterSheet'
+import DiceDrawer from '../mork_borg/DiceDrawer'
 import LogView from './LogView'
 import Notes from './Notes'
 import { useGameContext } from '../stores/GameContext'
@@ -33,15 +34,10 @@ export default function SheetPage() {
     loadCharacter
   } = useGameContext()
   const { id } = useParams()
+  const navigate = useNavigate()
 
-  const [editingName, setEditingName] = useState(false)
-  const nameInputRef = useRef<HTMLInputElement>(null)
+  const [isDiceDrawerOpen, setIsDiceDrawerOpen] = useState(false)
 
-  useEffect(() => {
-    if (editingName) nameInputRef.current?.focus()
-  }, [editingName])
-
-  // Apply Mork Borg theme when entering the sheet
   useEffect(() => {
     applyTheme('dark')
   }, [])
@@ -61,55 +57,56 @@ export default function SheetPage() {
     }
   }, [id, loadCharacter])
 
-  const tabTitle =
-    activeTab === 'character'
-      ? 'Character'
-      : activeTab === 'inventory'
-        ? 'Inventory'
-        : activeTab === 'notes'
-          ? 'Notes'
-          : 'Log'
-
-  const characterTitle = (
-    <Flex align="center" gap="var(--space-2)">
-      <RealmBackButton />
-      <Flex align="center" gap="var(--space-2)">
-        {editingName ? (
-          <Input
-            ref={nameInputRef}
-            value={sheet.name}
-            onChange={e =>
-              dispatch({ type: 'SET_SHEET', sheet: { ...sheet, name: e.target.value } })
-            }
-            onBlur={() => setEditingName(false)}
-            onKeyDown={e => {
-              if (e.key === 'Enter') e.currentTarget.blur()
-            }}
-            aria-label="Character name"
-            style={{ width: 'auto' }}
-          />
-        ) : (
-          <button
-            type="button"
-            onClick={() => setEditingName(true)}
-            style={{ background: 'none', border: 0, padding: 0, cursor: 'pointer' }}
-          >
-            {sheet.name}
-          </button>
-        )}
-        <span>– Mörk Borg</span>
-      </Flex>
-    </Flex>
-  )
-
   return (
-    <PageContainer title={characterTitle}>
-      <Section title="">
+    <div style={{ background: '#F7D02C', minHeight: '100vh', position: 'relative', overflowX: 'hidden' }}>
+      {/* Header Bar */}
+      <header style={{
+        background: '#000000',
+        color: '#FFFFFF',
+        height: '50px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 1rem',
+        position: 'sticky',
+        top: 0,
+        zIndex: 1100
+      }}>
+        <button
+          onClick={() => navigate('/roster')}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: '#FFFFFF',
+            fontSize: '1rem',
+            fontWeight: '900',
+            cursor: 'pointer',
+            padding: 0
+          }}
+        >
+          ← ROSTER
+        </button>
+        <button
+          onClick={() => setIsDiceDrawerOpen(!isDiceDrawerOpen)}
+          style={{
+            background: '#E61E8D',
+            border: 'none',
+            color: '#000000',
+            fontSize: '1rem',
+            fontWeight: '900',
+            padding: '0.25rem 1rem',
+            cursor: 'pointer'
+          }}
+        >
+          DICE
+        </button>
+      </header>
+
+      <DiceDrawer isOpen={isDiceDrawerOpen} onClose={() => setIsDiceDrawerOpen(false)} />
+
+      <main style={{ paddingBottom: '4rem' }}>
         <CharacterSheet />
-        <Inventory />
-        <Notes />
-        <LogView />
-      </Section>
+      </main>
 
       {overlay.visible && (
         <DialogRoot
@@ -134,6 +131,7 @@ export default function SheetPage() {
                     className="dice-preview"
                     camera={{ position: [0, 5, 5], fov: 50 }}
                     shadows
+                    style={{ height: '300px' }}
                   >
                     <ambientLight intensity={0.5} />
                     <directionalLight position={[5, 10, 5]} />
@@ -167,7 +165,7 @@ export default function SheetPage() {
           </DialogPositioner>
         </DialogRoot>
       )}
-    </PageContainer>
+    </div>
   )
 }
 

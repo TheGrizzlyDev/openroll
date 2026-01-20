@@ -43,22 +43,22 @@ test.describe('Mork Borg Character Sheet', () => {
         // Navigate to the sheet
         await page.goto('/sheet/argale')
 
-        // Verify key elements using SOFT assertions to ensure screenshot is taken even if selectors fail strict/partial checks
-        await expect.soft(page.locator('h1', { hasText: 'DYING' })).toBeVisible()
-
         // Check for character name (Argale) 
-        await expect.soft(page.locator('text=Argale').first()).toBeVisible()
+        await expect.soft(page.locator('h1', { hasText: 'Argale' })).toBeVisible()
 
-        // Stats - Robust selection using class filtering
-        await expect.soft(page.locator('.mork-stat-box').filter({ hasText: 'STRENGTH' })).toBeVisible()
-        await expect.soft(page.locator('.mork-stat-box').filter({ hasText: 'AGILITY' })).toBeVisible()
+        // Stats - Checks for Strength and Agility in the new layout
+        await expect.soft(page.getByText('Strength', { exact: true })).toBeVisible()
+        await expect.soft(page.getByText('Agility', { exact: true })).toBeVisible()
 
-        // HP & Omens
-        await expect.soft(page.getByText('Hit Points', { exact: true })).toBeVisible()
+        // Vitality & Omens
+        await expect.soft(page.getByText('Vitality', { exact: true })).toBeVisible()
         await expect.soft(page.getByText('Omens', { exact: true })).toBeVisible()
 
+        // Check for DICE button
+        await expect.soft(page.locator('button', { hasText: 'DICE' })).toBeVisible()
+
         // Capture screenshot to artifacts directory
-        const artifactPath = '/home/antonio/.gemini/antigravity/brain/97c4cbd5-61db-47e2-a5fc-f8cee5aa72ab/mork_borg_sheet.png'
+        const artifactPath = '/home/antonio/.gemini/antigravity/brain/4005949a-f458-4c05-912f-1e28de59f2c3/mork_borg_sheet_new.png'
         await page.screenshot({ path: artifactPath, fullPage: true })
         test.info().attach('mork-borg-sheet', { path: artifactPath, contentType: 'image/png' })
     })

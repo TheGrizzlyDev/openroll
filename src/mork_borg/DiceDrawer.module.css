@@ -1,0 +1,87 @@
+.drawer {
+    position: fixed;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    background: #000000;
+    z-index: 1000;
+    transition: top 0.3s ease-in-out;
+    padding: 1rem;
+    box-sizing: border-box;
+    color: #F7D02C;
+}
+
+.drawer.open {
+    top: 50px;
+    /* Below the header */
+}
+
+.content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.diceGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.diceButton {
+    background: transparent;
+    border: 2px solid #F7D02C;
+    color: #F7D02C;
+    padding: 0.5rem;
+    font-family: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+}
+
+.diceButton:hover {
+    background: #F7D02C;
+    color: #000000;
+}
+
+.diceIcon {
+    font-size: 1.2rem;
+}
+
+.inputContainer {
+    width: 100%;
+}
+
+.rollInput {
+    width: 100%;
+    background: #000000;
+    border: 2px solid #F7D02C;
+    color: #F7D02C;
+    padding: 0.75rem;
+    font-family: inherit;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+.rollInput::placeholder {
+    color: rgba(247, 208, 44, 0.5);
+}
+
+.backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+}
+
+.drawer.open .backdrop {
+    display: block;
+}
