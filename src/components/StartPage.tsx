@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useGameContext } from '../stores/GameContext'
+import { applyTheme } from '../theme'
 import { FileInput } from './FileInput'
 import {
   Button,
@@ -37,6 +38,11 @@ export default function StartPage() {
   const [isCreating, setIsCreating] = useState(false)
   const [selectedSystem, setSelectedSystem] = useState<string | null>(null)
   const [deleteIdx, setDeleteIdx] = useState<number | null>(null)
+
+  // Apply Nexus theme on mount
+  useEffect(() => {
+    applyTheme('nexus')
+  }, [])
 
   const handleExport = () => {
     const data = exportCharacters()

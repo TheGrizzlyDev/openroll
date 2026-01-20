@@ -1,5 +1,6 @@
 import { useEffect, type CSSProperties, useState, useRef } from 'react'
 import { useParams } from 'react-router-dom'
+import { applyTheme } from '../theme'
 import DiceRoller from '../DiceRoller'
 import Inventory from '../mork_borg/Inventory'
 import CharacterSheet from '../mork_borg/CharacterSheet'
@@ -43,6 +44,11 @@ export default function SheetPage() {
   useEffect(() => {
     if (editingName) nameInputRef.current?.focus()
   }, [editingName])
+
+  // Apply Mork Borg theme when entering the sheet
+  useEffect(() => {
+    applyTheme('dark')
+  }, [])
 
   useEffect(() => {
     if (id !== undefined) {
@@ -117,62 +123,62 @@ export default function SheetPage() {
         </Section>
       </TabsRoot>
 
-        {overlay.visible && (
-          <DialogRoot
-            open={overlay.visible}
-            onOpenChange={open => {
-              if (!open) {
-                if (overlayTimeout) clearTimeout(overlayTimeout)
-                setOverlayTimeout(null)
-                dispatch({
-                  type: 'SET_OVERLAY',
-                  overlay: { ...overlay, visible: false, roll: null }
-                })
-              }
-            }}
-          >
-            <DialogBackdrop />
-            <DialogPositioner>
-              <DialogContent>
-                {overlay.roll ? (
-                  <>
-                    <Canvas
-                      className="dice-preview"
-                      camera={{ position: [0, 5, 5], fov: 50 }}
-                      shadows
-                    >
-                      <ambientLight intensity={0.5} />
-                      <directionalLight position={[5, 10, 5]} />
-                      <DiceTray>
-                        {overlay.roll.dice.map((die, i) => (
-                          <Dice3D
-                            key={i}
-                            type={die.type}
-                            rollResult={die.result}
-                            position={[
-                              (i - (overlay.roll!.dice.length - 1) / 2) * 2,
-                              1,
-                              0
-                            ]}
-                          />
-                        ))}
-                      </DiceTray>
-                    </Canvas>
-                    <div>{overlay.message}</div>
-                    <span style={srOnly} aria-live="polite">
-                      {overlay.message}
-                    </span>
-                  </>
-                ) : (
-                  <span>{overlay.message}</span>
-                )}
-                <DialogCloseTrigger asChild>
-                  <Button type="button">×</Button>
-                </DialogCloseTrigger>
-              </DialogContent>
-            </DialogPositioner>
-          </DialogRoot>
-        )}
+      {overlay.visible && (
+        <DialogRoot
+          open={overlay.visible}
+          onOpenChange={open => {
+            if (!open) {
+              if (overlayTimeout) clearTimeout(overlayTimeout)
+              setOverlayTimeout(null)
+              dispatch({
+                type: 'SET_OVERLAY',
+                overlay: { ...overlay, visible: false, roll: null }
+              })
+            }
+          }}
+        >
+          <DialogBackdrop />
+          <DialogPositioner>
+            <DialogContent>
+              {overlay.roll ? (
+                <>
+                  <Canvas
+                    className="dice-preview"
+                    camera={{ position: [0, 5, 5], fov: 50 }}
+                    shadows
+                  >
+                    <ambientLight intensity={0.5} />
+                    <directionalLight position={[5, 10, 5]} />
+                    <DiceTray>
+                      {overlay.roll.dice.map((die, i) => (
+                        <Dice3D
+                          key={i}
+                          type={die.type}
+                          rollResult={die.result}
+                          position={[
+                            (i - (overlay.roll!.dice.length - 1) / 2) * 2,
+                            1,
+                            0
+                          ]}
+                        />
+                      ))}
+                    </DiceTray>
+                  </Canvas>
+                  <div>{overlay.message}</div>
+                  <span style={srOnly} aria-live="polite">
+                    {overlay.message}
+                  </span>
+                </>
+              ) : (
+                <span>{overlay.message}</span>
+              )}
+              <DialogCloseTrigger asChild>
+                <Button type="button">×</Button>
+              </DialogCloseTrigger>
+            </DialogContent>
+          </DialogPositioner>
+        </DialogRoot>
+      )}
     </PageContainer>
   )
 }
