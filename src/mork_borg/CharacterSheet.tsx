@@ -9,6 +9,8 @@ import {
   DialogPositioner,
   DialogContent,
   DialogCloseTrigger,
+  DialogTitle,
+  DialogDescription,
   Button,
 } from '../components/ui'
 
@@ -90,12 +92,14 @@ export default function CharacterSheet() {
     <div className={styles.sheet}>
       {/* Identity Section */}
       <div className={styles.identitySection}>
-        <input
-          className={styles.charName}
-          value={sheet.name || ''}
-          placeholder="NAME"
-          onChange={(e) => updateField('name', e.target.value)}
-        />
+        <div className={styles.nameContainer}>
+          <input
+            className={styles.charName}
+            value={sheet.name || ''}
+            placeholder="NAME"
+            onChange={(e) => updateField('name', e.target.value)}
+          />
+        </div>
         <div className={styles.charClassContainer}>
           <span className={styles.charClass}>{sheet.class || 'GUTTER BORN SCUM'}</span>
         </div>
@@ -119,8 +123,8 @@ export default function CharacterSheet() {
           </span>
         </div>
         <div className={styles.vitalityControls}>
-          <button className={styles.controlButton} onClick={() => handleVitalityChange(-1)}>-</button>
-          <button className={styles.controlButton} onClick={() => handleVitalityChange(1)}>+</button>
+          <button className={styles.minimalButton} onClick={() => handleVitalityChange(-1)}>−</button>
+          <button className={styles.minimalButton} onClick={() => handleVitalityChange(1)}>+</button>
         </div>
       </div>
 
@@ -138,23 +142,20 @@ export default function CharacterSheet() {
         {stats.map((stat) => (
           <div
             key={stat.key}
-            style={{
-              background: '#FFFFFF',
-              border: '3px solid #000000',
-              padding: '1rem',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              cursor: 'pointer'
-            }}
+            className={styles.statBox}
             onClick={() => rollStat(stat.key)}
           >
-            <span style={{ fontSize: '1.25rem', fontWeight: 900, textTransform: 'uppercase' }}>
+            <span className={styles.statLabel}>
               {stat.label}
             </span>
-            <span style={{ fontSize: '2rem', fontWeight: 900 }}>
-              {sheet[stat.key] >= 0 ? `+${sheet[stat.key]}` : sheet[stat.key]}
-            </span>
+            <div className={styles.statRollAction}>
+              <span className={styles.statMod}>
+                {sheet[stat.key] >= 0 ? `+${sheet[stat.key]}` : sheet[stat.key]}
+              </span>
+              <span className={styles.statRollIcon}>
+                ROLL D20 ⚄
+              </span>
+            </div>
           </div>
         ))}
       </div>
@@ -188,13 +189,28 @@ export default function CharacterSheet() {
                         width: '100%',
                         minHeight: '60px',
                         background: '#FFF',
-                        border: '2px solid #000',
+                        border: '4px solid #000',
                         marginTop: '0.5rem',
                         fontFamily: 'inherit',
-                        padding: '0.5rem'
+                        padding: '1rem',
+                        fontWeight: 700
                       }}
                     />
-                    <Button onClick={() => handleDeleteItem(item.id)} style={{ marginTop: '0.5rem', background: '#000', color: '#E61E8D', fontWeight: 900 }}>Delete Item</Button>
+                    <button
+                      onClick={() => handleDeleteItem(item.id)}
+                      style={{
+                        marginTop: '0.5rem',
+                        background: '#000',
+                        color: '#E61E8D',
+                        fontWeight: 950,
+                        padding: '0.5rem 1rem',
+                        border: 'none',
+                        width: '100%',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      DELETE ITEM
+                    </button>
                   </div>
                 ) : (
                   <p>{item.notes}</p>
@@ -209,97 +225,127 @@ export default function CharacterSheet() {
             </div>
           ))}
         </div>
-        {/* Add Equipment moved here (below list) */}
-        <button className={styles.addEquipmentBar} onClick={() => setIsAddingItem(true)}>
-          + ADD EQUIPMENT
-        </button>
+
+        {/* Inline Add Gear Form */}
+        <div style={{ marginTop: '2rem', border: '5px solid #000', padding: '1.5rem', background: '#000', color: '#F7D02C' }}>
+          <h3 style={{ textTransform: 'uppercase', marginBottom: '1rem', fontWeight: 950 }}>Add Equipment</h3>
+          <input
+            type="text"
+            placeholder="ITEM NAME"
+            value={newItemName}
+            onChange={(e) => setNewItemName(e.target.value)}
+            style={{
+              width: '100%',
+              background: '#000',
+              border: '3px solid #F7D02C',
+              color: '#F7D02C',
+              padding: '1rem',
+              boxSizing: 'border-box',
+              fontWeight: 700,
+              marginBottom: '1rem'
+            }}
+          />
+          <textarea
+            placeholder="DESCRIPTION / NOTES"
+            value={newItemNotes}
+            onChange={(e) => setNewItemNotes(e.target.value)}
+            style={{
+              width: '100%',
+              minHeight: '80px',
+              background: '#000',
+              border: '3px solid #F7D02C',
+              color: '#F7D02C',
+              padding: '1rem',
+              boxSizing: 'border-box',
+              fontFamily: 'inherit',
+              fontWeight: 700,
+              marginBottom: '1rem'
+            }}
+          />
+          <button
+            onClick={handleAddItem}
+            style={{
+              width: '100%',
+              background: '#F7D02C',
+              color: '#000',
+              fontWeight: 950,
+              height: '3.5rem',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '1.2rem'
+            }}
+          >
+            ADD TO INVENTORY
+          </button>
+        </div>
       </div>
 
-      {/* Armor Overlay */}
+      {/* Simple Armor Selection Overlay */}
       {isArmorOverlayOpen && (
-        <DialogRoot open={isArmorOverlayOpen} onOpenChange={setIsArmorOverlayOpen}>
-          <DialogBackdrop />
-          <DialogPositioner>
-            <DialogContent style={{ background: '#000', color: '#F7D02C', border: '5px solid #F7D02C', padding: '2rem' }}>
-              <h2 style={{ textTransform: 'uppercase', marginBottom: '1.5rem', fontWeight: 900 }}>Select Armor</h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {armors.map(a => (
-                  <button
-                    key={a.tier}
-                    onClick={() => {
-                      updateField('armor', a.tier)
-                      setIsArmorOverlayOpen(false)
-                    }}
-                    style={{
-                      background: 'transparent',
-                      border: '2px solid #F7D02C',
-                      color: '#F7D02C',
-                      padding: '1rem',
-                      fontSize: '1.2rem',
-                      fontWeight: 900,
-                      textAlign: 'left',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    {a.name} ({a.die})
-                  </button>
-                ))}
-              </div>
-              <DialogCloseTrigger asChild>
-                <Button style={{ marginTop: '2rem', width: '100%', background: '#F7D02C', color: '#000', fontWeight: 900 }}>Close</Button>
-              </DialogCloseTrigger>
-            </DialogContent>
-          </DialogPositioner>
-        </DialogRoot>
-      )}
-
-      {/* Add Item Dialog */}
-      {isAddingItem && (
-        <DialogRoot open={isAddingItem} onOpenChange={setIsAddingItem}>
-          <DialogBackdrop />
-          <DialogPositioner>
-            <DialogContent style={{ background: '#000', color: '#F7D02C', border: '5px solid #F7D02C', padding: '2rem' }}>
-              <h2 style={{ textTransform: 'uppercase', marginBottom: '1.5rem', fontWeight: 900 }}>Add Gear</h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <input
-                  type="text"
-                  placeholder="ITEM NAME"
-                  value={newItemName}
-                  onChange={(e) => setNewItemName(e.target.value)}
-                  style={{
-                    width: '100%',
-                    background: '#000',
-                    border: '2px solid #F7D02C',
-                    color: '#F7D02C',
-                    padding: '1rem',
-                    boxSizing: 'border-box',
-                    fontWeight: 700
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'rgba(0,0,0,0.9)',
+          zIndex: 2000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '2rem'
+        }}>
+          <div style={{
+            background: '#000',
+            color: '#F7D02C',
+            border: '8px solid #F7D02C',
+            padding: '2rem',
+            maxWidth: '500px',
+            width: '100%',
+            boxShadow: '20px 20px 0 #F7D02C'
+          }}>
+            <h2 style={{ textTransform: 'uppercase', marginBottom: '2rem', fontWeight: 950, fontSize: '2rem' }}>Select Armor</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {armors.map(a => (
+                <button
+                  key={a.tier}
+                  onClick={() => {
+                    updateField('armor', a.tier)
+                    setIsArmorOverlayOpen(false)
                   }}
-                />
-                <textarea
-                  placeholder="DESCRIPTION / NOTES"
-                  value={newItemNotes}
-                  onChange={(e) => setNewItemNotes(e.target.value)}
                   style={{
-                    width: '100%',
-                    minHeight: '100px',
-                    background: '#000',
-                    border: '2px solid #F7D02C',
+                    background: 'transparent',
+                    border: '4px solid #F7D02C',
                     color: '#F7D02C',
-                    padding: '1rem',
-                    boxSizing: 'border-box',
-                    fontFamily: 'inherit',
-                    fontWeight: 700
+                    padding: '1.5rem',
+                    fontSize: '1.25rem',
+                    fontWeight: 950,
+                    textAlign: 'left',
+                    cursor: 'pointer'
                   }}
-                />
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                  <Button onClick={handleAddItem} style={{ flex: 1, background: '#F7D02C', color: '#000', fontWeight: 900, height: '3rem' }}>ADD</Button>
-                  <Button onClick={() => setIsAddingItem(false)} style={{ flex: 1, background: 'transparent', border: '2px solid #F7D02C', color: '#F7D02C', fontWeight: 900, height: '3rem' }}>CANCEL</Button>
-                </div>
-              </div>
-            </DialogContent>
-          </DialogPositioner>
-        </DialogRoot>
+                >
+                  {a.name} ({a.die})
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => setIsArmorOverlayOpen(false)}
+              style={{
+                marginTop: '2.5rem',
+                width: '100%',
+                background: '#F7D02C',
+                color: '#000',
+                fontWeight: 950,
+                fontSize: '1.25rem',
+                padding: '1rem',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              CLOSE
+            </button>
+          </div>
+        </div>
       )}
     </div>
   )

@@ -11,5 +11,7 @@ export {
   DialogBackdrop,
   DialogPositioner,
   DialogContent,
-  DialogCloseTrigger
+  DialogCloseTrigger,
+  DialogTitle,
+  DialogDescription
 } from './Dialog'

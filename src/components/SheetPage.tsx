@@ -10,17 +10,8 @@ import Notes from './Notes'
 import { useGameContext } from '../stores/GameContext'
 import RealmBackButton from './RealmBackButton'
 import {
-  Button,
-  Input,
-  DialogRoot,
-  DialogBackdrop,
-  DialogPositioner,
-  DialogContent,
   DialogCloseTrigger,
 } from './ui'
-import { Canvas } from '@react-three/fiber'
-import Dice3D from './Dice3D'
-import DiceTray from './DiceTray'
 import { PageContainer, Section } from '../layout'
 import { useSettingsStore, type ButtonVariant } from '../stores/settingsStore'
 import { Flex } from '@radix-ui/themes'
@@ -73,19 +64,20 @@ export default function SheetPage() {
         width: '100%',
         zIndex: 1100,
         boxSizing: 'border-box',
-        borderBottom: '4px solid #F7D02C'
+        borderBottom: '4px solid #E61E8D'
       }}>
         <button
           onClick={() => navigate('/roster')}
           style={{
             background: 'none',
-            border: '2px solid #FFFFFF',
+            border: 'none',
             color: '#FFFFFF',
             fontSize: '0.9rem',
             fontWeight: '900',
             cursor: 'pointer',
-            padding: '0.25rem 0.75rem',
-            textTransform: 'uppercase'
+            padding: '0.25rem 0',
+            textTransform: 'uppercase',
+            textDecoration: 'underline'
           }}
         >
           ← ROSTER
@@ -100,10 +92,13 @@ export default function SheetPage() {
             fontWeight: '900',
             padding: '0.5rem 1.25rem',
             cursor: 'pointer',
-            textTransform: 'uppercase'
+            textTransform: 'uppercase',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem'
           }}
         >
-          DICE
+          DICE ▾
         </button>
       </header>
 
@@ -117,39 +112,65 @@ export default function SheetPage() {
       </main>
 
       {overlay.visible && (
-        <DialogRoot
-          open={overlay.visible}
-          onOpenChange={open => {
-            if (!open) {
-              if (overlayTimeout) clearTimeout(overlayTimeout)
-              setOverlayTimeout(null)
-              dispatch({
-                type: 'SET_OVERLAY',
-                overlay: { ...overlay, visible: false, roll: null }
-              })
-            }
-          }}
-        >
-          <DialogBackdrop />
-          <DialogPositioner>
-            <DialogContent style={{ background: '#000', color: '#FFF', border: '5px solid #E61E8D', padding: '2rem' }}>
-              <div style={{ textAlign: 'center' }}>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '1rem', color: '#E61E8D' }}>
-                  ROLL RESULT
-                </h2>
-                <div style={{ fontSize: '5rem', fontWeight: 900, marginBottom: '1rem' }}>
-                  {overlay.roll?.total}
-                </div>
-                <div style={{ fontSize: '1.2rem', opacity: 0.8 }}>
-                  {overlay.message}
-                </div>
-              </div>
-              <DialogCloseTrigger asChild>
-                <Button style={{ marginTop: '2rem', width: '100%', background: '#E61E8D', color: '#FFF', fontWeight: 900 }}>OK</Button>
-              </DialogCloseTrigger>
-            </DialogContent>
-          </DialogPositioner>
-        </DialogRoot>
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'rgba(0,0,0,0.85)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 2000,
+          padding: '2rem',
+          boxSizing: 'border-box'
+        }}>
+          <div style={{
+            background: '#000',
+            color: '#FFF',
+            border: '8px solid #E61E8D',
+            padding: '3rem',
+            textAlign: 'center',
+            maxWidth: '500px',
+            width: '100%',
+            position: 'relative',
+            boxShadow: '20px 20px 0 #E61E8D'
+          }}>
+            <h2 style={{ fontSize: '2rem', fontWeight: 950, textTransform: 'uppercase', marginBottom: '1.5rem', color: '#E61E8D' }}>
+              ROLL RESULT
+            </h2>
+            <div style={{ fontSize: '7rem', fontWeight: 950, marginBottom: '1rem', lineHeight: 1 }}>
+              {overlay.roll?.total}
+            </div>
+            <p style={{ fontSize: '1.5rem', opacity: 1, fontWeight: 700, margin: '1rem 0 2rem' }}>
+              {overlay.message}
+            </p>
+            <button
+              onClick={() => {
+                if (overlayTimeout) clearTimeout(overlayTimeout)
+                setOverlayTimeout(null)
+                dispatch({
+                  type: 'SET_OVERLAY',
+                  overlay: { ...overlay, visible: false, roll: null }
+                })
+              }}
+              style={{
+                width: '100%',
+                background: '#E61E8D',
+                color: '#FFF',
+                fontWeight: 950,
+                fontSize: '1.5rem',
+                padding: '1rem',
+                border: 'none',
+                cursor: 'pointer',
+                textTransform: 'uppercase'
+              }}
+            >
+              OK
+            </button>
+          </div>
+        </div>
       )}
     </div>
   )
