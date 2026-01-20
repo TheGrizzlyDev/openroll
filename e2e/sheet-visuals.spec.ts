@@ -44,7 +44,7 @@ test.describe('Mork Borg Character Sheet', () => {
         await page.goto('/sheet/argale')
 
         // Check for character name (Argale) 
-        await expect.soft(page.locator('h1', { hasText: 'Argale' })).toBeVisible()
+        await expect.soft(page.locator('input[placeholder="NAME"]')).toHaveValue('Argale')
 
         // Stats - Checks for Strength and Agility in the new layout
         await expect.soft(page.getByText('Strength', { exact: true })).toBeVisible()

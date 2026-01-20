@@ -63,25 +63,29 @@ export default function SheetPage() {
       <header style={{
         background: '#000000',
         color: '#FFFFFF',
-        height: '50px',
+        height: '60px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 1rem',
-        position: 'sticky',
+        position: 'fixed',
         top: 0,
-        zIndex: 1100
+        width: '100%',
+        zIndex: 1100,
+        boxSizing: 'border-box',
+        borderBottom: '4px solid #F7D02C'
       }}>
         <button
           onClick={() => navigate('/roster')}
           style={{
             background: 'none',
-            border: 'none',
+            border: '2px solid #FFFFFF',
             color: '#FFFFFF',
-            fontSize: '1rem',
+            fontSize: '0.9rem',
             fontWeight: '900',
             cursor: 'pointer',
-            padding: 0
+            padding: '0.25rem 0.75rem',
+            textTransform: 'uppercase'
           }}
         >
           ← ROSTER
@@ -91,20 +95,24 @@ export default function SheetPage() {
           style={{
             background: '#E61E8D',
             border: 'none',
-            color: '#000000',
+            color: '#FFFFFF',
             fontSize: '1rem',
             fontWeight: '900',
-            padding: '0.25rem 1rem',
-            cursor: 'pointer'
+            padding: '0.5rem 1.25rem',
+            cursor: 'pointer',
+            textTransform: 'uppercase'
           }}
         >
           DICE
         </button>
       </header>
 
+      {/* Spacer for fixed header plus original 50px offset + 4px border */}
+      <div style={{ height: '64px' }} />
+
       <DiceDrawer isOpen={isDiceDrawerOpen} onClose={() => setIsDiceDrawerOpen(false)} />
 
-      <main style={{ paddingBottom: '4rem' }}>
+      <main style={{ paddingBottom: '4rem', marginTop: '1rem' }}>
         <CharacterSheet />
       </main>
 
@@ -124,42 +132,20 @@ export default function SheetPage() {
         >
           <DialogBackdrop />
           <DialogPositioner>
-            <DialogContent>
-              {overlay.roll ? (
-                <>
-                  <Canvas
-                    className="dice-preview"
-                    camera={{ position: [0, 5, 5], fov: 50 }}
-                    shadows
-                    style={{ height: '300px' }}
-                  >
-                    <ambientLight intensity={0.5} />
-                    <directionalLight position={[5, 10, 5]} />
-                    <DiceTray>
-                      {overlay.roll.dice.map((die, i) => (
-                        <Dice3D
-                          key={i}
-                          type={die.type}
-                          rollResult={die.result}
-                          position={[
-                            (i - (overlay.roll!.dice.length - 1) / 2) * 2,
-                            1,
-                            0
-                          ]}
-                        />
-                      ))}
-                    </DiceTray>
-                  </Canvas>
-                  <div>{overlay.message}</div>
-                  <span style={srOnly} aria-live="polite">
-                    {overlay.message}
-                  </span>
-                </>
-              ) : (
-                <span>{overlay.message}</span>
-              )}
+            <DialogContent style={{ background: '#000', color: '#FFF', border: '5px solid #E61E8D', padding: '2rem' }}>
+              <div style={{ textAlign: 'center' }}>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: 900, textTransform: 'uppercase', marginBottom: '1rem', color: '#E61E8D' }}>
+                  ROLL RESULT
+                </h2>
+                <div style={{ fontSize: '5rem', fontWeight: 900, marginBottom: '1rem' }}>
+                  {overlay.roll?.total}
+                </div>
+                <div style={{ fontSize: '1.2rem', opacity: 0.8 }}>
+                  {overlay.message}
+                </div>
+              </div>
               <DialogCloseTrigger asChild>
-                <Button type="button">×</Button>
+                <Button style={{ marginTop: '2rem', width: '100%', background: '#E61E8D', color: '#FFF', fontWeight: 900 }}>OK</Button>
               </DialogCloseTrigger>
             </DialogContent>
           </DialogPositioner>

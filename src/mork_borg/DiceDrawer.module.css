@@ -32,20 +32,35 @@
     background: transparent;
     border: 2px solid #F7D02C;
     color: #F7D02C;
-    padding: 0.5rem;
+    padding: 1rem;
     font-family: inherit;
-    font-weight: bold;
+    font-weight: 900;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s, color 0.2s;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    min-height: 80px;
 }
 
-.diceButton:hover {
+.diceButton:hover,
+.diceButton.selected {
     background: #F7D02C;
     color: #000000;
+}
+
+.rollActionButton {
+    background: #F7D02C;
+    color: #000000;
+    border-color: #F7D02C;
+}
+
+.rollActionButton:hover {
+    background: #E61E8D;
+    border-color: #E61E8D;
+    color: #FFFFFF;
 }
 
 .diceIcon {

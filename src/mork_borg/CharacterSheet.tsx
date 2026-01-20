@@ -90,7 +90,12 @@ export default function CharacterSheet() {
     <div className={styles.sheet}>
       {/* Identity Section */}
       <div className={styles.identitySection}>
-        <h1 className={styles.charName}>{sheet.name || 'GURN'}</h1>
+        <input
+          className={styles.charName}
+          value={sheet.name || ''}
+          placeholder="NAME"
+          onChange={(e) => updateField('name', e.target.value)}
+        />
         <div className={styles.charClassContainer}>
           <span className={styles.charClass}>{sheet.class || 'GUTTER BORN SCUM'}</span>
         </div>
@@ -176,11 +181,20 @@ export default function CharacterSheet() {
                 <h4>{item.name}</h4>
                 {editingItemId === item.id ? (
                   <div onClick={(e) => e.stopPropagation()}>
-                    <SmartTextEditor
+                    <textarea
                       value={item.notes}
-                      onChange={(val) => handleUpdateItemNotes(item.id, val)}
+                      onChange={(e) => handleUpdateItemNotes(item.id, e.target.value)}
+                      style={{
+                        width: '100%',
+                        minHeight: '60px',
+                        background: '#FFF',
+                        border: '2px solid #000',
+                        marginTop: '0.5rem',
+                        fontFamily: 'inherit',
+                        padding: '0.5rem'
+                      }}
                     />
-                    <Button onClick={() => handleDeleteItem(item.id)} style={{ marginTop: '0.5rem', background: '#000', color: '#E61E8D' }}>Delete Item</Button>
+                    <Button onClick={() => handleDeleteItem(item.id)} style={{ marginTop: '0.5rem', background: '#000', color: '#E61E8D', fontWeight: 900 }}>Delete Item</Button>
                   </div>
                 ) : (
                   <p>{item.notes}</p>
@@ -195,20 +209,19 @@ export default function CharacterSheet() {
             </div>
           ))}
         </div>
+        {/* Add Equipment moved here (below list) */}
+        <button className={styles.addEquipmentBar} onClick={() => setIsAddingItem(true)}>
+          + ADD EQUIPMENT
+        </button>
       </div>
-
-      {/* Add Equipment */}
-      <button className={styles.addEquipmentBar} onClick={() => setIsAddingItem(true)}>
-        + ADD EQUIPMENT
-      </button>
 
       {/* Armor Overlay */}
       {isArmorOverlayOpen && (
         <DialogRoot open={isArmorOverlayOpen} onOpenChange={setIsArmorOverlayOpen}>
           <DialogBackdrop />
           <DialogPositioner>
-            <DialogContent style={{ background: '#000', color: '#F7D02C', border: '2px solid #F7D02C' }}>
-              <h2 style={{ textTransform: 'uppercase', marginBottom: '1rem' }}>Select Armor</h2>
+            <DialogContent style={{ background: '#000', color: '#F7D02C', border: '5px solid #F7D02C', padding: '2rem' }}>
+              <h2 style={{ textTransform: 'uppercase', marginBottom: '1.5rem', fontWeight: 900 }}>Select Armor</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {armors.map(a => (
                   <button
@@ -233,7 +246,7 @@ export default function CharacterSheet() {
                 ))}
               </div>
               <DialogCloseTrigger asChild>
-                <Button style={{ marginTop: '1rem' }}>Close</Button>
+                <Button style={{ marginTop: '2rem', width: '100%', background: '#F7D02C', color: '#000', fontWeight: 900 }}>Close</Button>
               </DialogCloseTrigger>
             </DialogContent>
           </DialogPositioner>
@@ -245,30 +258,44 @@ export default function CharacterSheet() {
         <DialogRoot open={isAddingItem} onOpenChange={setIsAddingItem}>
           <DialogBackdrop />
           <DialogPositioner>
-            <DialogContent style={{ background: '#000', color: '#F7D02C', border: '2px solid #F7D02C' }}>
-              <h2 style={{ textTransform: 'uppercase', marginBottom: '1rem' }}>Add Gear</h2>
-              <input
-                type="text"
-                placeholder="NAME"
-                value={newItemName}
-                onChange={(e) => setNewItemName(e.target.value)}
-                style={{
-                  width: '100%',
-                  background: '#000',
-                  border: '2px solid #F7D02C',
-                  color: '#F7D02C',
-                  padding: '0.75rem',
-                  marginBottom: '1rem',
-                  boxSizing: 'border-box'
-                }}
-              />
-              <SmartTextEditor
-                value={newItemNotes}
-                onChange={setNewItemNotes}
-              />
-              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                <Button onClick={handleAddItem} style={{ flex: 1 }}>Add</Button>
-                <Button onClick={() => setIsAddingItem(false)} style={{ flex: 1 }}>Cancel</Button>
+            <DialogContent style={{ background: '#000', color: '#F7D02C', border: '5px solid #F7D02C', padding: '2rem' }}>
+              <h2 style={{ textTransform: 'uppercase', marginBottom: '1.5rem', fontWeight: 900 }}>Add Gear</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <input
+                  type="text"
+                  placeholder="ITEM NAME"
+                  value={newItemName}
+                  onChange={(e) => setNewItemName(e.target.value)}
+                  style={{
+                    width: '100%',
+                    background: '#000',
+                    border: '2px solid #F7D02C',
+                    color: '#F7D02C',
+                    padding: '1rem',
+                    boxSizing: 'border-box',
+                    fontWeight: 700
+                  }}
+                />
+                <textarea
+                  placeholder="DESCRIPTION / NOTES"
+                  value={newItemNotes}
+                  onChange={(e) => setNewItemNotes(e.target.value)}
+                  style={{
+                    width: '100%',
+                    minHeight: '100px',
+                    background: '#000',
+                    border: '2px solid #F7D02C',
+                    color: '#F7D02C',
+                    padding: '1rem',
+                    boxSizing: 'border-box',
+                    fontFamily: 'inherit',
+                    fontWeight: 700
+                  }}
+                />
+                <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                  <Button onClick={handleAddItem} style={{ flex: 1, background: '#F7D02C', color: '#000', fontWeight: 900, height: '3rem' }}>ADD</Button>
+                  <Button onClick={() => setIsAddingItem(false)} style={{ flex: 1, background: 'transparent', border: '2px solid #F7D02C', color: '#F7D02C', fontWeight: 900, height: '3rem' }}>CANCEL</Button>
+                </div>
               </div>
             </DialogContent>
           </DialogPositioner>

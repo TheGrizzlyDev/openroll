@@ -7,16 +7,17 @@ export default function DiceDrawer({ isOpen, onClose }: { isOpen: boolean; onClo
     const [customNotation, setCustomNotation] = useState('')
 
     const dice = [
-        { type: 'd4', label: 'D4' },
-        { type: 'd6', label: 'D6' },
-        { type: 'd8', label: 'D8' },
-        { type: 'd10', label: 'D10' },
-        { type: 'd12', label: 'D12' },
-        { type: 'd20', label: 'D20' },
-        { type: 'd100', label: 'D100' },
+        { type: 'd4', label: 'D4', notation: '1d4' },
+        { type: 'd6', label: 'D6', notation: '1d6' },
+        { type: 'd8', label: 'D8', notation: '1d8' },
+        { type: 'd10', label: 'D10', notation: '1d10' },
+        { type: 'd12', label: 'D12', notation: '1d12' },
+        { type: 'd20', label: 'D20', notation: '1d20' },
+        { type: 'd100', label: 'D100', notation: '1d100' },
     ]
 
     const handleRoll = (notation: string) => {
+        if (!notation) return
         roll(notation)
         onClose()
     }
@@ -28,14 +29,17 @@ export default function DiceDrawer({ isOpen, onClose }: { isOpen: boolean; onClo
                     {dice.map((die) => (
                         <button
                             key={die.type}
-                            className={styles.diceButton}
-                            onClick={() => handleRoll(`1${die.type}`)}
+                            className={`${styles.diceButton} ${customNotation.toLowerCase() === die.notation ? styles.selected : ''}`}
+                            onClick={() => setCustomNotation(die.notation)}
                         >
                             <div className={styles.diceIcon}>{die.label}</div>
                         </button>
                     ))}
-                    <button className={styles.diceButton} onClick={() => setCustomNotation('')}>
-                        <div className={styles.diceIcon}>EDIT</div>
+                    <button
+                        className={`${styles.diceButton} ${styles.rollActionButton}`}
+                        onClick={() => handleRoll(customNotation)}
+                    >
+                        <div className={styles.diceIcon}>ROLL</div>
                     </button>
                 </div>
                 <div className={styles.inputContainer}>
