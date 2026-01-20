@@ -1,6 +1,5 @@
-import { ReactNode, useEffect } from 'react'
+import { ReactNode } from 'react'
 import * as RadixDialog from '@radix-ui/react-dialog'
-import { useFloating } from '@floating-ui/react'
 
 export const DialogRoot = RadixDialog.Root
 export const DialogCloseTrigger = RadixDialog.Close

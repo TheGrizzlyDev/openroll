@@ -447,6 +447,7 @@ const storeWithPersist = persist(storeCreator, {
     }
   }),
   merge: (persistedState, currentState) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const rawState = persistedState as any
     // Handle double-nested state if it exists (for backward compatibility/tests)
     const incomingState = rawState?.state?.state ? rawState.state.state : rawState?.state

@@ -44,7 +44,8 @@ export default function StartPage() {
     applyTheme('nexus')
   }, [])
 
-  const handleExport = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _handleExport = () => {
     const data = exportCharacters()
     const blob = new Blob([data], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
@@ -94,7 +95,8 @@ export default function StartPage() {
 
   const sortedIndexes = sortCharactersByLastAccess(characters, lastAccess)
 
-  const confirmDelete = (idx: number) => setDeleteIdx(idx)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _confirmDelete = (idx: number) => setDeleteIdx(idx)
 
   const handleLoad = (idx: number) => {
     loadCharacter(idx)

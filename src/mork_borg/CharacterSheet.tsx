@@ -3,18 +3,7 @@ import { RenderOml } from '../oml/render'
 import { useGameContext } from '../stores/GameContext'
 import type { Sheet } from './sheet'
 import styles from './CharacterSheet.module.css'
-import SmartTextEditor from '../components/SmartTextEditor'
 import { MorkBorgOmlButton } from './MorkBorgOmlButton'
-import {
-  DialogRoot,
-  DialogBackdrop,
-  DialogPositioner,
-  DialogContent,
-  DialogCloseTrigger,
-  DialogTitle,
-  DialogDescription,
-  Button,
-} from '../components/ui'
 
 type StatKey = 'str' | 'agi' | 'pre' | 'tou'
 
@@ -27,7 +16,6 @@ export default function CharacterSheet() {
 
   const [vitalityFocus, setVitalityFocus] = useState<'hp' | 'maxHp'>('hp')
   const [editingItemId, setEditingItemId] = useState<number | null>(null)
-  const [isAddingItem, setIsAddingItem] = useState(false)
   const [isArmorOverlayOpen, setIsArmorOverlayOpen] = useState(false)
   const [newItemName, setNewItemName] = useState('')
   const [newItemNotes, setNewItemNotes] = useState('')
@@ -73,7 +61,6 @@ export default function CharacterSheet() {
     dispatch({ type: 'SET_INVENTORY', inventory: [...inventory, newItem] })
     setNewItemName('')
     setNewItemNotes('')
-    setIsAddingItem(false)
   }
 
   const handleDeleteItem = (id: number) => {

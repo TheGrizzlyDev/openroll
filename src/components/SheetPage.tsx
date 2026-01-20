@@ -1,24 +1,13 @@
-import { useEffect, type CSSProperties, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { applyTheme } from '../theme'
-import DiceRoller from '../DiceRoller'
-import Inventory from '../mork_borg/Inventory'
 import CharacterSheet from '../mork_borg/CharacterSheet'
 import DiceDrawer from '../mork_borg/DiceDrawer'
-import LogView from './LogView'
-import Notes from './Notes'
 import { useGameContext } from '../stores/GameContext'
-import RealmBackButton from './RealmBackButton'
-import {
-  DialogCloseTrigger,
-} from './ui'
-import { PageContainer, Section } from '../layout'
-import { useSettingsStore, type ButtonVariant } from '../stores/settingsStore'
-import { Flex } from '@radix-ui/themes'
 
 export default function SheetPage() {
   const {
-    state: { activeTab, overlay, sheet },
+    state: { overlay },
     dispatch,
     overlayTimeout,
     setOverlayTimeout,
@@ -175,17 +164,4 @@ export default function SheetPage() {
     </div>
   )
 }
-
-const srOnly: CSSProperties = {
-  position: 'absolute',
-  width: '1px',
-  height: '1px',
-  padding: 0,
-  margin: '-1px',
-  overflow: 'hidden',
-  clip: 'rect(0, 0, 0, 0)',
-  whiteSpace: 'nowrap',
-  border: 0
-}
-
 

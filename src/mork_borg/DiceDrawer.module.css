@@ -1,66 +1,67 @@
 .drawer {
-    position: fixed;
-    top: -100%;
-    left: 0;
-    width: 100%;
-    background: #000000;
-    z-index: 1000;
-    transition: top 0.3s ease-in-out;
-    padding: 1rem;
+    background: #000;
     box-sizing: border-box;
     color: #F7D02C;
+    left: 0;
+    padding: 1rem;
+    position: fixed;
+    top: -100%;
+    transition: top 0.3s ease-in-out;
+    width: 100%;
+    z-index: 1000;
 }
 
 .drawer.open {
     top: 50px;
+
     /* Below the header */
 }
 
 .content {
-    max-width: 600px;
     margin: 0 auto;
+    max-width: 600px;
 }
 
 .diceGrid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
+    grid-template-columns: repeat(4, 1fr);
     margin-bottom: 1rem;
 }
 
 .diceButton {
+    align-items: center;
     background: transparent;
     border: 2px solid #F7D02C;
     color: #F7D02C;
-    padding: 1rem;
-    font-family: inherit;
-    font-weight: 900;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    font-family: inherit;
+    font-weight: 900;
     justify-content: center;
-    transition: all 0.2s;
-    text-transform: uppercase;
     min-height: 80px;
+    padding: 1rem;
+    text-transform: uppercase;
+    transition: all 0.2s;
 }
 
 .diceButton:hover,
 .diceButton.selected {
     background: #F7D02C;
-    color: #000000;
+    color: #000;
 }
 
 .rollActionButton {
     background: #F7D02C;
-    color: #000000;
     border-color: #F7D02C;
+    color: #000;
 }
 
 .rollActionButton:hover {
     background: #E61E8D;
     border-color: #E61E8D;
-    color: #FFFFFF;
+    color: #FFF;
 }
 
 .diceIcon {
@@ -72,28 +73,28 @@
 }
 
 .rollInput {
-    width: 100%;
-    background: #000000;
+    background: #000;
     border: 2px solid #F7D02C;
+    box-sizing: border-box;
     color: #F7D02C;
-    padding: 0.75rem;
     font-family: inherit;
     font-weight: bold;
-    box-sizing: border-box;
+    padding: 0.75rem;
+    width: 100%;
 }
 
 .rollInput::placeholder {
-    color: rgba(247, 208, 44, 0.5);
+    color: rgb(247 208 44 / 50%);
 }
 
 .backdrop {
+    background: rgb(0 0 0 / 50%);
     display: none;
+    height: 100%;
+    left: 0;
     position: fixed;
     top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
     z-index: -1;
 }
 

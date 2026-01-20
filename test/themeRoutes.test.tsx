@@ -43,7 +43,7 @@ afterEach(() => {
 
 describe('theme application by route', () => {
   it('forces Nexus routes to use Nexus dark tokens', async () => {
-    useSettingsStore.setState({ theme: 'light' })
+    useSettingsStore.setState({ theme: 'dark' })
     renderWithRoute('/roster')
 
     expect(await screen.findByRole('heading', { name: 'The Roster is Empty' })).toBeTruthy()
@@ -56,7 +56,7 @@ describe('theme application by route', () => {
   })
 
   it('allows Realm routes to use settings theme tokens', async () => {
-    useSettingsStore.setState({ theme: 'light' })
+    useSettingsStore.setState({ theme: 'dark' })
     renderWithRoute('/generator')
 
     expect(
@@ -65,7 +65,7 @@ describe('theme application by route', () => {
 
     await waitFor(() => {
       expect(document.documentElement.style.getPropertyValue('--color-bg')).toBe(
-        themes.light.colors.bg
+        themes.dark.colors.bg
       )
     })
   })

@@ -1,5 +1,4 @@
 import { type ReactNode } from 'react'
-import { Flex } from '../layout'
 
 interface SystemCardProps {
     title: string

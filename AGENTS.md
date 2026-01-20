@@ -8,6 +8,8 @@
   - Run `npm test` for unit tests.
   - Run integration tests (if applicable) before check-in.
   - Run `npm run test:e2e` (or `npm run test:e2e:update-snapshots` to update the snapshots) for E2E tests for any UI or flow changes.
+  - Run `npm run typecheck`
+  - Run `npm run lint`
 - **Visual Verification**: Every UI modification MUST be confirmed visually. Use the browser subagent to check the UI status and perform visual comparison against mockups or expected layouts.
 - **Pre-commit Checks**: Run `npm run lint` and `npm run typecheck` to ensure code quality.
 
