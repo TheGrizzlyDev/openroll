@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { RenderOml } from '../oml/render'
 import { useGameContext } from '../stores/GameContext'
 import type { Sheet } from './sheet'
 import styles from './CharacterSheet.module.css'
@@ -29,6 +30,8 @@ export default function CharacterSheet() {
   const [isArmorOverlayOpen, setIsArmorOverlayOpen] = useState(false)
   const [newItemName, setNewItemName] = useState('')
   const [newItemNotes, setNewItemNotes] = useState('')
+  const [editingStat, setEditingStat] = useState<StatKey | null>(null)
+  const [tempStatValue, setTempStatValue] = useState<string>('')
 
   const updateField = <K extends keyof Sheet>(field: K, value: Sheet[K]) =>
     dispatch({ type: 'SET_SHEET', sheet: { ...sheet, [field]: value } })
@@ -41,10 +44,21 @@ export default function CharacterSheet() {
 
   const handleVitalityChange = (delta: number) => {
     if (vitalityFocus === 'hp') {
-      updateField('hp', Math.max(0, sheet.hp + delta))
+      const nextHp = Math.max(0, sheet.hp + delta)
+      updateField('hp', Math.min(nextHp, sheet.maxHp))
     } else {
-      updateField('maxHp', Math.max(1, sheet.maxHp + delta))
+      const nextMax = Math.max(1, sheet.maxHp + delta)
+      updateField('maxHp', nextMax)
+      // If decreasing maxHp makes it lower than current hp, capped current hp is handled by state usually but let's be explicit
+      if (sheet.hp > nextMax) {
+        updateField('hp', nextMax)
+      }
     }
+  }
+
+  const handleRollOmens = () => {
+    const { total } = roll('1d2', 'OMENS')
+    updateField('omens', total)
   }
 
   const handleAddItem = () => {
@@ -107,25 +121,25 @@ export default function CharacterSheet() {
 
       {/* Vitality Block */}
       <div className={styles.vitalityBlock}>
-        <span className={styles.vitalityLabel}>Vitality</span>
-        <div className={styles.vitalityValues}>
-          <span
-            className={`${styles.currentHp} ${vitalityFocus === 'hp' ? styles.focused : ''}`}
-            onClick={() => setVitalityFocus('hp')}
-          >
-            {sheet.hp.toString().padStart(2, '0')}
-          </span>
-          <span
-            className={`${styles.maxHp} ${vitalityFocus === 'maxHp' ? styles.focused : ''}`}
-            onClick={() => setVitalityFocus('maxHp')}
-          >
-            /{sheet.maxHp}
-          </span>
+        <button className={styles.minimalButton} onClick={() => handleVitalityChange(-1)}>−</button>
+        <div className={styles.vitalityMain}>
+          <span className={styles.vitalityLabel}>Vitality</span>
+          <div className={styles.vitalityValues}>
+            <span
+              className={`${styles.currentHp} ${vitalityFocus === 'hp' ? styles.focused : ''}`}
+              onClick={() => setVitalityFocus('hp')}
+            >
+              {sheet.hp.toString().padStart(2, '0')}
+            </span>
+            <span
+              className={`${styles.maxHp} ${vitalityFocus === 'maxHp' ? styles.focused : ''}`}
+              onClick={() => setVitalityFocus('maxHp')}
+            >
+              /{sheet.maxHp}
+            </span>
+          </div>
         </div>
-        <div className={styles.vitalityControls}>
-          <button className={styles.minimalButton} onClick={() => handleVitalityChange(-1)}>−</button>
-          <button className={styles.minimalButton} onClick={() => handleVitalityChange(1)}>+</button>
-        </div>
+        <button className={styles.minimalButton} onClick={() => handleVitalityChange(1)}>+</button>
       </div>
 
       {/* Armor Card */}
@@ -137,25 +151,35 @@ export default function CharacterSheet() {
         <div className={styles.armorDie}>{currentArmor.die}</div>
       </div>
 
-      {/* Core Stats */}
       <div className={styles.statsSection}>
         {stats.map((stat) => (
           <div
             key={stat.key}
             className={styles.statBox}
-            onClick={() => rollStat(stat.key)}
           >
-            <span className={styles.statLabel}>
-              {stat.label}
-            </span>
-            <div className={styles.statRollAction}>
-              <span className={styles.statMod}>
-                {sheet[stat.key] >= 0 ? `+${sheet[stat.key]}` : sheet[stat.key]}
+            <div className={styles.statMain} onClick={() => rollStat(stat.key)}>
+              <span className={styles.statLabel}>
+                {stat.label}
               </span>
-              <span className={styles.statRollIcon}>
-                ROLL D20 ⚄
-              </span>
+              <div className={styles.statRollAction}>
+                <span className={styles.statMod}>
+                  {sheet[stat.key] >= 0 ? `+${sheet[stat.key]}` : sheet[stat.key]}
+                </span>
+                <span className={styles.statRollIcon}>
+                  ROLL D20 ⚄
+                </span>
+              </div>
             </div>
+            <button
+              className={styles.statEditBtn}
+              onClick={(e) => {
+                e.stopPropagation()
+                setEditingStat(stat.key)
+                setTempStatValue(sheet[stat.key].toString())
+              }}
+            >
+              ✎
+            </button>
           </div>
         ))}
       </div>
@@ -164,12 +188,21 @@ export default function CharacterSheet() {
       <div className={styles.omensSection}>
         <div className={styles.omensTitle}>Omens</div>
         <div className={styles.omensCount}>{sheet.omens}</div>
-        <button
-          className={styles.omensButton}
-          onClick={() => updateField('omens', Math.max(0, sheet.omens - 1))}
-        >
-          {sheet.omens > 0 ? 'USE OMEN' : 'ROLL OMENS'}
-        </button>
+        {sheet.omens > 0 ? (
+          <button
+            className={styles.omensButton}
+            onClick={() => updateField('omens', Math.max(0, sheet.omens - 1))}
+          >
+            USE OMEN
+          </button>
+        ) : (
+          <button
+            className={styles.omensButton}
+            onClick={handleRollOmens}
+          >
+            ROLL 1d2 OMENS
+          </button>
+        )}
       </div>
 
       {/* Gear */}
@@ -178,16 +211,35 @@ export default function CharacterSheet() {
         <div className={styles.gearList}>
           {inventory.map((item) => (
             <div key={item.id} className={styles.gearItem}>
-              <div className={styles.gearInfo} onClick={() => setEditingItemId(editingItemId === item.id ? null : item.id)}>
-                <h4>{item.name}</h4>
+              <div className={styles.gearInfo} style={{ width: '100%' }}>
                 {editingItemId === item.id ? (
-                  <div onClick={(e) => e.stopPropagation()}>
+                  <div onClick={(e) => e.stopPropagation()} style={{ width: '100%' }}>
+                    <input
+                      value={item.name}
+                      onChange={(e) => {
+                        dispatch({
+                          type: 'SET_INVENTORY',
+                          inventory: inventory.map(i => i.id === item.id ? { ...i, name: e.target.value } : i)
+                        })
+                      }}
+                      style={{
+                        width: '100%',
+                        background: '#FFF',
+                        border: '4px solid #000',
+                        padding: '0.75rem',
+                        fontSize: '1.25rem',
+                        fontWeight: 900,
+                        marginBottom: '0.5rem',
+                        textTransform: 'uppercase',
+                        fontFamily: 'inherit'
+                      }}
+                    />
                     <textarea
                       value={item.notes}
                       onChange={(e) => handleUpdateItemNotes(item.id, e.target.value)}
                       style={{
                         width: '100%',
-                        minHeight: '60px',
+                        minHeight: '100px',
                         background: '#FFF',
                         border: '4px solid #000',
                         marginTop: '0.5rem',
@@ -196,32 +248,48 @@ export default function CharacterSheet() {
                         fontWeight: 700
                       }}
                     />
-                    <button
-                      onClick={() => handleDeleteItem(item.id)}
-                      style={{
-                        marginTop: '0.5rem',
-                        background: '#000',
-                        color: '#E61E8D',
-                        fontWeight: 950,
-                        padding: '0.5rem 1rem',
-                        border: 'none',
-                        width: '100%',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      DELETE ITEM
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+                      <button
+                        onClick={() => setEditingItemId(null)}
+                        style={{
+                          flex: 1,
+                          background: '#F7D02C',
+                          color: '#000',
+                          fontWeight: 950,
+                          padding: '0.75rem',
+                          border: '4px solid #000',
+                          cursor: 'pointer',
+                          textTransform: 'uppercase'
+                        }}
+                      >
+                        SAVE
+                      </button>
+                      <button
+                        onClick={() => handleDeleteItem(item.id)}
+                        style={{
+                          flex: 1,
+                          background: '#000',
+                          color: '#E61E8D',
+                          fontWeight: 950,
+                          padding: '0.75rem',
+                          border: 'none',
+                          cursor: 'pointer',
+                          textTransform: 'uppercase'
+                        }}
+                      >
+                        DELETE
+                      </button>
+                    </div>
                   </div>
                 ) : (
-                  <p>{item.notes}</p>
+                  <div onClick={() => setEditingItemId(item.id)}>
+                    <h4>{item.name}</h4>
+                    <div className={styles.gearDescription}>
+                      {RenderOml(item.notes || '', roll)}
+                    </div>
+                  </div>
                 )}
               </div>
-              <button
-                className={styles.gearRoll}
-                onClick={() => roll('1d8', item.name)}
-              >
-                🎲
-              </button>
             </div>
           ))}
         </div>
@@ -279,6 +347,104 @@ export default function CharacterSheet() {
           </button>
         </div>
       </div>
+
+      {/* Stat Edit Overlay */}
+      {editingStat && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'rgba(0,0,0,0.9)',
+          zIndex: 2000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '2rem'
+        }}>
+          <div style={{
+            background: '#000',
+            color: '#FFF',
+            border: '8px solid #F7D02C',
+            padding: '2rem',
+            maxWidth: '400px',
+            width: '100%',
+            boxShadow: '20px 20px 0 #F7D02C',
+            textAlign: 'center'
+          }}>
+            <h2 style={{ textTransform: 'uppercase', marginBottom: '2rem', fontWeight: 950, fontSize: '2rem', color: '#F7D02C' }}>
+              Edit {stats.find(s => s.key === editingStat)?.label}
+            </h2>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
+              <button
+                onClick={() => setTempStatValue((parseInt(tempStatValue) - 1).toString())}
+                style={{ background: '#F7D02C', border: 'none', color: '#000', fontSize: '2rem', fontWeight: 950, padding: '0.5rem 1.5rem', cursor: 'pointer' }}
+              >
+                -
+              </button>
+              <input
+                type="number"
+                value={tempStatValue}
+                onChange={(e) => setTempStatValue(e.target.value)}
+                style={{
+                  width: '100px',
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#FFF',
+                  fontSize: '3rem',
+                  fontWeight: 950,
+                  textAlign: 'center',
+                  fontFamily: 'inherit'
+                }}
+              />
+              <button
+                onClick={() => setTempStatValue((parseInt(tempStatValue) + 1).toString())}
+                style={{ background: '#F7D02C', border: 'none', color: '#000', fontSize: '2rem', fontWeight: 950, padding: '0.5rem 1.5rem', cursor: 'pointer' }}
+              >
+                +
+              </button>
+            </div>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button
+                onClick={() => {
+                  updateField(editingStat, parseInt(tempStatValue) || 0)
+                  setEditingStat(null)
+                }}
+                style={{
+                  flex: 1,
+                  background: '#F7D02C',
+                  color: '#000',
+                  fontWeight: 950,
+                  fontSize: '1.25rem',
+                  padding: '1rem',
+                  border: 'none',
+                  cursor: 'pointer',
+                  textTransform: 'uppercase'
+                }}
+              >
+                SAVE
+              </button>
+              <button
+                onClick={() => setEditingStat(null)}
+                style={{
+                  flex: 1,
+                  background: 'transparent',
+                  color: '#F7D02C',
+                  border: '4px solid #F7D02C',
+                  fontWeight: 950,
+                  fontSize: '1.25rem',
+                  padding: '1rem',
+                  cursor: 'pointer',
+                  textTransform: 'uppercase'
+                }}
+              >
+                CANCEL
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Simple Armor Selection Overlay */}
       {isArmorOverlayOpen && (

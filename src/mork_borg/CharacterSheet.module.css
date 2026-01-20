@@ -35,10 +35,11 @@
     word-break: break-all;
     font-family: inherit;
     outline: none;
+    color: #000000;
 }
 
 .charName::placeholder {
-    color: rgba(0, 0, 0, 0.2);
+    color: rgba(0, 0, 0, 0.4);
 }
 
 .charClassContainer {
@@ -67,65 +68,73 @@
     background: #000000;
     color: #FFFFFF;
     margin: 1.5rem;
-    padding: 2rem;
+    padding: 1.5rem;
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     position: relative;
     border: 5px solid #000000;
 }
 
+.vitalityMain {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
 .vitalityLabel {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 800;
     text-transform: uppercase;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
     letter-spacing: 0.1rem;
+    opacity: 0.7;
 }
 
 .vitalityValues {
     display: flex;
     align-items: baseline;
-    font-size: 5rem;
+    font-size: 4.5rem;
     font-weight: 950;
 }
 
-.currentHp {
+.currentHp,
+.maxHp {
     position: relative;
     cursor: pointer;
+    transition: color 0.2s;
 }
 
-.currentHp::after {
+.currentHp.focused,
+.maxHp.focused {
+    color: #E61E8D;
+}
+
+.currentHp.focused::after,
+.maxHp.focused::after {
     content: '';
     position: absolute;
-    bottom: 8px;
+    bottom: 5px;
     left: 0;
     width: 100%;
-    height: 8px;
+    height: 6px;
     background: #E61E8D;
 }
 
 .maxHp {
-    font-size: 2.5rem;
-    opacity: 0.6;
-    margin-left: 0.5rem;
-    cursor: pointer;
-}
-
-.vitalityControls {
-    display: flex;
-    gap: 4rem;
-    margin-top: 1rem;
+    font-size: 2.25rem;
+    margin-left: 0.25rem;
 }
 
 .minimalButton {
     background: transparent;
     border: none;
     color: #FFFFFF;
-    font-size: 3rem;
+    font-size: 4rem;
     cursor: pointer;
     font-weight: 950;
-    padding: 0 1rem;
+    padding: 0 1.5rem;
     line-height: 1;
     transition: color 0.1s;
 }
@@ -179,16 +188,25 @@
 .statBox {
     background: #FFFFFF;
     border: 5px solid #000000;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    transition: transform 0.05s;
+    overflow: hidden;
+}
+
+.statMain {
     padding: 1.25rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex: 1;
     cursor: pointer;
-    transition: transform 0.05s;
 }
 
-.statBox:active {
-    transform: scale(0.98);
+.statMain:active {
+    background: rgba(0, 0, 0, 0.05);
 }
 
 .statLabel {
@@ -215,6 +233,22 @@
     font-weight: 950;
     font-size: 0.85rem;
     text-transform: uppercase;
+}
+
+.statEditBtn {
+    background: #F7D02C;
+    border: none;
+    border-left: 5px solid #000000;
+    color: #000000;
+    padding: 0 1.5rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.statEditBtn:hover {
+    background: #000000;
+    color: #F7D02C;
 }
 
 /* Omens Section */
@@ -284,12 +318,14 @@
     font-size: 1.5rem;
     font-weight: 900;
     text-transform: uppercase;
+    cursor: pointer;
 }
 
-.gearInfo p {
-    margin: 0;
+.gearDescription {
+    margin-top: 0.5rem;
     font-size: 1.1rem;
-    opacity: 0.8;
+    font-weight: 500;
+    line-height: 1.4;
 }
 
 .gearRoll {
