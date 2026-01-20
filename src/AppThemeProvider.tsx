@@ -10,9 +10,7 @@ export default function AppThemeProvider({ children }: { children: ReactNode }) 
   const isNexusRoute = ['/roster', '/armory', '/settings'].some(route =>
     location.pathname === route || location.pathname.startsWith(`${route}/`)
   )
-  const [appearance, setAppearance] = useState<'light' | 'dark'>(() =>
-    isNexusRoute ? 'dark' : 'light'
-  )
+  const [appearance, setAppearance] = useState<'dark'>(() => 'dark')
 
   useEffect(() => {
     if (isNexusRoute) {
@@ -20,14 +18,11 @@ export default function AppThemeProvider({ children }: { children: ReactNode }) 
       return
     }
 
-    const mq = window.matchMedia('(prefers-color-scheme: dark)')
-    const handle = () => setAppearance(mq.matches ? 'dark' : 'light')
     if (mode === 'auto') {
-      handle()
-      mq.addEventListener('change', handle)
-      return () => mq.removeEventListener('change', handle)
+      setAppearance('dark')
+    } else {
+      setAppearance(mode as 'dark')
     }
-    setAppearance(mode)
   }, [mode, isNexusRoute])
 
   useEffect(() => {

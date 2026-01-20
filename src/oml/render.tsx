@@ -93,7 +93,7 @@ export function RenderNodes(
 export function RenderOml(text: string, rollFn?: (_notation: string) => unknown) {
   const { roll, applyEffect } = useGameContext.getState()
   const doRoll = rollFn ?? roll
-  const nodes = parseOml(text.trim())
+  const nodes = parseOml((text || '').trim())
   return <>{RenderNodes(nodes, { roll: doRoll, applyEffect })}</>
 }
 

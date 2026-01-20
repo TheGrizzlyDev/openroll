@@ -1,0 +1,131 @@
+.sheet {
+    max-width: 600px;
+    margin: 0 auto;
+    padding-bottom: 4rem;
+    font-family: var(--font-heading);
+}
+
+.header {
+    margin-bottom: 3rem;
+    margin-top: 1rem;
+}
+
+.name {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.875rem;
+    color: white;
+    margin-bottom: 0.25rem;
+}
+
+.class {
+    color: var(--color-accent);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.titleContainer {
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.title {
+    font-style: italic;
+    font-size: 4rem;
+    line-height: 0.9;
+    color: var(--color-accent);
+    margin: 0;
+    transform: skew(-5deg);
+}
+
+.subtitle {
+    color: var(--color-text-dim);
+    font-style: italic;
+    font-size: 0.875rem;
+    margin-top: 1rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.box {
+    background: var(--color-accent);
+    color: black;
+    padding: 1.5rem;
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid var(--color-accent);
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.boxBlack {
+    background: black;
+    color: var(--color-accent);
+}
+
+.boxBlack .controlButton {
+    background: var(--color-accent);
+    color: black;
+}
+
+.iconContainer {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.icon {
+    font-size: 1.5rem;
+}
+
+.contentCenter {
+    text-align: center;
+    margin-top: -1rem;
+}
+
+.label {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.value {
+    font-size: 5rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.05em;
+}
+
+.valueMax {
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+.controls {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.controlButton {
+    background: black;
+    color: var(--color-accent);
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-weight: bold;
+    cursor: pointer;
+}

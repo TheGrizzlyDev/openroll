@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 export type NavPosition = 'left' | 'right' | 'top' | 'bottom'
-export type ThemeMode = 'auto' | 'light' | 'dark'
+export type ThemeMode = 'auto' | 'dark'
 export type AnimationStyle = 'fade' | 'slide' | 'both'
 export type ButtonVariant = 'solid' | 'soft' | 'surface' | 'outline' | 'ghost'
 
@@ -82,7 +82,7 @@ export const useSettingsStore = create<SettingsState>()(
         set({ navActiveButtonVariant }),
       hpBarVariant: 'solid',
       setHpBarVariant: hpBarVariant => set({ hpBarVariant }),
-      theme: 'auto',
+      theme: 'dark',
       setTheme: theme => set({ theme }),
     }),
     { name: 'settings' }

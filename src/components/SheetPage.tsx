@@ -48,7 +48,16 @@ export default function SheetPage() {
 
   useEffect(() => {
     if (id !== undefined) {
-      loadCharacter(parseInt(id, 10))
+      const idx = parseInt(id, 10)
+      if (!isNaN(idx)) {
+        loadCharacter(idx)
+      } else {
+        const { characters } = useGameContext.getState().state
+        const foundIdx = characters.findIndex(c => c.id === id)
+        if (foundIdx !== -1) {
+          loadCharacter(foundIdx)
+        }
+      }
     }
   }, [id, loadCharacter])
 

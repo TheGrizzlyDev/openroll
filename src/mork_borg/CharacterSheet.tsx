@@ -1,6 +1,7 @@
 import { useGameContext } from '../stores/GameContext'
 import StatGrid from './StatGrid'
 import type { Sheet } from './sheet'
+import styles from './CharacterSheet.module.css'
 
 type StatKey = 'str' | 'agi' | 'pre' | 'tou'
 
@@ -20,112 +21,71 @@ export default function CharacterSheet() {
     roll(fullNotation, stat.toUpperCase())
   }
 
-  // Styles specific for this sheet
-  const boxStyle = {
-    background: 'var(--color-accent)', // Yellow background
-    color: 'black',
-    padding: '1.5rem',
-    height: '180px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    border: '2px solid var(--color-accent)',
-    position: 'relative'
-  } as const
-
-  const labelStyle = {
-    fontSize: '1rem',
-    fontWeight: 700,
-    textTransform: 'uppercase',
-    letterSpacing: '0.05em',
-    marginBottom: '0.25rem'
-  } as const
-
-  const valueStyle = {
-    fontSize: '5rem',
-    fontWeight: 900,
-    lineHeight: 1,
-    letterSpacing: '-0.05em'
-  } as const
-
   return (
-    <div className="sheet" style={{ maxWidth: '600px', margin: '0 auto', paddingBottom: '4rem', fontFamily: 'var(--font-heading)' }}>
+    <div className={styles.sheet}>
 
       {/* Header */}
-      <header style={{ marginBottom: '3rem', marginTop: '1rem' }}>
-        <div style={{ textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.875rem', color: 'white', marginBottom: '0.25rem' }}>
+      <header className={styles.header}>
+        <div className={styles.name}>
           {sheet.name || 'Nameless Scum'}
         </div>
-        <div style={{ color: 'var(--color-accent)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase' }}>
+        <div className={styles.class}>
           {sheet.class || 'Classless'}
         </div>
 
-        <div style={{ marginTop: '3rem', textAlign: 'center' }}>
-          <h1 style={{
-            fontStyle: 'italic',
-            fontSize: '4rem',
-            lineHeight: 0.9,
-            color: 'var(--color-accent)',
-            margin: 0,
-            transform: 'skew(-5deg)'
-          }}>
+        <div className={styles.titleContainer}>
+          <h1 className={styles.title}>
             DYING<br />WORLD
           </h1>
-          <p style={{
-            color: 'var(--color-text-dim)',
-            fontStyle: 'italic',
-            fontSize: '0.875rem',
-            marginTop: '1rem'
-          }}>
+          <p className={styles.subtitle}>
             "The world dies. You die. Everyone dies."
           </p>
         </div>
       </header>
 
       {/* HP & Omens */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+      <div className={styles.grid}>
 
         {/* HIT POINTS */}
-        <div style={{ ...boxStyle, justifyContent: 'space-between', paddingBottom: '0.5rem' }}>
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
-            <span style={{ fontSize: '1.5rem' }}>♥</span>
+        <div className={styles.box}>
+          <div className={styles.iconContainer}>
+            <span className={styles.icon}>♥</span>
           </div>
-          <div style={{ textAlign: 'center', marginTop: '-1rem' }}>
-            <div style={labelStyle}>Hit Points</div>
-            <div style={valueStyle}>
-              {sheet.hp.toString().padStart(2, '0')}<span style={{ fontSize: '2rem', opacity: 0.6 }}>/{sheet.maxHp}</span>
+          <div className={styles.contentCenter}>
+            <div className={styles.label}>Hit Points</div>
+            <div className={styles.value}>
+              {sheet.hp.toString().padStart(2, '0')}<span className={styles.valueMax}>/{sheet.maxHp}</span>
             </div>
           </div>
           {/* Simple controls */}
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+          <div className={styles.controls}>
             <button
               onClick={() => updateField('hp', Math.max(0, sheet.hp - 1))}
-              style={{ background: 'black', color: 'var(--color-accent)', border: 'none', width: '30px', height: '30px', borderRadius: '50%', fontWeight: 'bold' }}>-</button>
+              className={styles.controlButton}>-</button>
             <button
               onClick={() => updateField('hp', Math.min(sheet.maxHp, sheet.hp + 1))}
-              style={{ background: 'black', color: 'var(--color-accent)', border: 'none', width: '30px', height: '30px', borderRadius: '50%', fontWeight: 'bold' }}>+</button>
+              className={styles.controlButton}>+</button>
           </div>
         </div>
 
         {/* OMENS */}
-        <div style={{ ...boxStyle, background: 'black', color: 'var(--color-accent)', justifyContent: 'space-between', paddingBottom: '0.5rem' }}>
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
-            <span style={{ fontSize: '1.5rem' }}>🪄</span>
+        <div className={`${styles.box} ${styles.boxBlack}`}>
+          <div className={styles.iconContainer}>
+            <span className={styles.icon}>🪄</span>
           </div>
-          <div style={{ textAlign: 'center', marginTop: '-1rem' }}>
-            <div style={labelStyle}>Omens</div>
-            <div style={valueStyle}>
+          <div className={styles.contentCenter}>
+            <div className={styles.label}>Omens</div>
+            <div className={styles.value}>
               {sheet.omens.toString().padStart(2, '0')}
             </div>
           </div>
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+          <div className={styles.controls}>
             <button
               onClick={() => updateField('omens', Math.max(0, sheet.omens - 1))}
-              style={{ background: 'var(--color-accent)', color: 'black', border: 'none', width: '30px', height: '30px', borderRadius: '50%', fontWeight: 'bold' }}>-</button>
+              className={styles.controlButton}>-</button>
             <button
               onClick={() => updateField('omens', sheet.omens + 1)}
-              style={{ background: 'var(--color-accent)', color: 'black', border: 'none', width: '30px', height: '30px', borderRadius: '50%', fontWeight: 'bold' }}>+</button>
+              className={styles.controlButton}>+</button>
           </div>
         </div>
 

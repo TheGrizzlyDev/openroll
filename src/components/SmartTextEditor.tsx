@@ -19,7 +19,7 @@ interface SmartTextEditorProps {
 export default function SmartTextEditor({ value, onChange }: SmartTextEditorProps) {
   const { roll } = useGameContext()
   const [editing, setEditing] = useState(false)
-  const [draft, setDraft] = useState(value)
+  const [draft, setDraft] = useState(value || '')
   const isMobile =
     typeof navigator !== 'undefined' &&
     /Mobi|Android|iP(ad|hone|od)/i.test(navigator.userAgent)

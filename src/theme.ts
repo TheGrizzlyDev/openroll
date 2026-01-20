@@ -1,23 +1,4 @@
 export const themes = {
-  light: {
-    colors: {
-      bg: '#ffffff',
-      bgAlt: '#f0f0f0',
-      surface: '#ffffff',
-      surfaceDim: '#f5f5f5',
-      text: '#000000',
-      textDim: '#666666',
-      accent: '#2563eb', // Bright blue
-      border: '#e5e7eb',
-      error: '#dc2626',
-    },
-    fonts: {
-      body: 'Inter, system-ui, sans-serif',
-      heading: 'Inter, system-ui, sans-serif',
-    },
-    borderWidth: '1px',
-    borderRadius: '8px',
-  },
   dark: {
     colors: {
       bg: '#000000',
@@ -60,8 +41,9 @@ export const themes = {
 
 export type ThemeName = keyof typeof themes
 
-export function applyTheme(name: ThemeName) {
-  const theme = themes[name]
+export function applyTheme(name: string) {
+  const theme = themes[name as ThemeName]
+  if (!theme) return
   const root = document.documentElement
   root.style.setProperty('--color-bg', theme.colors.bg)
   root.style.setProperty('--color-bg-alt', theme.colors.bgAlt)

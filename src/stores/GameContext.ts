@@ -101,81 +101,42 @@ const reducer = (state: GameState, action: GameAction): GameState => {
       return { ...state, characters: action.characters }
     case 'SET_CURRENT':
       return { ...state, current: action.current }
-    case 'SET_SHEET': {
-      const newState = { ...state, sheet: action.sheet }
+    case 'SET_SHEET':
+    case 'SET_INVENTORY':
+    case 'SET_SCROLLS': {
+      let sheet = state.sheet
+      let inventory = state.inventory
+      let scrolls = state.scrolls
+
+      if (action.type === 'SET_SHEET') sheet = action.sheet
+      else if (action.type === 'SET_INVENTORY') inventory = action.inventory
+      else if (action.type === 'SET_SCROLLS') scrolls = action.scrolls
+
+      const newState = { ...state, sheet, inventory, scrolls }
+
       if (state.current !== null) {
         const updated = [...state.characters]
-        let char = updated[state.current]
-        if (!char) {
-          char = {
-            id: crypto.randomUUID(),
-            name: '',
-            sheet: createSheet(),
-            inventory: [],
-            scrolls: []
-          }
-        } else if (!char.id) {
-          char = { ...char, id: crypto.randomUUID() }
+        let char = updated[state.current] || {
+          id: crypto.randomUUID(),
+          name: '',
+          sheet: createSheet(),
+          inventory: [],
+          scrolls: []
         }
+
+        if (!char.id) char = { ...char, id: crypto.randomUUID() }
+
         char = {
           ...char,
-          name: action.sheet.name,
-          sheet: action.sheet,
-          inventory: state.inventory,
-          scrolls: state.scrolls
+          name: sheet.name,
+          sheet,
+          inventory,
+          scrolls
         }
+
         updated[state.current] = char
-        const lastAccess = { ...state.lastAccess, [char.id]: Date.now() }
         newState.characters = updated
-        newState.lastAccess = lastAccess
-      }
-      return newState
-    }
-    case 'SET_INVENTORY': {
-      const newState = { ...state, inventory: action.inventory }
-      if (state.current !== null) {
-        const updated = [...state.characters]
-        let char = updated[state.current]
-        if (!char) {
-          char = {
-            id: crypto.randomUUID(),
-            name: '',
-            sheet: createSheet(),
-            inventory: [],
-            scrolls: []
-          }
-        } else if (!char.id) {
-          char = { ...char, id: crypto.randomUUID() }
-        }
-        char = { ...char, inventory: action.inventory }
-        updated[state.current] = char
-        const lastAccess = { ...state.lastAccess, [char.id]: Date.now() }
-        newState.characters = updated
-        newState.lastAccess = lastAccess
-      }
-      return newState
-    }
-    case 'SET_SCROLLS': {
-      const newState = { ...state, scrolls: action.scrolls }
-      if (state.current !== null) {
-        const updated = [...state.characters]
-        let char = updated[state.current]
-        if (!char) {
-          char = {
-            id: crypto.randomUUID(),
-            name: '',
-            sheet: createSheet(),
-            inventory: state.inventory,
-            scrolls: []
-          }
-        } else if (!char.id) {
-          char = { ...char, id: crypto.randomUUID() }
-        }
-        char = { ...char, scrolls: action.scrolls }
-        updated[state.current] = char
-        const lastAccess = { ...state.lastAccess, [char.id]: Date.now() }
-        newState.characters = updated
-        newState.lastAccess = lastAccess
+        newState.lastAccess = { ...state.lastAccess, [char.id]: Date.now() }
       }
       return newState
     }
@@ -486,15 +447,19 @@ const storeWithPersist = persist(storeCreator, {
     }
   }),
   merge: (persistedState, currentState) => {
+    const rawState = persistedState as any
+    // Handle double-nested state if it exists (for backward compatibility/tests)
+    const incomingState = rawState?.state?.state ? rawState.state.state : rawState?.state
+
     const merged = {
       ...currentState,
       state: {
         ...currentState.state,
-        ...(persistedState as PersistedState).state
+        ...incomingState
       }
     }
     const lastAccess = { ...merged.state.lastAccess }
-    merged.state.characters = merged.state.characters.map(c => {
+    merged.state.characters = merged.state.characters.map((c: Character) => {
       const id = c.id || crypto.randomUUID()
       const char = c.id ? c : { ...c, id }
       if (!lastAccess[id]) lastAccess[id] = Date.now()
@@ -508,10 +473,10 @@ const storeWithPersist = persist(storeCreator, {
 const store = (import.meta.env.DEV
   ? devtools(storeWithPersist)
   : storeWithPersist) as StateCreator<
-  GameContextValue,
-  [],
-  [["zustand/devtools", never], ["zustand/persist", unknown]]
->
+    GameContextValue,
+    [],
+    [["zustand/devtools", never], ["zustand/persist", unknown]]
+  >
 
 export const useGameContext = create<GameContextValue>()(store)
 

@@ -7,7 +7,6 @@ const StartPage = lazy(() => import('./components/StartPage'))
 const SheetPage = lazy(() => import('./components/SheetPage'))
 const LogView = lazy(() => import('./components/LogView'))
 const CharacterGenerator = lazy(() => import('./mork_borg/components/CharacterGenerator'))
-const DiceDemo = lazy(() => import('./components/DiceDemo'))
 
 export default function AppRoutes() {
   const navPosition = useSettingsStore(state => state.navPosition)
@@ -43,7 +42,6 @@ export default function AppRoutes() {
             <Route path="/generator" element={<CharacterGenerator />} />
             <Route path="/sheet/:id" element={<SheetPage />} />
             <Route path="/log" element={<LogView />} />
-            <Route path="/dice-demo" element={<DiceDemo />} />
             <Route path="*" element={<Navigate to="/roster" replace />} />
           </Routes>
         </Suspense>
