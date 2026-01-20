@@ -17,10 +17,10 @@ beforeAll(() => {
         matches: false,
         media: query,
         onchange: null,
-        addEventListener: () => {},
-        removeEventListener: () => {},
-        addListener: () => {},
-        removeListener: () => {},
+        addEventListener: () => { },
+        removeEventListener: () => { },
+        addListener: () => { },
+        removeListener: () => { },
         dispatchEvent: () => false,
       }) as MediaQueryList
   }
@@ -34,7 +34,7 @@ describe('route destinations', () => {
   it('renders roster screen for /roster', async () => {
     renderWithRoute('/roster')
 
-    expect(await screen.findByRole('heading', { name: 'Roster' })).toBeTruthy()
+    expect(await screen.findByRole('heading', { name: /The Roster is Empty/i })).toBeTruthy()
   })
 
   it('renders armory screen for /armory', async () => {
@@ -56,7 +56,7 @@ describe('route destinations', () => {
   it('redirects the root route to roster', async () => {
     renderWithRoute('/')
 
-    const rosterHeadings = await screen.findAllByRole('heading', { name: 'Roster' })
+    const rosterHeadings = await screen.findAllByRole('heading', { name: /(Roster|Active Characters|The Roster is Empty)/i })
     expect(rosterHeadings.length).toBeGreaterThan(0)
   })
 })

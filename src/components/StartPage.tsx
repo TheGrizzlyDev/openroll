@@ -12,6 +12,7 @@ import {
 } from './ui'
 import { PageContainer, Section, Flex } from '../layout'
 import { sortCharactersByLastAccess } from '../sortCharactersByLastAccess'
+import { SystemCard } from './SystemCard'
 import UnderConstruction from './UnderConstruction'
 
 type StartTab = 'roster' | 'armory' | 'settings'
@@ -31,6 +32,10 @@ export default function StartPage() {
   const navigate = useNavigate()
   const location = useLocation()
 
+  const [search, setSearch] = useState('')
+  const [systemFilter, setSystemFilter] = useState<string>('All Systems')
+  const [isCreating, setIsCreating] = useState(false)
+  const [selectedSystem, setSelectedSystem] = useState<string | null>(null)
   const [deleteIdx, setDeleteIdx] = useState<number | null>(null)
 
   const handleExport = () => {
@@ -81,6 +86,8 @@ export default function StartPage() {
     reader.readAsText(file)
   }
 
+  const sortedIndexes = sortCharactersByLastAccess(characters, lastAccess)
+
   const confirmDelete = (idx: number) => setDeleteIdx(idx)
 
   const handleLoad = (idx: number) => {
@@ -89,187 +96,226 @@ export default function StartPage() {
   }
 
   const handleCreate = () => {
-    createCharacter()
-    navigate('/generator')
+    setIsCreating(true)
   }
 
-  const cardStyle = {
-    background: 'var(--color-bg-alt)',
-    border: '1px solid color-mix(in srgb, var(--color-accent), transparent 70%)',
-    borderRadius: '16px',
-    padding: '1rem',
-    boxShadow: '0 12px 24px rgb(0 0 0 / 18%)'
+  const confirmSystemSelection = () => {
+    if (selectedSystem === 'Mörk Borg') {
+      createCharacter()
+      navigate('/generator')
+    } else {
+      alert('Only Mörk Borg is supported currently.')
+    }
+  }
+
+  const filteredCharacters = sortedIndexes.filter(idx => {
+    const char = characters[idx]
+    const matchesSearch = (char.name || '').toLowerCase().includes(search.toLowerCase())
+    const matchesSystem = systemFilter === 'All Systems' || (systemFilter === 'Mörk Borg' && true)
+    return matchesSearch && matchesSystem
+  })
+
+  // Styles
+  const searchInputStyle = {
+    width: '100%',
+    padding: '0.75rem 1rem',
+    borderRadius: '8px',
+    background: 'var(--color-surface-dim)',
+    border: '1px solid var(--color-border)',
+    color: 'var(--color-text)',
+    fontSize: '1rem',
+    outline: 'none'
   } as const
 
-  const tagStyle = {
+  const filterPillStyle = (isActive: boolean) => ({
+    padding: '0.5rem 1rem',
     borderRadius: '999px',
-    border: '1px solid color-mix(in srgb, var(--color-accent), transparent 60%)',
-    padding: '0.2rem 0.6rem',
-    fontSize: '0.75rem',
-    fontWeight: 600,
-    textTransform: 'uppercase',
-    letterSpacing: '0.04em'
-  } as const
+    background: isActive ? 'var(--color-accent)' : 'var(--color-surface-dim)',
+    color: isActive ? '#fff' : 'var(--color-text-dim)',
+    border: '1px solid transparent',
+    cursor: 'pointer',
+    fontSize: '0.875rem',
+    fontWeight: 500,
+    transition: 'all 0.2s'
+  }) as const
 
-  const statStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.2rem',
-    padding: '0.5rem 0.75rem',
+  const characterCardStyle = {
+    background: 'var(--color-surface)',
+    border: '1px solid var(--color-border)',
     borderRadius: '12px',
-    background: 'color-mix(in srgb, var(--color-bg), transparent 10%)',
-    border: '1px solid color-mix(in srgb, var(--color-accent), transparent 75%)',
-    minWidth: '88px'
+    padding: '1rem',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem'
   } as const
 
-  const sortedIndexes = sortCharactersByLastAccess(characters, lastAccess)
+  const renderSystemSelection = () => (
+    <Section title="Choose a System">
+      <div style={{ display: 'grid', gap: '1rem' }}>
+        <SystemCard
+          title="Mörk Borg"
+          description="A doom-laden artpunk RPG about a dying world."
+          selected={selectedSystem === 'Mörk Borg'}
+          onClick={() => setSelectedSystem('Mörk Borg')}
+          image={<span style={{ fontSize: '2rem' }}>💀</span>}
+        />
+        <SystemCard
+          title="Mothership"
+          description="Sci-fi horror where the most dangerous thing in space is your own fear."
+          selected={selectedSystem === 'Mothership'}
+          onClick={() => setSelectedSystem('Mothership')}
+          image={<span style={{ fontSize: '2rem' }}>🚀</span>}
+        />
+        <SystemCard
+          title="Pirate Borg"
+          description="A scurvy-ridden RPG of maritime horror and skeleton-filled seas."
+          selected={selectedSystem === 'Pirate Borg'}
+          onClick={() => setSelectedSystem('Pirate Borg')}
+          image={<span style={{ fontSize: '2rem' }}>⛵</span>}
+        />
+      </div>
+      <Flex justify="end" style={{ marginTop: '2rem' }}>
+        <Flex gap="1rem">
+          <Button variant="ghost" onClick={() => setIsCreating(false)}>Cancel</Button>
+          <Button onClick={confirmSystemSelection} disabled={!selectedSystem}>Confirm Selection</Button>
+        </Flex>
+      </Flex>
+    </Section>
+  )
+
+  const renderRoster = () => {
+    if (isCreating) return renderSystemSelection()
+
+    return (
+      <div style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+        {/* Header Controls */}
+        <Flex direction="column" gap="1rem">
+          <input
+            type="text"
+            placeholder="Search characters..."
+            className="search-input"
+            style={searchInputStyle}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+          <Flex gap="0.5rem" wrap="wrap">
+            {['All Systems', 'Mörk Borg', 'D&D 5e', 'Star Wars'].map(sys => (
+              <button
+                key={sys}
+                style={filterPillStyle(systemFilter === sys)}
+                onClick={() => setSystemFilter(sys)}
+              >
+                {sys}
+              </button>
+            ))}
+          </Flex>
+        </Flex>
+
+        {/* Character List */}
+        <div>
+          <Flex justify="between" align="center" style={{ marginBottom: '1rem' }}>
+            <h3 style={{ margin: 0, fontSize: '0.875rem', color: 'var(--color-text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Active Characters
+            </h3>
+          </Flex>
+
+          {filteredCharacters.length === 0 ? (
+            <div
+              data-testid="roster-empty-card"
+              style={{
+                padding: '4rem 2rem',
+                textAlign: 'center',
+                background: 'var(--color-surface)',
+                borderRadius: '16px',
+                border: '1px dashed var(--color-border)'
+              }}>
+              <div style={{
+                fontSize: '3rem',
+                marginBottom: '1rem',
+                opacity: 0.2
+              }}>
+                📖
+              </div>
+              <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>The Roster is Empty</h2>
+              <p style={{ color: 'var(--color-text-dim)', marginBottom: '2rem', maxWidth: '400px', marginInline: 'auto' }}>
+                Your journey has not yet begun. No wretches, crew, or warriors are under your command.
+              </p>
+              <Flex gap="1rem" justify="center">
+                <Button onClick={handleCreate} style={{ padding: '0.75rem 1.5rem', fontSize: '1rem' }}>
+                  + Create Character
+                </Button>
+                <FileInput accept="application/json" onFileSelect={handleImport}>
+                  Import Roster
+                </FileInput>
+              </Flex>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {filteredCharacters.map(idx => {
+                const char = characters[idx]
+                return (
+                  <div
+                    key={idx}
+                    onClick={() => handleLoad(idx)}
+                    style={characterCardStyle}
+                    data-testid="roster-card"
+                  >
+                    <div style={{
+                      width: '64px',
+                      height: '64px',
+                      borderRadius: '12px',
+                      background: 'var(--color-surface-dim)',
+                      overflow: 'hidden',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      {/* Placeholder Avatar */}
+                      {char.sheet.class === 'Fanged Deserter' ? '🦷' :
+                        char.sheet.class === 'Gutterborn Scum' ? '🐀' : '💀'}
+                    </div>
+
+                    <div style={{ flex: 1 }}>
+                      <div style={{
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        color: 'var(--color-accent)', // Or system specific color
+                        textTransform: 'uppercase',
+                        marginBottom: '0.25rem'
+                      }}>
+                        Mörk Borg
+                      </div>
+                      <h3 style={{ margin: 0, fontSize: '1.25rem' }}>{char.name || 'Nameless Wretch'}</h3>
+                      <div style={{ color: 'var(--color-text-dim)', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+                        HP: {char.sheet.hp}/{char.sheet.maxHp} • {char.sheet.class || 'Classless'}
+                      </div>
+                    </div>
+
+                    <div style={{ color: 'var(--color-text-dim)', fontSize: '1.5rem' }}>
+                      ›
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
 
   const pathTab = location.pathname.split('/')[1]
   const activeTab: StartTab =
     pathTab === 'roster' || pathTab === 'armory' || pathTab === 'settings'
       ? pathTab
       : 'roster'
+
   const renderTab = () => {
     switch (activeTab) {
       case 'roster':
-        return (
-          <Section
-            title="Roster"
-            actions={
-              <>
-                <Button onClick={handleCreate}>Create New</Button>
-                <Button onClick={handleExport}>Export</Button>
-                <FileInput accept="application/json" onFileSelect={handleImport}>
-                  Import
-                </FileInput>
-              </>
-            }
-          >
-            {sortedIndexes.length === 0 ? (
-              <div data-testid="roster-empty-card" style={cardStyle}>
-                <Flex direction="column" gap="1rem">
-                  <Flex gap="1.5rem" align="center" wrap="wrap">
-                    <div
-                      style={{
-                        width: '84px',
-                        height: '84px',
-                        borderRadius: '24px',
-                        background:
-                          'linear-gradient(135deg, var(--color-accent), color-mix(in srgb, var(--color-accent), transparent 60%))',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '2rem',
-                        fontWeight: 700
-                      }}
-                    >
-                      +
-                    </div>
-                    <div style={{ flex: '1 1 240px' }}>
-                      <h3 style={{ margin: 0 }}>Build your roster</h3>
-                      <p style={{ margin: '0.35rem 0 0' }}>
-                        Add your first character and pick the system you want to
-                        explore. We&apos;ll guide you through the generator next.
-                      </p>
-                    </div>
-                  </Flex>
-                  <Flex gap="0.75rem" wrap="wrap">
-                    <Button onClick={handleCreate}>Select a System</Button>
-                    <FileInput accept="application/json" onFileSelect={handleImport}>
-                      Import Roster
-                    </FileInput>
-                  </Flex>
-                </Flex>
-              </div>
-            ) : (
-              <ul
-                data-testid="roster-list"
-                style={{
-                  listStyle: 'none',
-                  margin: 0,
-                  padding: 0,
-                  display: 'grid',
-                  gap: '1rem',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))'
-                }}
-              >
-                {sortedIndexes.map(originalIdx => (
-                  <li key={originalIdx}>
-                    <div data-testid="roster-card" style={cardStyle}>
-                      <Flex direction="column" gap="1rem">
-                        <Flex align="center" gap="1rem" wrap="wrap">
-                          <div
-                            style={{
-                              width: '64px',
-                              height: '64px',
-                              borderRadius: '20px',
-                              background:
-                                'linear-gradient(135deg, var(--color-accent), color-mix(in srgb, var(--color-accent), transparent 60%))',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '1.4rem',
-                              fontWeight: 700
-                            }}
-                            aria-hidden="true"
-                          >
-                            {(characters[originalIdx].name || '?')
-                              .charAt(0)
-                              .toUpperCase()}
-                          </div>
-                          <div style={{ flex: '1 1 220px' }}>
-                            <h3 style={{ margin: 0 }}>
-                              {characters[originalIdx].name ||
-                                `Character ${originalIdx + 1}`}
-                            </h3>
-                            <p style={{ margin: '0.25rem 0 0' }}>
-                              {characters[originalIdx].sheet.class || 'Classless'}
-                            </p>
-                          </div>
-                          <Flex gap="0.5rem" wrap="wrap">
-                            <span data-testid="roster-system-tag" style={tagStyle}>
-                              Mörk Borg
-                            </span>
-                            <span data-testid="roster-class-tag" style={tagStyle}>
-                              {characters[originalIdx].sheet.class || 'Classless'}
-                            </span>
-                          </Flex>
-                        </Flex>
-                        <Flex gap="0.75rem" wrap="wrap">
-                          <div data-testid="roster-stat-hp" style={statStyle}>
-                            <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>HP</span>
-                            <strong>
-                              {characters[originalIdx].sheet.hp}/
-                              {characters[originalIdx].sheet.maxHp}
-                            </strong>
-                          </div>
-                          <div data-testid="roster-stat-omens" style={statStyle}>
-                            <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>
-                              Omens
-                            </span>
-                            <strong>{characters[originalIdx].sheet.omens}</strong>
-                          </div>
-                          <div data-testid="roster-stat-armor" style={statStyle}>
-                            <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>
-                              Armor
-                            </span>
-                            <strong>{characters[originalIdx].sheet.armor}</strong>
-                          </div>
-                        </Flex>
-                        <Flex gap="0.5rem" wrap="wrap">
-                          <Button onClick={() => handleLoad(originalIdx)}>Open</Button>
-                          <Button onClick={() => confirmDelete(originalIdx)}>
-                            Delete
-                          </Button>
-                        </Flex>
-                      </Flex>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Section>
-        )
+        return renderRoster()
       case 'armory':
         return <UnderConstruction title="Armory" />
       case 'settings':
@@ -278,10 +324,12 @@ export default function StartPage() {
         return null
     }
   }
+
   return (
     <>
       <PageContainer>{renderTab()}</PageContainer>
 
+      {/* Delete Dialog */}
       {deleteIdx !== null && (
         <DialogRoot
           open
@@ -301,7 +349,10 @@ export default function StartPage() {
                   <Button
                     type="button"
                     onClick={() => {
-                      if (deleteIdx !== null) deleteCharacter(deleteIdx)
+                      if (deleteIdx !== null) {
+                        deleteCharacter(deleteIdx)
+                        setDeleteIdx(null)
+                      }
                     }}
                   >
                     Delete

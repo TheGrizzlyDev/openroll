@@ -22,10 +22,10 @@ beforeAll(() => {
         matches: false,
         media: query,
         onchange: null,
-        addEventListener: () => {},
-        removeEventListener: () => {},
-        addListener: () => {},
-        removeListener: () => {},
+        addEventListener: () => { },
+        removeEventListener: () => { },
+        addListener: () => { },
+        removeListener: () => { },
         dispatchEvent: () => false,
       }) as MediaQueryList
   }
@@ -46,7 +46,7 @@ describe('theme application by route', () => {
     useSettingsStore.setState({ theme: 'light' })
     renderWithRoute('/roster')
 
-    expect(await screen.findByRole('heading', { name: 'Roster' })).toBeTruthy()
+    expect(await screen.findByRole('heading', { name: 'The Roster is Empty' })).toBeTruthy()
 
     await waitFor(() => {
       expect(document.documentElement.style.getPropertyValue('--color-bg')).toBe(
