@@ -122,7 +122,7 @@ export default function CharacterGenerator() {
               { label: 'STR', val: sheet.str },
               { label: 'AGI', val: sheet.agi },
               { label: 'PRE', val: sheet.pre },
-              { label: 'TGH', val: sheet.tou }
+              { label: 'TOU', val: sheet.tou }
             ].map(stat => (
               <div key={stat.label} style={{
                 border: '2px solid white',

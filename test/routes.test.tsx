@@ -85,7 +85,7 @@ describe('navbar visibility', () => {
   it('hides navbar buttons on Realm routes', async () => {
     renderWithRoute('/generator')
 
-    expect(await screen.findByRole('heading', { name: /Character Generator/ }))
+    expect(await screen.findByRole('heading', { name: /BIRTH A WRETCH/ }))
       .toBeTruthy()
     expect(screen.queryByRole('button', { name: 'Armory' })).toBeNull()
     expect(screen.queryByRole('button', { name: 'Settings' })).toBeNull()
