@@ -12,7 +12,7 @@ test('realm back arrow returns to roster from generator', async ({ page }) => {
 
   await page.getByRole('button', { name: 'Back to roster' }).click()
   await expect(page).toHaveURL(/\/roster$/)
-  await expect(page.getByRole('heading', { name: 'Roster' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Roster', level: 2 })).toBeVisible()
 })
 
 test('realm back arrow returns to roster from sheet', async ({ page }) => {

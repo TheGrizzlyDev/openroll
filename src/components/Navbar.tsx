@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useSettingsStore, type ButtonVariant } from '../stores/settingsStore'
 import { useGameContext } from '../stores/GameContext'
 import { Flex } from '@radix-ui/themes'
+import './Navbar.css'
 
 type StartTab = 'roster' | 'armory' | 'settings'
 
@@ -56,6 +57,7 @@ export default function Navbar() {
     : (pathname.split('/')[1] as StartTab)
 
   const vertical = navPosition === 'left' || navPosition === 'right'
+  const isBottom = navPosition === 'bottom'
 
   const [appearance, setAppearance] = useState<'light' | 'dark'>('light')
   useEffect(() => {
@@ -72,7 +74,7 @@ export default function Navbar() {
 
   const bgColor = appearance === 'dark' ? navBgColorDark : navBgColorLight
   const opacity = appearance === 'dark' ? navBgOpacityDark : navBgOpacityLight
-  const background = `rgba(${hexToRgb(bgColor)}, ${opacity})`
+  const baseBackground = `rgba(${hexToRgb(bgColor)}, ${opacity})`
   const shadowColor =
     appearance === 'dark' ? navShadowColorDark : navShadowColorLight
   const shadowOpacity =
@@ -110,9 +112,16 @@ export default function Navbar() {
     gap: 'var(--space-2)',
     borderRadius: `${navCornerRadius}px`,
     backdropFilter: 'blur(10px)',
-    background,
-    boxShadow: `0 2px 6px ${boxShadowColor}`,
+    background: isBottom ? 'var(--color-bg-alt)' : baseBackground,
+    boxShadow: isBottom
+      ? '0 8px 20px rgba(0, 0, 0, 0.4)'
+      : `0 2px 6px ${boxShadowColor}`,
     transition: `opacity ${navAnimationDuration}ms, transform ${navAnimationDuration}ms`,
+    display: isBottom ? 'grid' : 'flex',
+    gridTemplateColumns: isBottom ? 'repeat(3, minmax(0, 1fr))' : undefined,
+    alignItems: 'center',
+    justifyItems: isBottom ? 'center' : undefined,
+    border: isBottom ? '1px solid rgba(255, 255, 255, 0.08)' : undefined,
   }
 
   let visibleTransform = ''
@@ -131,7 +140,7 @@ export default function Navbar() {
       bottom: '1rem',
       left: '50%',
       width: 'calc(100% - 2rem)',
-      maxWidth: '800px',
+      maxWidth: '480px',
     }
     visibleTransform = 'translateX(-50%)'
   } else if (navPosition === 'left') {
@@ -152,7 +161,10 @@ export default function Navbar() {
       justify="between"
       style={style}
     >
-      <nav>
+      <nav
+        className={`navbar${isBottom ? ' navbar--bottom' : ''}`}
+        data-testid="nexus-nav"
+      >
         {tabs.map(tab => (
           <Button
             key={tab.id}
@@ -162,6 +174,7 @@ export default function Navbar() {
                 : navButtonVariant,
               activeTab === tab.id
             )}
+            className="navbar__item"
             aria-current={activeTab === tab.id ? 'page' : undefined}
             onClick={() => {
               if (tab.id === 'roster') {
@@ -175,7 +188,7 @@ export default function Navbar() {
               }
             }}
           >
-            {tab.label}
+            <span className="navbar__label">{tab.label}</span>
           </Button>
         ))}
       </nav>

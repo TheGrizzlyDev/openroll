@@ -63,6 +63,26 @@ test('bottom navigation swaps between Nexus destinations', async ({ page }) => {
   ).toBeVisible()
 })
 
+test('bottom navigation stays fixed on Nexus routes', async ({ page }) => {
+  const routes = ['/roster', '/armory', '/settings']
+
+  for (const route of routes) {
+    await page.goto(route)
+    const nav = page.getByTestId('nexus-nav')
+    await expect(nav).toBeVisible()
+    const position = await nav.evaluate(el => getComputedStyle(el).position)
+    expect(position).toBe('fixed')
+    const bottom = await nav.evaluate(el => getComputedStyle(el).bottom)
+    expect(Number.parseFloat(bottom)).toBeGreaterThan(0)
+    const box = await nav.boundingBox()
+    expect(box).not.toBeNull()
+    const viewportHeight = await page.evaluate(() => window.innerHeight)
+    if (box) {
+      expect(Math.abs(viewportHeight - (box.y + box.height))).toBeLessThanOrEqual(24)
+    }
+  }
+})
+
 test('empty roster CTA navigates to generator flow', async ({ page }) => {
   await page.goto('/roster')
   await expect(page.getByTestId('roster-empty-card')).toBeVisible()
@@ -92,6 +112,18 @@ test.describe('Nexus visual states', () => {
     await expect(page.getByTestId('roster-empty-card')).toBeVisible()
     const screenshot = await page.screenshot({ fullPage: true })
     test.info().attach('roster-empty', { body: screenshot, contentType: 'image/png' })
+    expect(screenshot.byteLength).toBeGreaterThan(0)
+  })
+
+  test('Roster empty state with bottom nav', async ({ page }) => {
+    await page.goto('/roster')
+    await expect(page.getByTestId('nexus-nav')).toBeVisible()
+    await expect(page).toHaveScreenshot('roster-bottom-nav.png', { fullPage: true })
+    const screenshot = await page.screenshot({ fullPage: true })
+    test.info().attach('roster-bottom-nav', {
+      body: screenshot,
+      contentType: 'image/png'
+    })
     expect(screenshot.byteLength).toBeGreaterThan(0)
   })
 

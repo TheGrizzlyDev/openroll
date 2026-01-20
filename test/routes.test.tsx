@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterEach } from 'vitest'
-import { render, screen, cleanup } from '@testing-library/react'
+import { render, screen, cleanup, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import AppRoutes from '../src/routes'
 
@@ -62,6 +62,19 @@ describe('route destinations', () => {
 })
 
 describe('navbar visibility', () => {
+  it('renders three bottom nav items with expected labels', async () => {
+    renderWithRoute('/roster')
+
+    const nav = await screen.findByTestId('nexus-nav')
+    const navButtons = within(nav).getAllByRole('button')
+    expect(navButtons).toHaveLength(3)
+    expect(navButtons.map(button => button.textContent?.trim())).toEqual([
+      'Roster',
+      'Armory',
+      'Settings',
+    ])
+  })
+
   it('renders navbar buttons on Nexus routes', async () => {
     renderWithRoute('/roster')
 
