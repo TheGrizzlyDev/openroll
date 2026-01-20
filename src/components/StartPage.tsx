@@ -225,6 +225,9 @@ export default function StartPage() {
             <h3 style={{ margin: 0, fontSize: '0.875rem', color: 'var(--color-text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Active Characters
             </h3>
+            <Button onClick={handleCreate} style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
+              + Create New
+            </Button>
           </Flex>
 
           {filteredCharacters.length === 0 ? (

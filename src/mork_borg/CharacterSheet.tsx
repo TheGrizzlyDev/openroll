@@ -87,18 +87,18 @@ export default function CharacterSheet() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
 
         {/* HIT POINTS */}
-        <div style={boxStyle}>
+        <div style={{ ...boxStyle, justifyContent: 'space-between', paddingBottom: '0.5rem' }}>
           <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
             <span style={{ fontSize: '1.5rem' }}>♥</span>
           </div>
-          <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: 'center', marginTop: '-1rem' }}>
             <div style={labelStyle}>Hit Points</div>
             <div style={valueStyle}>
               {sheet.hp.toString().padStart(2, '0')}<span style={{ fontSize: '2rem', opacity: 0.6 }}>/{sheet.maxHp}</span>
             </div>
           </div>
           {/* Simple controls */}
-          <div style={{ position: 'absolute', bottom: '0.5rem', width: '100%', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
             <button
               onClick={() => updateField('hp', Math.max(0, sheet.hp - 1))}
               style={{ background: 'black', color: 'var(--color-accent)', border: 'none', width: '30px', height: '30px', borderRadius: '50%', fontWeight: 'bold' }}>-</button>
@@ -109,17 +109,17 @@ export default function CharacterSheet() {
         </div>
 
         {/* OMENS */}
-        <div style={{ ...boxStyle, background: 'black', color: 'var(--color-accent)' }}>
+        <div style={{ ...boxStyle, background: 'black', color: 'var(--color-accent)', justifyContent: 'space-between', paddingBottom: '0.5rem' }}>
           <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-start' }}>
             <span style={{ fontSize: '1.5rem' }}>🪄</span>
           </div>
-          <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: 'center', marginTop: '-1rem' }}>
             <div style={labelStyle}>Omens</div>
             <div style={valueStyle}>
               {sheet.omens.toString().padStart(2, '0')}
             </div>
           </div>
-          <div style={{ position: 'absolute', bottom: '0.5rem', width: '100%', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
             <button
               onClick={() => updateField('omens', Math.max(0, sheet.omens - 1))}
               style={{ background: 'var(--color-accent)', color: 'black', border: 'none', width: '30px', height: '30px', borderRadius: '50%', fontWeight: 'bold' }}>-</button>
@@ -134,75 +134,7 @@ export default function CharacterSheet() {
       <StatGrid sheet={sheet} updateField={updateField} rollStat={rollStat} />
 
       {/* Equipment Header */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        borderBottom: '2px solid var(--color-accent)',
-        paddingBottom: '0.5rem',
-        marginBottom: '1.5rem'
-      }}>
-        <h2 style={{
-          fontSize: '2rem',
-          fontStyle: 'italic',
-          margin: 0,
-          color: 'white',
-          transform: 'skew(-10deg)'
-        }}>EQUIPMENT</h2>
-        <span style={{ color: 'var(--color-accent)', fontWeight: 700 }}>
-          7/12 SLOTS
-        </span>
-      </div>
-
-      {/* Placeholder Equipment Item to match mockup */}
-      <div style={{
-        background: '#111',
-        padding: '1rem',
-        marginBottom: '1rem',
-        display: 'flex',
-        gap: '1rem',
-        alignItems: 'center'
-      }}>
-        <div style={{
-          width: '48px',
-          height: '48px',
-          background: 'var(--color-accent)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '1.5rem',
-          color: 'black'
-        }}>
-          ⚔️
-        </div>
-        <div style={{ flex: 1 }}>
-          <div style={{ color: 'var(--color-accent)', fontWeight: 700, fontSize: '1.1rem', marginBottom: '0.2rem' }}>ZWEIHANDER</div>
-          <div style={{ color: '#666', fontSize: '0.75rem', textTransform: 'uppercase' }}>HEAVY / TWO-HANDED</div>
-        </div>
-        <div style={{ fontSize: '1.5rem', fontWeight: 700, fontStyle: 'italic', color: 'white' }}>
-          d10+2
-        </div>
-      </div>
-
-      <div style={{ color: '#666', fontSize: '0.875rem', marginBottom: '1rem' }}>
-        A rusted, notched blade of immense weight.
-      </div>
-
-      <button style={{
-        background: 'transparent',
-        border: '1px solid var(--color-accent)',
-        color: 'var(--color-accent)',
-        padding: '0.5rem 1rem',
-        borderRadius: '999px',
-        fontSize: '0.8rem',
-        fontWeight: 700,
-        textTransform: 'uppercase',
-        cursor: 'pointer'
-      }}
-        onClick={() => roll('1d10+2', 'Zweihander')}
-      >
-        🎲 Roll 1d10+2
-      </button>
+      {/* Equipment is now handled by the Inventory component in SheetPage */}
 
       {/* Existing form fields mostly hidden or pushed to bottom/settings? 
           For now I'll just keep the main visual elements. 

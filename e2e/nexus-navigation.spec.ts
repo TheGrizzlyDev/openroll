@@ -88,7 +88,12 @@ test('empty roster CTA navigates to generator flow', async ({ page }) => {
   await expect(page.getByTestId('roster-empty-card')).toBeVisible()
 
   await page.getByRole('button', { name: 'Select a System' }).click()
-  await expect(page).toHaveURL(/\/generator$/)
+  await expect.soft(page).toHaveURL(/\/generator$/)
+
+  // Capture Generator Screenshot
+  const artifactPath = '/home/antonio/.gemini/antigravity/brain/97c4cbd5-61db-47e2-a5fc-f8cee5aa72ab/character_generator.png'
+  await page.screenshot({ path: artifactPath, fullPage: true })
+  test.info().attach('character-generator', { path: artifactPath, contentType: 'image/png' })
 })
 
 test('populated roster renders cards with key elements', async ({ page }) => {
@@ -157,5 +162,13 @@ test.describe('Nexus visual states', () => {
     await expect(page.getByRole('heading', { name: 'Under Construction' })).toBeVisible()
     await expect(page.getByText("We're building the next set of tools for this space.")).toBeVisible()
     // await expect(page).toHaveScreenshot('settings-placeholder.png')
+  })
+
+  test('Generator visual', async ({ page }) => {
+    await page.goto('/generator')
+    await expect.soft(page.getByText('BIRTH A WRETCH')).toBeVisible()
+    const artifactPath = '/home/antonio/.gemini/antigravity/brain/97c4cbd5-61db-47e2-a5fc-f8cee5aa72ab/character_generator.png'
+    await page.screenshot({ path: artifactPath, fullPage: true })
+    test.info().attach('character-generator', { path: artifactPath, contentType: 'image/png' })
   })
 })
