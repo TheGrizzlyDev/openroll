@@ -3,13 +3,15 @@ import type { ChangeEvent } from 'react'
 import { useGameContext } from '../../stores/GameContext'
 import classes from '../classes'
 import type { InventoryItem, Scroll } from '../generateCharacter'
+import styles from './CharacterGenerator.module.css'
 
 export default function CharacterGenerator() {
   const {
     state: { sheet, inventory, scrolls },
     createCharacter,
     finalizeCharacter,
-    cancelCreation
+    cancelCreation,
+    dispatch
   } = useGameContext()
   const navigate = useNavigate()
 
@@ -20,7 +22,7 @@ export default function CharacterGenerator() {
 
   const handleCancel = () => {
     cancelCreation()
-    navigate('/')
+    navigate('/roster')
   }
 
   const handleClassChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -28,195 +30,151 @@ export default function CharacterGenerator() {
     createCharacter(value || undefined)
   }
 
-  const handleRollClass = () => {
-    createCharacter()
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      type: 'SET_SHEET',
+      sheet: { ...sheet, name: e.target.value }
+    })
   }
 
-  // Styles
-  const pageStyle = {
-    fontFamily: 'var(--font-heading)',
-    color: 'white',
-    maxWidth: '800px',
-    margin: '0 auto',
-    padding: '2rem 1rem'
+  const handleRollStat = (stat: 'str' | 'agi' | 'pre' | 'tou') => {
+    // Roll 3d6 and calculate modifier
+    const roll1 = Math.floor(Math.random() * 6) + 1
+    const roll2 = Math.floor(Math.random() * 6) + 1
+    const roll3 = Math.floor(Math.random() * 6) + 1
+    const total = roll1 + roll2 + roll3
+
+    // Calculate modifier based on Mörk Borg rules
+    let modifier = 0
+    if (total <= 4) modifier = -3
+    else if (total <= 6) modifier = -2
+    else if (total <= 8) modifier = -1
+    else if (total <= 12) modifier = 0
+    else if (total <= 14) modifier = 1
+    else if (total <= 16) modifier = 2
+    else modifier = 3
+
+    dispatch({
+      type: 'SET_SHEET',
+      sheet: { ...sheet, [stat]: modifier }
+    })
   }
 
-  const sectionTitleStyle = {
-    fontSize: '2rem',
-    color: 'var(--color-accent)',
-    borderBottom: '2px solid var(--color-accent)',
-    marginBottom: '1rem',
-    paddingBottom: '0.5rem',
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.1em'
-  }
-
-  const buttonStyle = {
-    background: 'var(--color-accent)',
-    color: 'black',
-    border: 'none',
-    padding: '0.75rem 1.5rem',
-    fontSize: '1rem',
-    fontWeight: 700,
-    textTransform: 'uppercase' as const,
-    cursor: 'pointer',
-    clipPath: 'polygon(5% 0, 100% 0, 100% 90%, 95% 100%, 0 100%, 0 10%)'
-  }
+  const stats = [
+    { key: 'str' as const, label: 'STRENGTH', abbr: 'STR' },
+    { key: 'agi' as const, label: 'AGILITY', abbr: 'AGI' },
+    { key: 'pre' as const, label: 'PRESENCE', abbr: 'PRE' },
+    { key: 'tou' as const, label: 'TOUGHNESS', abbr: 'TOU' },
+  ]
 
   return (
-    <div style={pageStyle}>
-      <header style={{ textAlign: 'center', marginBottom: '4rem' }}>
-        <h1 style={{
-          fontSize: '4rem',
-          color: 'var(--color-accent)',
-          margin: 0,
-          transform: 'rotate(-2deg)'
+    <div className={styles.generator}>
+      <div className={styles.header}>
+        <button onClick={handleCancel} className={styles.backButton}>
+          ← ROSTER
+        </button>
+        <button onClick={handleCancel} className={styles.rosterLink}>
+          CANCEL
+        </button>
+      </div>
+
+      <h1 className={styles.title}>FORGING NEW SCUM</h1>
+
+      {/* Character Name */}
+      <div className={styles.section}>
+        <div className={styles.sectionLabel}>WHAT IS YOUR NAME?</div>
+        <input
+          type="text"
+          className={styles.nameInput}
+          value={sheet.name || ''}
+          onChange={handleNameChange}
+          placeholder="GURN"
+        />
+      </div>
+
+      {/* Class Selection */}
+      <div className={styles.section}>
+        <div className={styles.sectionLabel}>CLASS SELECTION</div>
+        <select
+          value={sheet.class || ''}
+          onChange={handleClassChange}
+          className={styles.classSelect}
+        >
+          <option value="">GUTTER BORN SCUM</option>
+          {classes.map(cls => (
+            <option key={cls} value={cls}>{cls.toUpperCase()}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Stats Grid */}
+      <div className={styles.section}>
+        <div className={styles.sectionLabel}>VITALITY</div>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '1rem',
+          marginBottom: '1rem'
         }}>
-          BIRTH A WRETCH
-        </h1>
-        <p style={{ fontStyle: 'italic', opacity: 0.7 }}>Who will die in the dark?</p>
-      </header>
-
-      <div style={{ marginBottom: '3rem' }}>
-        <h2 style={sectionTitleStyle}>1. CHOOSE YOUR DOOM</h2>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <select
-            value={sheet.class || ''}
-            onChange={handleClassChange}
-            style={{
-              background: 'black',
-              color: 'var(--color-accent)',
-              border: '2px solid var(--color-accent)',
-              padding: '0.5rem',
-              fontSize: '1.25rem',
-              fontFamily: 'inherit',
-              width: '100%',
-              maxWidth: '300px'
-            }}
-          >
-            <option value="">(Random Scum)</option>
-            {classes.map(cls => (
-              <option key={cls} value={cls}>{cls}</option>
-            ))}
-          </select>
-          <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>OR</span>
-          <button onClick={handleRollClass} style={{ ...buttonStyle, background: 'white' }}>
-            ROLL THE DICE
-          </button>
+          <div className={styles.statBox}>
+            <div className={styles.statLabel}>HP</div>
+            <div className={styles.statValue}>{sheet.hp.toString().padStart(2, '0')}</div>
+            <div style={{ fontSize: '0.75rem', color: '#888' }}>/{sheet.maxHp}</div>
+          </div>
+          <div className={styles.statBox}>
+            <div className={styles.statLabel}>OMENS</div>
+            <div className={styles.statValue}>{sheet.omens.toString().padStart(2, '0')}</div>
+          </div>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 2fr) 1fr', gap: '2rem' }}>
-
-        {/* Left Column: Stats & Abilities */}
-        <div>
-          <h2 style={sectionTitleStyle}>2. THE FLESH</h2>
-
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '1rem',
-            marginBottom: '2rem'
-          }}>
-            {[
-              { label: 'STR', val: sheet.str },
-              { label: 'AGI', val: sheet.agi },
-              { label: 'PRE', val: sheet.pre },
-              { label: 'TOU', val: sheet.tou }
-            ].map(stat => (
-              <div key={stat.label} style={{
-                border: '2px solid white',
-                padding: '1rem',
-                textAlign: 'center'
-              }}>
-                <div style={{ fontSize: '0.8rem', marginBottom: '0.5rem' }}>{stat.label}</div>
-                <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--color-accent)' }}>
-                  {stat.val > 0 ? `+${stat.val}` : stat.val}
-                </div>
+      <div className={styles.section}>
+        <div className={styles.sectionLabel}>ABILITIES</div>
+        <div className={styles.statsGrid}>
+          {stats.map(stat => (
+            <div key={stat.key} className={styles.statBox}>
+              <button
+                className={styles.statRollButton}
+                onClick={() => handleRollStat(stat.key)}
+                title={`Roll ${stat.label}`}
+              >
+                ⚄
+              </button>
+              <div className={styles.statLabel}>{stat.abbr}</div>
+              <div className={styles.statValue}>
+                {sheet[stat.key] >= 0 ? `+${sheet[stat.key]}` : sheet[stat.key]}
               </div>
-            ))}
-          </div>
-
-          <div style={{ marginBottom: '2rem' }}>
-            <h3 style={{ borderBottom: '1px solid #333', paddingBottom: '0.25rem', marginBottom: '0.5rem' }}>VITALITY</h3>
-            <div style={{ display: 'flex', gap: '2rem' }}>
-              <div>HP: <span style={{ color: 'var(--color-accent)', fontSize: '1.5rem' }}>{sheet.hp}</span></div>
-              <div>OMENS: <span style={{ color: 'var(--color-accent)', fontSize: '1.5rem' }}>{sheet.omens}</span></div>
-              <div>SILVER: <span style={{ color: 'var(--color-accent)', fontSize: '1.5rem' }}>{sheet.silver}</span></div>
             </div>
-          </div>
-
-          {sheet.notes && (
-            <div style={{ marginBottom: '2rem' }}>
-              <h3 style={{ borderBottom: '1px solid #333', paddingBottom: '0.25rem' }}>ABILITIES ({sheet.class || 'Classless'})</h3>
-              <ul style={{ paddingLeft: '1.5rem', lineHeight: '1.6' }}>
-                {sheet.notes.split('\n').filter(Boolean).map((n, i) => (
-                  <li key={i}>{n}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+          ))}
         </div>
-
-        {/* Right Column: Inventory */}
-        <div style={{ background: '#111', padding: '1rem', border: '1px solid #333' }}>
-          <h2 style={{ ...sectionTitleStyle, fontSize: '1.5rem', borderBottom: 'none' }}>BELONGINGS</h2>
-          <div style={{ marginBottom: '1rem' }}>
-            <strong>WEAPONS & GEAR</strong>
-            <ul style={{ paddingLeft: '1.2rem', color: '#ccc' }}>
-              {inventory.map((item: InventoryItem) => (
-                <li key={item.id}>
-                  {item.name}
-                  {item.qty > 1 ? ` x${item.qty}` : ''}
-                  {item.notes ? ` (${item.notes})` : ''}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {scrolls.length > 0 && (
-            <div>
-              <strong>SCROLLS - UNCLEAN</strong>
-              <ul style={{ paddingLeft: '1.2rem', color: 'var(--color-accent)' }}>
-                {scrolls.map((scroll: Scroll) => (
-                  <li key={scroll.id}>
-                    {scroll.name}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-
       </div>
 
-      <div style={{
-        marginTop: '4rem',
-        paddingTop: '2rem',
-        borderTop: '2px dashed #333',
-        display: 'flex',
-        justifyContent: 'flex-end',
-        gap: '1rem'
-      }}>
-        <button
-          onClick={handleCancel}
-          style={{
-            ...buttonStyle,
-            background: 'transparent',
-            color: 'var(--color-text-dim)',
-            border: '1px solid #333'
-          }}
-        >
-          DISCARD
-        </button>
-        <button
-          onClick={handleConfirm}
-          style={{ ...buttonStyle, fontSize: '1.5rem', padding: '1rem 2rem' }}
-        >
-          ACCEPT THIS FATE
-        </button>
+      {/* Starting Equipment */}
+      <div className={styles.section}>
+        <div className={styles.banner}>STARTING SCUM</div>
+        <ul className={styles.itemList}>
+          {inventory.map((item: InventoryItem) => (
+            <li key={item.id} className={styles.item}>
+              <span className={styles.itemName}>
+                {item.name}
+                {item.qty > 1 ? ` x${item.qty}` : ''}
+              </span>
+              <button className={styles.itemButton}>⚄</button>
+            </li>
+          ))}
+          {scrolls.map((scroll: Scroll) => (
+            <li key={scroll.id} className={styles.item}>
+              <span className={styles.itemName}>{scroll.name}</span>
+              <button className={styles.itemButton}>⚄</button>
+            </li>
+          ))}
+        </ul>
       </div>
 
+      {/* Finalize Button */}
+      <button onClick={handleConfirm} className={styles.finalizeButton}>
+        FINALIZE WRETCH
+      </button>
     </div>
   )
 }

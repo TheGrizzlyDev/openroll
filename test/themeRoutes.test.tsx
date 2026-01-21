@@ -60,7 +60,7 @@ describe('theme application by route', () => {
     renderWithRoute('/generator')
 
     expect(
-      await screen.findByRole('heading', { name: /BIRTH A WRETCH/ })
+      await screen.findByRole('heading', { name: /FORGING NEW SCUM/ })
     ).toBeTruthy()
 
     await waitFor(() => {
