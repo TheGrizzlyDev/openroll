@@ -62,4 +62,22 @@ test.describe('Mork Borg Character Sheet', () => {
         await page.screenshot({ path: artifactPath, fullPage: true })
         test.info().attach('mork-borg-sheet', { path: artifactPath, contentType: 'image/png' })
     })
+
+    test('shows and hides the roll overlay', async ({ page }) => {
+        await page.addInitScript(storageState => {
+            window.localStorage.setItem('openroll-store', JSON.stringify(storageState))
+        }, morkBorgStorageState)
+
+        await page.goto('/sheet/argale')
+
+        await page.getByRole('button', { name: /dice/i }).click()
+        await page.getByRole('button', { name: 'D4' }).click()
+        await page.getByRole('button', { name: 'ROLL' }).click()
+
+        const overlayHeading = page.getByRole('heading', { name: 'ROLL RESULT' })
+        await expect(overlayHeading).toBeVisible()
+
+        await page.getByRole('button', { name: 'OK' }).click()
+        await expect(overlayHeading).toHaveCount(0)
+    })
 })
