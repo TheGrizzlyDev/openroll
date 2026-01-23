@@ -119,11 +119,12 @@ export default function CharacterSheet() {
             >
               {sheet.hp}
             </span>
+            /
             <span
               className={`${styles.maxHp} ${vitalityFocus === 'maxHp' ? styles.focused : ''}`}
               onClick={() => setVitalityFocus('maxHp')}
             >
-              /{sheet.maxHp}
+              {sheet.maxHp}
             </span>
           </div>
         </div>
