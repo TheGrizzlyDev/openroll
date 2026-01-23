@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, afterEach, vi } from 'vitest'
 import { NumberGenerator } from '@dice-roller/rpg-dice-roller'
 import { useGameContext, type GameState } from '../src/stores/GameContext'
 
@@ -43,5 +43,20 @@ describe('GameContext roll breakdown', () => {
 
     const logEntry = useGameContext.getState().state.log[0]
     expect(logEntry.output).toBe('1d4+3d20: [1]+[1, 1, 1] = 4')
+  })
+
+  it('hides the overlay after the timeout', () => {
+    vi.useFakeTimers()
+    const { roll } = useGameContext.getState()
+    roll('1d4')
+    expect(useGameContext.getState().state.overlay.visible).toBe(true)
+
+    vi.advanceTimersByTime(10000)
+
+    const { overlay } = useGameContext.getState().state
+    expect(overlay.visible).toBe(false)
+    expect(overlay.roll).toBe(null)
+    expect(useGameContext.getState().overlayTimeout).toBe(null)
+    vi.useRealTimers()
   })
 })

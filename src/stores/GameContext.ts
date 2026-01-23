@@ -95,6 +95,54 @@ const initialState: GameState = {
   overlay: { message: '', roll: null, visible: false }
 }
 
+const syncCurrentCharacter = (
+  state: GameState,
+  options: { name?: string } = {}
+): GameState => {
+  if (state.current === null) return state
+  const updated = [...state.characters]
+  let char = updated[state.current] || {
+    id: crypto.randomUUID(),
+    name: '',
+    sheet: createSheet(),
+    inventory: [],
+    scrolls: []
+  }
+
+  if (!char.id) char = { ...char, id: crypto.randomUUID() }
+
+  const synced = {
+    ...char,
+    ...(options.name !== undefined ? { name: options.name } : {}),
+    sheet: state.sheet,
+    inventory: state.inventory,
+    scrolls: state.scrolls
+  }
+
+  updated[state.current] = synced
+  return {
+    ...state,
+    characters: updated,
+    lastAccess: { ...state.lastAccess, [synced.id]: Date.now() }
+  }
+}
+
+const scheduleOverlayTimeout = (
+  set: NamedSet<GameContextValue>,
+  get: () => GameContextValue,
+  overlay: OverlayState
+): { overlay: OverlayState; overlayTimeout: ReturnType<typeof setTimeout> } => {
+  const { overlayTimeout } = get()
+  if (overlayTimeout) clearTimeout(overlayTimeout)
+  const timeout = setTimeout(() => {
+    set(({ state }) => ({
+      state: { ...state, overlay: { ...state.overlay, visible: false, roll: null } },
+      overlayTimeout: null
+    }), false, 'hideOverlay')
+  }, 10000)
+  return { overlay, overlayTimeout: timeout }
+}
+
 const reducer = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
     case 'SET_CHARACTERS':
@@ -113,32 +161,7 @@ const reducer = (state: GameState, action: GameAction): GameState => {
       else if (action.type === 'SET_SCROLLS') scrolls = action.scrolls
 
       const newState = { ...state, sheet, inventory, scrolls }
-
-      if (state.current !== null) {
-        const updated = [...state.characters]
-        let char = updated[state.current] || {
-          id: crypto.randomUUID(),
-          name: '',
-          sheet: createSheet(),
-          inventory: [],
-          scrolls: []
-        }
-
-        if (!char.id) char = { ...char, id: crypto.randomUUID() }
-
-        char = {
-          ...char,
-          name: sheet.name,
-          sheet,
-          inventory,
-          scrolls
-        }
-
-        updated[state.current] = char
-        newState.characters = updated
-        newState.lastAccess = { ...state.lastAccess, [char.id]: Date.now() }
-      }
-      return newState
+      return syncCurrentCharacter(newState, { name: sheet.name })
     }
     case 'ADD_LOG':
       return { ...state, log: [action.entry, ...state.log] }
@@ -308,25 +331,18 @@ const storeCreator: StateCreator<
         matchIndex++
       }
     }
-    const { overlayTimeout } = get()
-    if (overlayTimeout) clearTimeout(overlayTimeout)
-    const timeout = setTimeout(() => {
-      set(({ state }) => ({
-        state: { ...state, overlay: { ...state.overlay, visible: false, roll: null } },
-        overlayTimeout: null
-      }), false, 'hideOverlay')
-    }, 10000)
+    const { overlay, overlayTimeout } = scheduleOverlayTimeout(set, get, {
+      message: result.output,
+      roll: { dice: diceResults, total },
+      visible: true
+    })
     set(({ state }) => ({
       state: {
         ...state,
         log: [entry, ...state.log],
-        overlay: {
-          message: result.output,
-          roll: { dice: diceResults, total },
-          visible: true
-        }
+        overlay
       },
-      overlayTimeout: timeout
+      overlayTimeout
     }), false, 'roll')
     return { total, output: result.output }
   },
@@ -353,16 +369,13 @@ const storeCreator: StateCreator<
     }
     const label = description || subject || target
     const message = `${label}: ${target === 'condition' ? value : output}`
-    const { overlayTimeout } = get()
-    if (overlayTimeout) clearTimeout(overlayTimeout)
-    const timeout = setTimeout(() => {
-      set(({ state }) => ({
-        state: { ...state, overlay: { ...state.overlay, visible: false, roll: null } },
-        overlayTimeout: null
-      }), false, 'hideOverlay')
-    }, 10000)
+    const { overlay, overlayTimeout } = scheduleOverlayTimeout(set, get, {
+      message,
+      roll: null,
+      visible: true
+    })
     set(({ state }) => {
-      const newState = { ...state }
+      let newState = { ...state }
       if (target === 'hp') {
         newState.sheet = { ...newState.sheet, hp: newState.sheet.hp + amount }
       } else if (['str', 'agi', 'pre', 'tou'].includes(target)) {
@@ -391,38 +404,14 @@ const storeCreator: StateCreator<
         newState.sheet = { ...newState.sheet, conditions: conds }
       }
 
-      if (newState.current !== null) {
-        const updated = [...newState.characters]
-        let char = updated[newState.current]
-        if (!char) {
-          char = {
-            id: crypto.randomUUID(),
-            name: '',
-            sheet: createSheet(),
-            inventory: [],
-            scrolls: []
-          }
-        } else if (!char.id) {
-          char = { ...char, id: crypto.randomUUID() }
-        }
-        char = {
-          ...char,
-          sheet: newState.sheet,
-          inventory: newState.inventory,
-          scrolls: newState.scrolls
-        }
-        updated[newState.current] = char
-        const lastAccess = { ...newState.lastAccess, [char.id]: Date.now() }
-        newState.characters = updated
-        newState.lastAccess = lastAccess
-      }
+      newState = syncCurrentCharacter(newState)
 
       newState.log = [
         { label, notation: value, output, total: amount },
         ...newState.log
       ]
-      newState.overlay = { message, roll: null, visible: true }
-      return { state: newState, overlayTimeout: timeout }
+      newState.overlay = overlay
+      return { state: newState, overlayTimeout }
     }, false, 'applyEffect')
     return amount
   }
@@ -483,4 +472,3 @@ export const useGameContext = create<GameContextValue>()(store)
 
 // Alias for compatibility with previous naming
 export type { GameContextValue as GameStore }
-
