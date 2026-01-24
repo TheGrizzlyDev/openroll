@@ -161,4 +161,18 @@ describe('GameContext', () => {
     state = useGameContext.getState().state
     expect(state.sheet.conditions).not.toContain('Poisoned')
   })
+
+  it('defaults missing character names when finalizing', () => {
+    const sheet = { ...createSheet(), name: '' }
+    resetStore({ sheet, inventory: [], scrolls: [] })
+
+    const { finalizeCharacter } = useGameContext.getState()
+    const index = finalizeCharacter()
+
+    const state = useGameContext.getState().state
+    const finalized = state.characters[index]
+    expect(finalized?.name).toBe('Mark Borg')
+    expect(finalized?.sheet.name).toBe('Mark Borg')
+    expect(state.sheet.name).toBe('Mark Borg')
+  })
 })

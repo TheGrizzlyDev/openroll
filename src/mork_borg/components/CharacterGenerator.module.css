@@ -100,32 +100,14 @@
   color: color-mix(in srgb, var(--color-text-strong), transparent 60%);
 }
 
-.selectWrapper {
-  position: relative;
-}
-
-.selectWrapper::after {
-  color: var(--color-accent-strong);
-  content: '▾';
-  font-size: 1.2rem;
-  pointer-events: none;
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.classSelect {
-  appearance: none;
+.classValue {
   background: var(--color-surface-dim);
   border: 1px solid var(--color-border);
   color: var(--color-text-strong);
-  cursor: pointer;
-  font-family: inherit;
   font-size: 1rem;
   font-weight: 800;
   letter-spacing: 0.05em;
-  padding: 1rem 3rem 1rem 1rem;
+  padding: 1rem;
   text-transform: uppercase;
   width: 100%;
 }

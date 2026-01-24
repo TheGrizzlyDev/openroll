@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import type { ChangeEvent } from 'react'
 import { useGameContext } from '../../stores/GameContext'
-import classes from '../classes'
 import type { InventoryItem, Scroll } from '../generateCharacter'
 import styles from './CharacterGenerator.module.css'
 
@@ -26,12 +25,7 @@ export default function CharacterGenerator() {
   }
 
   const handleRerollAll = () => {
-    createCharacter(sheet.class || undefined)
-  }
-
-  const handleClassChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value
-    createCharacter(value || undefined)
+    createCharacter()
   }
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -71,25 +65,14 @@ export default function CharacterGenerator() {
           className={styles.nameInput}
           value={sheet.name || ''}
           onChange={handleNameChange}
-          placeholder="GURN"
+          placeholder="Character Name"
         />
       </div>
 
       {/* Class Selection */}
       <div className={styles.section}>
-        <div className={styles.sectionTag}>CLASS SELECTOR</div>
-        <div className={styles.selectWrapper}>
-          <select
-            value={sheet.class || ''}
-            onChange={handleClassChange}
-            className={styles.classSelect}
-          >
-            <option value="">GUTTER BORN SCUM</option>
-            {classes.map(cls => (
-              <option key={cls} value={cls}>{cls.toUpperCase()}</option>
-            ))}
-          </select>
-        </div>
+        <div className={styles.sectionTag}>CLASS</div>
+        <div className={styles.classValue}>{(sheet.class || 'Gutter Born Scum').toUpperCase()}</div>
       </div>
 
       <div className={styles.section}>
@@ -97,7 +80,7 @@ export default function CharacterGenerator() {
           <div className={`${styles.statTile} ${styles.statTileAccent}`}>
             <div className={styles.statLabel}>VITALITY</div>
             <div className={styles.vitalityValue}>
-              <span className={styles.statValue}>{sheet.hp.toString().padStart(2, '0')}</span>
+              <span className={styles.statValue}>{sheet.hp}</span>
               <span className={styles.statDivider}>/</span>
               <span className={styles.statValueSmall}>{sheet.maxHp}</span>
             </div>

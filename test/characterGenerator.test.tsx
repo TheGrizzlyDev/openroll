@@ -52,8 +52,44 @@ describe('Character generator layout', () => {
     renderGenerator()
 
     fireEvent.click(screen.getByRole('button', { name: /reroll all/i }))
-    expect(spy).toHaveBeenCalled()
+    expect(spy).toHaveBeenCalledWith()
     spy.mockRestore()
+  })
+
+  it('shows class as read-only text without a selector', () => {
+    const initial = useGameContext.getInitialState().state
+    const sheet = createSheet()
+    sheet.class = 'Fanged Deserter'
+    useGameContext.setState({
+      state: {
+        ...initial,
+        sheet,
+        inventory: [],
+        scrolls: []
+      }
+    })
+
+    renderGenerator()
+
+    expect(screen.queryByRole('combobox')).toBeNull()
+    expect(screen.getByText('FANGED DESERTER')).toBeTruthy()
+  })
+
+  it('uses a character name placeholder without defaulting the value', () => {
+    const initial = useGameContext.getInitialState().state
+    useGameContext.setState({
+      state: {
+        ...initial,
+        sheet: createSheet(),
+        inventory: [],
+        scrolls: []
+      }
+    })
+
+    renderGenerator()
+
+    const input = screen.getByPlaceholderText('Character Name') as HTMLInputElement
+    expect(input.value).toBe('')
   })
 
   it('shows vitality, armor, and finalize action', () => {

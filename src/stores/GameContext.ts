@@ -229,17 +229,28 @@ const storeCreator: StateCreator<
     const updated = [...state.characters]
     const existing = updated[index]
     const id = existing?.id ?? crypto.randomUUID()
+    const trimmedName = state.sheet.name.trim()
+    const finalName = trimmedName.length > 0 ? trimmedName : 'Mark Borg'
+    const finalSheet = trimmedName.length > 0
+      ? state.sheet
+      : { ...state.sheet, name: finalName }
     updated[index] = {
       id,
-      name: '',
-      sheet: state.sheet,
+      name: finalName,
+      sheet: finalSheet,
       inventory: state.inventory,
       scrolls: state.scrolls
     }
     const lastAccess = { ...state.lastAccess, [id]: Date.now() }
     set(
       {
-        state: { ...state, characters: updated, lastAccess, current: index }
+        state: {
+          ...state,
+          characters: updated,
+          lastAccess,
+          current: index,
+          sheet: finalSheet
+        }
       },
       false,
       'finalizeCharacter'
