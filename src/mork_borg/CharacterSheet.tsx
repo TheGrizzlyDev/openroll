@@ -111,7 +111,6 @@ export default function CharacterSheet() {
       <div className={styles.vitalityBlock}>
         <button className={styles.minimalButton} onClick={() => handleVitalityChange(-1)}>−</button>
         <div className={styles.vitalityMain}>
-          <span className={styles.vitalityLabel}>Vitality</span>
           <div className={styles.vitalityValues}>
             <span
               className={`${styles.currentHp} ${vitalityFocus === 'hp' ? styles.focused : ''}`}
