@@ -25,6 +25,10 @@ export default function CharacterGenerator() {
     navigate('/roster')
   }
 
+  const handleRerollAll = () => {
+    createCharacter(sheet.class || undefined)
+  }
+
   const handleClassChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value
     createCharacter(value || undefined)
@@ -34,29 +38,6 @@ export default function CharacterGenerator() {
     dispatch({
       type: 'SET_SHEET',
       sheet: { ...sheet, name: e.target.value }
-    })
-  }
-
-  const handleRollStat = (stat: 'str' | 'agi' | 'pre' | 'tou') => {
-    // Roll 3d6 and calculate modifier
-    const roll1 = Math.floor(Math.random() * 6) + 1
-    const roll2 = Math.floor(Math.random() * 6) + 1
-    const roll3 = Math.floor(Math.random() * 6) + 1
-    const total = roll1 + roll2 + roll3
-
-    // Calculate modifier based on Mörk Borg rules
-    let modifier = 0
-    if (total <= 4) modifier = -3
-    else if (total <= 6) modifier = -2
-    else if (total <= 8) modifier = -1
-    else if (total <= 12) modifier = 0
-    else if (total <= 14) modifier = 1
-    else if (total <= 16) modifier = 2
-    else modifier = 3
-
-    dispatch({
-      type: 'SET_SHEET',
-      sheet: { ...sheet, [stat]: modifier }
     })
   }
 
@@ -73,16 +54,18 @@ export default function CharacterGenerator() {
         <button onClick={handleCancel} className={styles.backButton}>
           ← ROSTER
         </button>
-        <button onClick={handleCancel} className={styles.rosterLink}>
-          CANCEL
+        <button onClick={handleRerollAll} className={styles.rerollButton}>
+          REROLL ALL <span className={styles.rerollIcon}>⚡</span>
         </button>
       </div>
 
-      <h1 className={styles.title}>FORGING NEW SCUM</h1>
+      <div className={styles.titleBar}>
+        <h1 className={styles.title}>FORGING NEW SCUM</h1>
+      </div>
 
       {/* Character Name */}
       <div className={styles.section}>
-        <div className={styles.sectionLabel}>WHAT IS YOUR NAME?</div>
+        <div className={styles.sectionTag}>IDENTITY</div>
         <input
           type="text"
           className={styles.nameInput}
@@ -94,54 +77,42 @@ export default function CharacterGenerator() {
 
       {/* Class Selection */}
       <div className={styles.section}>
-        <div className={styles.sectionLabel}>CLASS SELECTION</div>
-        <select
-          value={sheet.class || ''}
-          onChange={handleClassChange}
-          className={styles.classSelect}
-        >
-          <option value="">GUTTER BORN SCUM</option>
-          {classes.map(cls => (
-            <option key={cls} value={cls}>{cls.toUpperCase()}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Stats Grid */}
-      <div className={styles.section}>
-        <div className={styles.sectionLabel}>VITALITY</div>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '1rem',
-          marginBottom: '1rem'
-        }}>
-          <div className={styles.statBox}>
-            <div className={styles.statLabel}>HP</div>
-            <div className={styles.statValue}>{sheet.hp.toString().padStart(2, '0')}</div>
-            <div style={{ fontSize: '0.75rem', color: '#888' }}>/{sheet.maxHp}</div>
-          </div>
-          <div className={styles.statBox}>
-            <div className={styles.statLabel}>OMENS</div>
-            <div className={styles.statValue}>{sheet.omens.toString().padStart(2, '0')}</div>
-          </div>
+        <div className={styles.sectionTag}>CLASS SELECTOR</div>
+        <div className={styles.selectWrapper}>
+          <select
+            value={sheet.class || ''}
+            onChange={handleClassChange}
+            className={styles.classSelect}
+          >
+            <option value="">GUTTER BORN SCUM</option>
+            {classes.map(cls => (
+              <option key={cls} value={cls}>{cls.toUpperCase()}</option>
+            ))}
+          </select>
         </div>
       </div>
 
       <div className={styles.section}>
-        <div className={styles.sectionLabel}>ABILITIES</div>
         <div className={styles.statsGrid}>
+          <div className={`${styles.statTile} ${styles.statTileAccent}`}>
+            <div className={styles.statLabel}>VITALITY</div>
+            <div className={styles.vitalityValue}>
+              <span className={styles.statValue}>{sheet.hp.toString().padStart(2, '0')}</span>
+              <span className={styles.statDivider}>/</span>
+              <span className={styles.statValueSmall}>{sheet.maxHp}</span>
+            </div>
+          </div>
+          <div className={`${styles.statTile} ${styles.statTileAccent}`}>
+            <div className={styles.statLabel}>ARMOR</div>
+            <div className={styles.armorValue}>
+              <span className={styles.statValueMedium}>TIER {sheet.armor}</span>
+              <span className={styles.armorIcon}>🛡</span>
+            </div>
+          </div>
           {stats.map(stat => (
-            <div key={stat.key} className={styles.statBox}>
-              <button
-                className={styles.statRollButton}
-                onClick={() => handleRollStat(stat.key)}
-                title={`Roll ${stat.label}`}
-              >
-                ⚄
-              </button>
+            <div key={stat.key} className={styles.statTile}>
               <div className={styles.statLabel}>{stat.abbr}</div>
-              <div className={styles.statValue}>
+              <div className={styles.statValueMedium}>
                 {sheet[stat.key] >= 0 ? `+${sheet[stat.key]}` : sheet[stat.key]}
               </div>
             </div>
@@ -155,17 +126,21 @@ export default function CharacterGenerator() {
         <ul className={styles.itemList}>
           {inventory.map((item: InventoryItem) => (
             <li key={item.id} className={styles.item}>
-              <span className={styles.itemName}>
-                {item.name}
-                {item.qty > 1 ? ` x${item.qty}` : ''}
-              </span>
-              <button className={styles.itemButton}>⚄</button>
+              <div className={styles.itemText}>
+                <span className={styles.itemName}>
+                  {item.name}
+                  {item.qty > 1 ? ` x${item.qty}` : ''}
+                </span>
+                {item.notes ? <span className={styles.itemNotes}>{item.notes}</span> : null}
+              </div>
             </li>
           ))}
           {scrolls.map((scroll: Scroll) => (
             <li key={scroll.id} className={styles.item}>
-              <span className={styles.itemName}>{scroll.name}</span>
-              <button className={styles.itemButton}>⚄</button>
+              <div className={styles.itemText}>
+                <span className={styles.itemName}>{scroll.name}</span>
+                {scroll.notes ? <span className={styles.itemNotes}>{scroll.notes}</span> : null}
+              </div>
             </li>
           ))}
         </ul>
@@ -173,7 +148,7 @@ export default function CharacterGenerator() {
 
       {/* Finalize Button */}
       <button onClick={handleConfirm} className={styles.finalizeButton}>
-        FINALIZE WRETCH
+        FINALIZE
       </button>
     </div>
   )

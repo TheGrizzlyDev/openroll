@@ -6,8 +6,10 @@ export const themes = {
       surface: '#000000',
       surfaceDim: '#222222',
       text: '#E8E815', // Mork Borg Yellow
+      textStrong: '#ffffff',
       textDim: '#cccccc',
       accent: '#E8E815',
+      accentStrong: '#E61E8D',
       border: '#E8E815',
       error: '#dc2626',
     },
@@ -25,8 +27,10 @@ export const themes = {
       surface: '#1c212c', // Card background
       surfaceDim: '#2d3340',
       text: '#f5f5f5',
+      textStrong: '#ffffff',
       textDim: '#94a3b8',
       accent: '#2563eb', // Royal Blue
+      accentStrong: '#f43f5e',
       border: '#2d3340',
       error: '#ef4444',
     },
@@ -50,8 +54,10 @@ export function applyTheme(name: string) {
   root.style.setProperty('--color-surface', theme.colors.surface)
   root.style.setProperty('--color-surface-dim', theme.colors.surfaceDim)
   root.style.setProperty('--color-text', theme.colors.text)
+  root.style.setProperty('--color-text-strong', theme.colors.textStrong)
   root.style.setProperty('--color-text-dim', theme.colors.textDim)
   root.style.setProperty('--color-accent', theme.colors.accent)
+  root.style.setProperty('--color-accent-strong', theme.colors.accentStrong)
   root.style.setProperty('--color-border', theme.colors.border)
   root.style.setProperty('--color-error', theme.colors.error)
   root.style.setProperty('--font-body', theme.fonts.body)
