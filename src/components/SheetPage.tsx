@@ -46,13 +46,13 @@ export default function SheetPage() {
           onClick={() => navigate('/roster')}
           className={styles.rosterButton}
         >
-          ← ROSTER
+          ◀- ROSTER
         </button>
         <button
           onClick={() => setIsDiceDrawerOpen(!isDiceDrawerOpen)}
           className={styles.diceButton}
         >
-          DICE ▾
+          DICE ▼
         </button>
       </header>
 
