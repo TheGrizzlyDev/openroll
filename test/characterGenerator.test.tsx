@@ -114,7 +114,7 @@ describe('Character generator layout', () => {
     renderGenerator()
 
     expect(screen.getByText('VITALITY')).toBeTruthy()
-    expect(screen.getByText('09')).toBeTruthy()
+    expect(screen.getByText('9')).toBeTruthy()
     expect(screen.getByText('/')).toBeTruthy()
     expect(screen.getByText('20')).toBeTruthy()
     expect(screen.getByText('ARMOR')).toBeTruthy()

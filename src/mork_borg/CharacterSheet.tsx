@@ -212,7 +212,7 @@ export default function CharacterSheet() {
         <div className={styles.gearList}>
           {inventory.map((item) => (
             <div key={item.id} className={styles.gearItem}>
-              <div className={styles.gearInfo} style={{ width: '100%' }}>
+              <div className={styles.gearInfo}>
                 {editingItemId === item.id ? (
                   <div onClick={(e) => e.stopPropagation()} style={{ width: '100%' }}>
                     <input
@@ -285,30 +285,30 @@ export default function CharacterSheet() {
                     </div>
                   </div>
                 ) : (
-                  <div style={{ flex: 1 }}>
-                    <h4>{item.name}</h4>
+                  <div>
+                    <div className={styles.gearHeader}>
+                      <h4>{item.name}</h4>
+                      <div className={styles.gearActions}>
+                        <button
+                          className={styles.gearEditBtn}
+                          onClick={() => setEditingItemId(item.id)}
+                        >
+                          ✎
+                        </button>
+                        <button
+                          className={styles.gearRemoveBtn}
+                          onClick={() => handleDeleteItem(item.id)}
+                        >
+                          🗑
+                        </button>
+                      </div>
+                    </div>
                     <div className={styles.gearDescription}>
                       {RenderOml(item.notes || '', roll, { Button: MorkBorgOmlButton })}
                     </div>
                   </div>
                 )}
               </div>
-              {editingItemId !== item.id && (
-                <div style={{ display: 'flex', gap: '0.5rem', marginLeft: '1rem' }}>
-                  <button
-                    className={styles.gearEditBtn}
-                    onClick={() => setEditingItemId(item.id)}
-                  >
-                    ✎
-                  </button>
-                  <button
-                    className={styles.gearRemoveBtn}
-                    onClick={() => handleDeleteItem(item.id)}
-                  >
-                    🗑
-                  </button>
-                </div>
-              )}
             </div>
           ))}
         </div>
