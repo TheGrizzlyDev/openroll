@@ -169,20 +169,6 @@ export default function StartPage() {
           onClick={() => setSelectedSystem('Mörk Borg')}
           image={<span style={{ fontSize: '2rem' }}>💀</span>}
         />
-        <SystemCard
-          title="Mothership"
-          description="Sci-fi horror where the most dangerous thing in space is your own fear."
-          selected={selectedSystem === 'Mothership'}
-          onClick={() => setSelectedSystem('Mothership')}
-          image={<span style={{ fontSize: '2rem' }}>🚀</span>}
-        />
-        <SystemCard
-          title="Pirate Borg"
-          description="A scurvy-ridden RPG of maritime horror and skeleton-filled seas."
-          selected={selectedSystem === 'Pirate Borg'}
-          onClick={() => setSelectedSystem('Pirate Borg')}
-          image={<span style={{ fontSize: '2rem' }}>⛵</span>}
-        />
       </div>
       <Flex justify="end" style={{ marginTop: '2rem' }}>
         <Flex gap="1rem">
@@ -209,7 +195,7 @@ export default function StartPage() {
             onChange={e => setSearch(e.target.value)}
           />
           <Flex gap="0.5rem" wrap="wrap">
-            {['All Systems', 'Mörk Borg', 'D&D 5e', 'Star Wars'].map(sys => (
+            {['All Systems', 'Mörk Borg'].map(sys => (
               <button
                 key={sys}
                 style={filterPillStyle(systemFilter === sys)}
@@ -224,9 +210,6 @@ export default function StartPage() {
         {/* Character List */}
         <div>
           <Flex justify="between" align="center" style={{ marginBottom: '1rem' }}>
-            <h3 style={{ margin: 0, fontSize: '0.875rem', color: 'var(--color-text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Active Characters
-            </h3>
             <Button onClick={handleCreate} style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
               + Create New
             </Button>
