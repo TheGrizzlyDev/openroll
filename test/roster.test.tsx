@@ -47,7 +47,8 @@ describe('Roster states', () => {
           omens: 2
         },
         inventory: [],
-        scrolls: []
+        scrolls: [],
+        counters: []
       },
       {
         id: 'cinder',
@@ -62,7 +63,8 @@ describe('Roster states', () => {
           omens: 1
         },
         inventory: [],
-        scrolls: []
+        scrolls: [],
+        counters: []
       }
     ]
     useGameContext.setState({

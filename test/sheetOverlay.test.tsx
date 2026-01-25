@@ -33,7 +33,8 @@ describe('SheetPage overlay', () => {
         name: 'Tester',
         sheet,
         inventory: [],
-        scrolls: []
+        scrolls: [],
+        counters: []
       }
     ]
     resetStore({ characters, sheet })

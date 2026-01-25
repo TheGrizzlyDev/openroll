@@ -10,16 +10,20 @@ type StatKey = 'str' | 'agi' | 'pre' | 'tou'
 
 export default function CharacterSheet() {
   const {
-    state: { sheet, inventory, log },
+    state: { sheet, inventory, counters, log },
     dispatch,
     roll
   } = useGameContext()
 
   const [vitalityFocus, setVitalityFocus] = useState<'hp' | 'maxHp'>('hp')
   const [editingItemId, setEditingItemId] = useState<number | null>(null)
+  const [editingCounterId, setEditingCounterId] = useState<number | null>(null)
   const [isArmorOverlayOpen, setIsArmorOverlayOpen] = useState(false)
   const [newItemName, setNewItemName] = useState('')
   const [newItemNotes, setNewItemNotes] = useState('')
+  const [newCounterName, setNewCounterName] = useState('')
+  const [newCounterNotes, setNewCounterNotes] = useState('')
+  const [newCounterTurns, setNewCounterTurns] = useState('1')
   const [editingStat, setEditingStat] = useState<StatKey | null>(null)
   const [tempStatValue, setTempStatValue] = useState<string>('')
   const [isClassOverlayOpen, setIsClassOverlayOpen] = useState(false)
@@ -74,6 +78,46 @@ export default function CharacterSheet() {
     dispatch({
       type: 'SET_INVENTORY',
       inventory: inventory.map(i => i.id === id ? { ...i, notes } : i)
+    })
+  }
+
+  const handleAddCounter = () => {
+    if (!newCounterName) return
+    const turns = Math.max(0, Number(newCounterTurns) || 0)
+    const newCounter = {
+      id: Date.now(),
+      name: newCounterName,
+      turns,
+      notes: newCounterNotes
+    }
+    dispatch({ type: 'SET_COUNTERS', counters: [...counters, newCounter] })
+    setNewCounterName('')
+    setNewCounterNotes('')
+    setNewCounterTurns('1')
+  }
+
+  const handleDeleteCounter = (id: number) => {
+    dispatch({ type: 'SET_COUNTERS', counters: counters.filter(c => c.id !== id) })
+  }
+
+  const handleUpdateCounterNotes = (id: number, notes: string) => {
+    dispatch({
+      type: 'SET_COUNTERS',
+      counters: counters.map(c => c.id === id ? { ...c, notes } : c)
+    })
+  }
+
+  const handleUpdateCounterTurns = (id: number, turns: number) => {
+    dispatch({
+      type: 'SET_COUNTERS',
+      counters: counters.map(c => c.id === id ? { ...c, turns: Math.max(0, turns) } : c)
+    })
+  }
+
+  const handleDecrementAllCounters = () => {
+    dispatch({
+      type: 'SET_COUNTERS',
+      counters: counters.map(c => ({ ...c, turns: Math.max(0, c.turns - 1) }))
     })
   }
 
@@ -373,6 +417,134 @@ export default function CharacterSheet() {
             }}
           >
             ADD TO INVENTORY
+          </button>
+        </div>
+      </div>
+
+      {/* Counters */}
+      <div className={styles.counterSection}>
+        <div className={styles.counterTitle}>Counters</div>
+        <div className={styles.counterList}>
+          {counters.map((counter) => (
+            <div key={counter.id} className={styles.counterItem}>
+              <div className={styles.counterInfo}>
+                {editingCounterId === counter.id ? (
+                  <div className={styles.counterEditForm}>
+                    <input
+                      value={counter.name}
+                      onChange={(e) => {
+                        dispatch({
+                          type: 'SET_COUNTERS',
+                          counters: counters.map(c => c.id === counter.id ? { ...c, name: e.target.value } : c)
+                        })
+                      }}
+                      className={styles.counterEditName}
+                    />
+                    <textarea
+                      value={counter.notes}
+                      onChange={(e) => handleUpdateCounterNotes(counter.id, e.target.value)}
+                      className={styles.counterEditNotes}
+                    />
+                    <div className={styles.counterEditActions}>
+                      <button
+                        type="button"
+                        onClick={() => setEditingCounterId(null)}
+                        className={styles.counterSaveButton}
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setEditingCounterId(null)}
+                        className={styles.counterCancelButton}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className={styles.counterHeader}>
+                      <h4>{counter.name}</h4>
+                      <div className={styles.counterMeta}>
+                        <input
+                          aria-label={`${counter.name} turns`}
+                          className={styles.counterTurnsInput}
+                          type="number"
+                          min={0}
+                          value={counter.turns}
+                          onChange={(e) => handleUpdateCounterTurns(counter.id, Number(e.target.value))}
+                        />
+                        <div className={styles.counterActions}>
+                          <button
+                            type="button"
+                            className={styles.counterEditBtn}
+                            onClick={() => setEditingCounterId(counter.id)}
+                          >
+                            ✎
+                          </button>
+                          <button
+                            type="button"
+                            className={styles.counterRemoveBtn}
+                            onClick={() => handleDeleteCounter(counter.id)}
+                          >
+                            🗑
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={styles.counterDescription}>
+                      {RenderOml(counter.notes || '', roll, { Button: MorkBorgOmlButton })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          className={styles.counterDecrementButton}
+          onClick={handleDecrementAllCounters}
+        >
+          Decrement All Counters
+        </button>
+
+        <div className={styles.counterForm}>
+          <h3 className={styles.counterFormTitle}>Add Counter</h3>
+          <input
+            type="text"
+            placeholder="COUNTER NAME"
+            value={newCounterName}
+            onChange={(e) => setNewCounterName(e.target.value)}
+            className={styles.counterInput}
+          />
+          <div className={styles.counterTurnsRow}>
+            <label className={styles.counterTurnsLabel} htmlFor="counter-turns-input">
+              Turns
+            </label>
+            <input
+              id="counter-turns-input"
+              type="number"
+              min={0}
+              value={newCounterTurns}
+              onChange={(e) => setNewCounterTurns(e.target.value)}
+              className={styles.counterTurnsField}
+            />
+          </div>
+          <textarea
+            placeholder="DESCRIPTION / NOTES"
+            value={newCounterNotes}
+            onChange={(e) => setNewCounterNotes(e.target.value)}
+            className={styles.counterTextarea}
+          />
+          <button
+            type="button"
+            onClick={handleAddCounter}
+            className={styles.counterSubmit}
+          >
+            Add Counter
           </button>
         </div>
       </div>

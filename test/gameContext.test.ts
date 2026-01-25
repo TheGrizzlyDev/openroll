@@ -32,14 +32,16 @@ describe('GameContext', () => {
         name: 'Numbered',
         sheet: sheetA,
         inventory: [{ id: 1, name: 'Torch', qty: 1, notes: '' }],
-        scrolls: []
+        scrolls: [],
+        counters: []
       },
       {
         id: 'alpha',
         name: 'Alpha',
         sheet: sheetB,
         inventory: [],
-        scrolls: []
+        scrolls: [],
+        counters: []
       }
     ]
     resetStore({ characters })
@@ -69,14 +71,16 @@ describe('GameContext', () => {
         name: 'One',
         sheet: sheetA,
         inventory: [],
-        scrolls: []
+        scrolls: [],
+        counters: []
       },
       {
         id: 'two',
         name: 'Two',
         sheet: sheetB,
         inventory: [],
-        scrolls: []
+        scrolls: [],
+        counters: []
       }
     ]
     const lastAccess = { one: 1000, two: 2000 }

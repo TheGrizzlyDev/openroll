@@ -20,6 +20,13 @@ export interface Scroll {
   notes: string
 }
 
+export interface Counter {
+  id: number
+  name: string
+  turns: number
+  notes: string
+}
+
 export interface LogEntry {
   label: string
   notation?: string
@@ -33,6 +40,7 @@ export interface Character {
   sheet: Sheet
   inventory: InventoryItem[]
   scrolls: Scroll[]
+  counters: Counter[]
 }
 
 export type DiceType = 'd4' | 'd6' | 'd8' | 'd12' | 'd20'
@@ -50,6 +58,7 @@ export interface GameState {
   sheet: Sheet
   inventory: InventoryItem[]
   scrolls: Scroll[]
+  counters: Counter[]
   log: LogEntry[]
   activeTab: string
   overlay: OverlayState
@@ -61,6 +70,7 @@ export type GameAction =
   | { type: 'SET_SHEET'; sheet: Sheet }
   | { type: 'SET_INVENTORY'; inventory: InventoryItem[] }
   | { type: 'SET_SCROLLS'; scrolls: Scroll[] }
+  | { type: 'SET_COUNTERS'; counters: Counter[] }
   | { type: 'ADD_LOG'; entry: LogEntry }
   | { type: 'SET_LOG'; log: LogEntry[] }
   | { type: 'SET_ACTIVE_TAB'; tab: string }
@@ -91,6 +101,7 @@ const initialState: GameState = {
   sheet: createSheet(),
   inventory: [],
   scrolls: [],
+  counters: [],
   log: [],
   activeTab: 'character',
   overlay: { message: '', roll: null, visible: false }
@@ -107,7 +118,8 @@ const syncCurrentCharacter = (
     name: '',
     sheet: createSheet(),
     inventory: [],
-    scrolls: []
+    scrolls: [],
+    counters: []
   }
 
   if (!char.id) char = { ...char, id: crypto.randomUUID() }
@@ -117,7 +129,8 @@ const syncCurrentCharacter = (
     ...(options.name !== undefined ? { name: options.name } : {}),
     sheet: state.sheet,
     inventory: state.inventory,
-    scrolls: state.scrolls
+    scrolls: state.scrolls,
+    counters: state.counters
   }
 
   updated[state.current] = synced
@@ -152,16 +165,19 @@ const reducer = (state: GameState, action: GameAction): GameState => {
       return { ...state, current: action.current }
     case 'SET_SHEET':
     case 'SET_INVENTORY':
-    case 'SET_SCROLLS': {
+    case 'SET_SCROLLS':
+    case 'SET_COUNTERS': {
       let sheet = state.sheet
       let inventory = state.inventory
       let scrolls = state.scrolls
+      let counters = state.counters
 
       if (action.type === 'SET_SHEET') sheet = action.sheet
       else if (action.type === 'SET_INVENTORY') inventory = action.inventory
       else if (action.type === 'SET_SCROLLS') scrolls = action.scrolls
+      else if (action.type === 'SET_COUNTERS') counters = action.counters
 
-      const newState = { ...state, sheet, inventory, scrolls }
+      const newState = { ...state, sheet, inventory, scrolls, counters }
       return syncCurrentCharacter(newState, { name: sheet.name })
     }
     case 'ADD_LOG':
@@ -206,13 +222,14 @@ const storeCreator: StateCreator<
           current: idx,
           sheet: char.sheet || createSheet(),
           inventory: char.inventory || [],
-          scrolls: char.scrolls || []
+          scrolls: char.scrolls || [],
+          counters: char.counters || []
         }
       }
     }, false, 'loadCharacter')
   },
   createCharacter: cls => {
-    const { sheet, inventory, scrolls } = generateCharacter(cls)
+    const { sheet, inventory, scrolls, counters } = generateCharacter(cls)
     const index = get().state.characters.length
     set(({ state }) => ({
       state: {
@@ -220,6 +237,7 @@ const storeCreator: StateCreator<
         sheet,
         inventory,
         scrolls,
+        counters,
         current: index
       }
     }), false, 'createCharacter')
@@ -238,14 +256,16 @@ const storeCreator: StateCreator<
             name: '',
             sheet,
             inventory: [],
-            scrolls: []
+            scrolls: [],
+            counters: []
           }
         ],
         lastAccess: { ...state.lastAccess, [id]: Date.now() },
         current: index,
         sheet,
         inventory: [],
-        scrolls: []
+        scrolls: [],
+        counters: []
       }
     }), false, 'createEmptyCharacter')
     return index
@@ -266,7 +286,8 @@ const storeCreator: StateCreator<
       name: finalName,
       sheet: finalSheet,
       inventory: state.inventory,
-      scrolls: state.scrolls
+      scrolls: state.scrolls,
+      counters: state.counters
     }
     const lastAccess = { ...state.lastAccess, [id]: Date.now() }
     set(
@@ -332,10 +353,13 @@ const storeCreator: StateCreator<
       const scrolls = Array.isArray((c as Character).scrolls)
         ? (c as Character).scrolls
         : []
+      const counters = Array.isArray((c as Character).counters)
+        ? (c as Character).counters
+        : []
       const last = typeof (c as { lastAccess?: number }).lastAccess === 'number'
         ? (c as { lastAccess: number }).lastAccess
         : Date.now()
-      sanitizedChars.push({ id, name, sheet, inventory, scrolls })
+      sanitizedChars.push({ id, name, sheet, inventory, scrolls, counters })
       lastAccesses[id] = last
     })
     set(

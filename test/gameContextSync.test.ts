@@ -37,7 +37,8 @@ describe('GameContext character sync', () => {
             name: 'Before',
             sheet,
             inventory: [],
-            scrolls: []
+            scrolls: [],
+            counters: []
           }
         ],
         lastAccess: { 'char-1': 123 }

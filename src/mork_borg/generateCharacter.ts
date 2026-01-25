@@ -28,6 +28,7 @@ export interface GeneratedCharacter {
   sheet: ReturnType<typeof createSheet>
   inventory: InventoryItem[]
   scrolls: Scroll[]
+  counters: Array<{ id: number; name: string; turns: number; notes: string }>
 }
 
 const abilityScoreToModifier = (score: number): number => {
@@ -119,6 +120,5 @@ export function generateCharacter(clsName?: string): GeneratedCharacter {
     })
   }
 
-  return { sheet, inventory, scrolls }
+  return { sheet, inventory, scrolls, counters: [] }
 }
-
