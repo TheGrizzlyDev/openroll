@@ -216,16 +216,6 @@ export default function CharacterSheet() {
         )}
       </div>
 
-      <div className={styles.rollLogSection}>
-        <button
-          type="button"
-          className={styles.rollLogButton}
-          onClick={() => setIsRollLogOpen(true)}
-        >
-          Roll Log
-        </button>
-      </div>
-
       {/* Gear */}
       <div className={styles.gearSection}>
         <div className={styles.gearTitle}>Gear</div>
@@ -492,6 +482,16 @@ export default function CharacterSheet() {
           </div>
         </div>
       )}
+
+      <div className={styles.rollLogSection}>
+        <button
+          type="button"
+          className={styles.rollLogButton}
+          onClick={() => setIsRollLogOpen(true)}
+        >
+          Roll Log
+        </button>
+      </div>
 
       {/* Simple Armor Selection Overlay */}
       {isArmorOverlayOpen && (
