@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { RenderOml } from '../oml/render'
 import { useGameContext } from '../stores/GameContext'
 import type { Sheet } from './sheet'
@@ -27,10 +27,15 @@ export default function CharacterSheet() {
   const [editingStat, setEditingStat] = useState<StatKey | null>(null)
   const [tempStatValue, setTempStatValue] = useState<string>('')
   const [isClassOverlayOpen, setIsClassOverlayOpen] = useState(false)
+  const [omensDieInput, setOmensDieInput] = useState(sheet.omensDie || '1d2')
   const [isRollLogOpen, setIsRollLogOpen] = useState(false)
 
   const updateField = <K extends keyof Sheet>(field: K, value: Sheet[K]) =>
     dispatch({ type: 'SET_SHEET', sheet: { ...sheet, [field]: value } })
+
+  useEffect(() => {
+    setOmensDieInput(sheet.omensDie || '1d2')
+  }, [sheet.omensDie])
 
   const rollStat = (stat: StatKey) => {
     const mod = Number(sheet[stat]) || 0
@@ -53,8 +58,27 @@ export default function CharacterSheet() {
   }
 
   const handleRollOmens = () => {
-    const { total } = roll('1d2', 'OMENS')
+    const trimmed = omensDieInput.trim()
+    const notation = isValidDiceNotation(trimmed)
+      ? trimmed
+      : (sheet.omensDie || '1d2')
+    const { total } = roll(notation, 'OMENS')
     updateField('omens', total)
+  }
+
+  const handleOmensAdjust = (delta: number) => {
+    updateField('omens', Math.max(0, sheet.omens + delta))
+  }
+
+  const isValidDiceNotation = (value: string) => /^\d*d\d+(?:[+-]\d+)?$/i.test(value)
+
+  const commitOmensDie = () => {
+    const trimmed = omensDieInput.trim()
+    if (isValidDiceNotation(trimmed)) {
+      updateField('omensDie', trimmed)
+    } else {
+      setOmensDieInput(sheet.omensDie || '1d2')
+    }
   }
 
   const handleAddItem = () => {
@@ -137,6 +161,7 @@ export default function CharacterSheet() {
 
   const currentArmor = armors.find(a => a.tier === sheet.armor) || armors[0]
   const currentClassName = sheet.class || 'Gutterborn Scum'
+  const currentOmensDie = sheet.omensDie || '1d2'
   const rollEntries = log.filter(entry => entry.notation)
 
   return (
@@ -242,22 +267,50 @@ export default function CharacterSheet() {
       {/* Omens */}
       <div className={styles.omensSection}>
         <div className={styles.omensTitle}>Omens</div>
-        <div className={styles.omensCount}>{sheet.omens}</div>
-        {sheet.omens > 0 ? (
+        <div className={styles.omensCountRow}>
           <button
-            className={styles.omensButton}
-            onClick={() => updateField('omens', Math.max(0, sheet.omens - 1))}
+            type="button"
+            className={styles.omensAdjustButton}
+            aria-label="Decrease omens"
+            onClick={() => handleOmensAdjust(-1)}
           >
-            USE OMEN
+            −
           </button>
-        ) : (
+          <div className={styles.omensCount}>{sheet.omens}</div>
+          <button
+            type="button"
+            className={styles.omensAdjustButton}
+            aria-label="Increase omens"
+            onClick={() => handleOmensAdjust(1)}
+          >
+            +
+          </button>
+        </div>
+        <div className={styles.omensControls}>
+          <div className={styles.omensDieRow}>
+            <label className={styles.omensDieLabel} htmlFor="omens-die">
+              Omens die
+            </label>
+            <input
+              id="omens-die"
+              className={styles.omensDieInput}
+              value={omensDieInput}
+              onChange={(e) => setOmensDieInput(e.target.value)}
+              onBlur={commitOmensDie}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  commitOmensDie()
+                }
+              }}
+            />
+          </div>
           <button
             className={styles.omensButton}
             onClick={handleRollOmens}
           >
-            ROLL 1d2 OMENS
+            ROLL {currentOmensDie.toUpperCase()} OMENS
           </button>
-        )}
+        </div>
       </div>
 
       {/* Gear */}

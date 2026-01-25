@@ -66,7 +66,8 @@ export function generateCharacter(clsName?: string): GeneratedCharacter {
   let hp = rollTotal('1d8') + tgh
   if (hp < 1) hp = 1
 
-  const omens = rollTotal('1d2')
+  const omensDie = '1d2'
+  const omens = rollTotal(omensDie)
 
   const armorResult = rollArmor()
   const weaponResult = rollWeapon()
@@ -81,6 +82,7 @@ export function generateCharacter(clsName?: string): GeneratedCharacter {
     maxHp: hp,
     armor: armorResult.armor,
     omens,
+    omensDie,
     silver,
     trait,
     background,

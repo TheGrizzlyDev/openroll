@@ -10,6 +10,7 @@ export interface Sheet {
   maxHp: number
   armor: number
   omens: number
+  omensDie: string
   silver: number
   trait: string
   background: string
@@ -29,6 +30,7 @@ export const createSheet = (): Sheet => ({
   maxHp: 0,
   armor: 0,
   omens: 0,
+  omensDie: '1d2',
   silver: 0,
   trait: '',
   background: '',
