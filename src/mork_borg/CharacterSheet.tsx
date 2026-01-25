@@ -4,6 +4,7 @@ import { useGameContext } from '../stores/GameContext'
 import type { Sheet } from './sheet'
 import styles from './CharacterSheet.module.css'
 import { MorkBorgOmlButton } from './MorkBorgOmlButton'
+import classNames from './classes'
 
 type StatKey = 'str' | 'agi' | 'pre' | 'tou'
 
@@ -21,6 +22,7 @@ export default function CharacterSheet() {
   const [newItemNotes, setNewItemNotes] = useState('')
   const [editingStat, setEditingStat] = useState<StatKey | null>(null)
   const [tempStatValue, setTempStatValue] = useState<string>('')
+  const [isClassOverlayOpen, setIsClassOverlayOpen] = useState(false)
 
   const updateField = <K extends keyof Sheet>(field: K, value: Sheet[K]) =>
     dispatch({ type: 'SET_SHEET', sheet: { ...sheet, [field]: value } })
@@ -89,6 +91,7 @@ export default function CharacterSheet() {
   ]
 
   const currentArmor = armors.find(a => a.tier === sheet.armor) || armors[0]
+  const currentClassName = sheet.class || 'Gutterborn Scum'
 
   return (
     <div className={styles.sheet}>
@@ -102,9 +105,14 @@ export default function CharacterSheet() {
             onChange={(e) => updateField('name', e.target.value)}
           />
         </div>
-        <div className={styles.charClassContainer}>
-          <span className={styles.charClass}>{sheet.class || 'GUTTER BORN SCUM'}</span>
-        </div>
+        <button
+          type="button"
+          className={styles.charClassContainer}
+          onClick={() => setIsClassOverlayOpen(true)}
+        >
+          <span className={styles.charClass}>{currentClassName}</span>
+          <span className={styles.charClassAction}>Change</span>
+        </button>
       </div>
 
       {/* Vitality Block */}
@@ -382,7 +390,7 @@ export default function CharacterSheet() {
           justifyContent: 'center',
           padding: '2rem'
         }}>
-          <div style={{
+          <div className={styles.overlayCard} style={{
             background: '#000',
             color: '#FFF',
             border: '8px solid #F7D02C',
@@ -392,6 +400,14 @@ export default function CharacterSheet() {
             boxShadow: '20px 20px 0 #F7D02C',
             textAlign: 'center'
           }}>
+            <button
+              type="button"
+              className={styles.overlayCloseButton}
+              aria-label="Close stat editor"
+              onClick={() => setEditingStat(null)}
+            >
+              ×
+            </button>
             <h2 style={{ textTransform: 'uppercase', marginBottom: '2rem', fontWeight: 950, fontSize: '2rem', color: '#F7D02C' }}>
               Edit {stats.find(s => s.key === editingStat)?.label}
             </h2>
@@ -480,7 +496,7 @@ export default function CharacterSheet() {
           justifyContent: 'center',
           padding: '2rem'
         }}>
-          <div style={{
+          <div className={styles.overlayCard} style={{
             background: '#000',
             color: '#F7D02C',
             border: '8px solid #F7D02C',
@@ -489,6 +505,14 @@ export default function CharacterSheet() {
             width: '100%',
             boxShadow: '20px 20px 0 #F7D02C'
           }}>
+            <button
+              type="button"
+              className={styles.overlayCloseButton}
+              aria-label="Close armor selector"
+              onClick={() => setIsArmorOverlayOpen(false)}
+            >
+              ×
+            </button>
             <h2 style={{ textTransform: 'uppercase', marginBottom: '2rem', fontWeight: 950, fontSize: '2rem' }}>Select Armor</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {armors.map(a => (
@@ -513,22 +537,39 @@ export default function CharacterSheet() {
                 </button>
               ))}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Class Selection Overlay */}
+      {isClassOverlayOpen && (
+        <div className={styles.classOverlay}>
+          <div className={styles.classOverlayCard}>
+            <h2 className={styles.classOverlayTitle}>Select Class</h2>
             <button
-              onClick={() => setIsArmorOverlayOpen(false)}
-              style={{
-                marginTop: '2.5rem',
-                width: '100%',
-                background: '#F7D02C',
-                color: '#000',
-                fontWeight: 950,
-                fontSize: '1.25rem',
-                padding: '1rem',
-                border: 'none',
-                cursor: 'pointer'
-              }}
+              type="button"
+              className={styles.overlayCloseButton}
+              aria-label="Close class selector"
+              onClick={() => setIsClassOverlayOpen(false)}
             >
-              CLOSE
+              ×
             </button>
+            <div className={styles.classOptionList}>
+              {classNames.map(className => (
+                <button
+                  key={className}
+                  type="button"
+                  onClick={() => {
+                    updateField('class', className)
+                    setIsClassOverlayOpen(false)
+                  }}
+                  className={styles.classOptionButton}
+                  data-selected={currentClassName === className}
+                >
+                  {className}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}
