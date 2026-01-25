@@ -308,7 +308,7 @@ export default function CharacterSheet() {
             className={styles.omensButton}
             onClick={handleRollOmens}
           >
-            ROLL {currentOmensDie.toUpperCase()} OMENS
+            ROLL OMENS
           </button>
         </div>
       </div>
