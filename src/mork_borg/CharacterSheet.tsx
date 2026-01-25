@@ -10,7 +10,7 @@ type StatKey = 'str' | 'agi' | 'pre' | 'tou'
 
 export default function CharacterSheet() {
   const {
-    state: { sheet, inventory },
+    state: { sheet, inventory, log },
     dispatch,
     roll
   } = useGameContext()
@@ -23,6 +23,7 @@ export default function CharacterSheet() {
   const [editingStat, setEditingStat] = useState<StatKey | null>(null)
   const [tempStatValue, setTempStatValue] = useState<string>('')
   const [isClassOverlayOpen, setIsClassOverlayOpen] = useState(false)
+  const [isRollLogOpen, setIsRollLogOpen] = useState(false)
 
   const updateField = <K extends keyof Sheet>(field: K, value: Sheet[K]) =>
     dispatch({ type: 'SET_SHEET', sheet: { ...sheet, [field]: value } })
@@ -92,6 +93,7 @@ export default function CharacterSheet() {
 
   const currentArmor = armors.find(a => a.tier === sheet.armor) || armors[0]
   const currentClassName = sheet.class || 'Gutterborn Scum'
+  const rollEntries = log.filter(entry => entry.notation)
 
   return (
     <div className={styles.sheet}>
@@ -212,6 +214,16 @@ export default function CharacterSheet() {
             ROLL 1d2 OMENS
           </button>
         )}
+      </div>
+
+      <div className={styles.rollLogSection}>
+        <button
+          type="button"
+          className={styles.rollLogButton}
+          onClick={() => setIsRollLogOpen(true)}
+        >
+          Roll Log
+        </button>
       </div>
 
       {/* Gear */}
@@ -570,6 +582,42 @@ export default function CharacterSheet() {
                 </button>
               ))}
             </div>
+          </div>
+        </div>
+      )}
+
+      {isRollLogOpen && (
+        <div className={styles.rollLogOverlay} role="dialog" aria-modal="true">
+          <div className={styles.rollLogCard}>
+            <button
+              type="button"
+              className={styles.overlayCloseButton}
+              aria-label="Close roll log"
+              onClick={() => setIsRollLogOpen(false)}
+            >
+              ×
+            </button>
+            <h2 className={styles.rollLogTitle}>Roll Log</h2>
+            {rollEntries.length === 0 ? (
+              <p className={styles.rollLogEmpty}>No rolls yet.</p>
+            ) : (
+              <ul className={styles.rollLogList}>
+                {rollEntries.map((entry, index) => (
+                  <li key={`${entry.label}-${entry.notation}-${index}`} className={styles.rollLogItem}>
+                    <div className={styles.rollLogHeader}>
+                      <span className={styles.rollLogLabel}>
+                        {entry.label || 'Roll'}
+                      </span>
+                      <span className={styles.rollLogNotation}>{entry.notation}</span>
+                    </div>
+                    <div className={styles.rollLogOutput}>{entry.output}</div>
+                    {typeof entry.total === 'number' ? (
+                      <div className={styles.rollLogTotal}>Total: {entry.total}</div>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       )}
