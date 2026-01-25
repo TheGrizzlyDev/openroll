@@ -1,0 +1,25 @@
+.selectionActions {
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.selectionButtons {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.selectionButton {
+  flex: 0 0 auto;
+}
+
+@media (width <= 600px) {
+  .selectionButtons {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .selectionButton {
+    width: 100%;
+  }
+}

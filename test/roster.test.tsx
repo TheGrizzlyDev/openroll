@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest'
-import { render, screen, within, cleanup } from '@testing-library/react'
+import { render, screen, within, cleanup, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import StartPage from '../src/components/StartPage'
 import { useGameContext } from '../src/stores/GameContext'
@@ -85,5 +85,25 @@ describe('Roster states', () => {
     // Stats are combined
     expect(firstCard.getByText((content) => content.includes('HP: 4/7'))).toBeTruthy()
     expect(firstCard.getByText((content) => content.includes('Wretch'))).toBeTruthy()
+  })
+
+  it('allows adding an empty character after selecting a system', () => {
+    const initial = useGameContext.getInitialState().state
+    useGameContext.setState({
+      state: { ...initial, characters: [], lastAccess: {} }
+    })
+
+    renderRoster()
+
+    fireEvent.click(screen.getByRole('button', { name: '+ Create Character' }))
+
+    const addEmptyButton = screen.getByRole('button', { name: /add an empty character/i }) as HTMLButtonElement
+    expect(addEmptyButton.disabled).toBe(true)
+
+    fireEvent.click(screen.getByText('Mörk Borg'))
+    expect(addEmptyButton.disabled).toBe(false)
+
+    fireEvent.click(addEmptyButton)
+    expect(useGameContext.getState().state.characters).toHaveLength(1)
   })
 })

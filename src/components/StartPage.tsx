@@ -15,6 +15,7 @@ import { PageContainer, Section, Flex } from '../layout'
 import { sortCharactersByLastAccess } from '../sortCharactersByLastAccess'
 import { SystemCard } from './SystemCard'
 import UnderConstruction from './UnderConstruction'
+import styles from './StartPage.module.css'
 
 type StartTab = 'roster' | 'armory' | 'settings'
 
@@ -25,6 +26,7 @@ export default function StartPage() {
     loadCharacter,
     deleteCharacter,
     createCharacter,
+    createEmptyCharacter,
     exportCharacters,
     importCharacters,
     overlayTimeout,
@@ -116,6 +118,15 @@ export default function StartPage() {
     }
   }
 
+  const handleAddEmptyCharacter = () => {
+    if (selectedSystem === 'Mörk Borg') {
+      const index = createEmptyCharacter()
+      navigate(`/sheet/${index}`)
+    } else {
+      alert('Only Mörk Borg is supported currently.')
+    }
+  }
+
   const filteredCharacters = sortedIndexes.filter(idx => {
     const char = characters[idx]
     const matchesSearch = (char.name || '').toLowerCase().includes(search.toLowerCase())
@@ -170,10 +181,29 @@ export default function StartPage() {
           image={<span style={{ fontSize: '2rem' }}>💀</span>}
         />
       </div>
-      <Flex justify="end" style={{ marginTop: '2rem' }}>
-        <Flex gap="1rem">
-          <Button variant="ghost" onClick={() => setIsCreating(false)}>Cancel</Button>
-          <Button onClick={confirmSystemSelection} disabled={!selectedSystem}>Confirm Selection</Button>
+      <Flex justify="end" className={styles.selectionActions}>
+        <Flex gap="1rem" className={styles.selectionButtons}>
+          <Button
+            variant="ghost"
+            onClick={() => setIsCreating(false)}
+            className={styles.selectionButton}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleAddEmptyCharacter}
+            disabled={!selectedSystem}
+            className={styles.selectionButton}
+          >
+            Add an empty character
+          </Button>
+          <Button
+            onClick={confirmSystemSelection}
+            disabled={!selectedSystem}
+            className={styles.selectionButton}
+          >
+            Confirm Selection
+          </Button>
         </Flex>
       </Flex>
     </Section>
