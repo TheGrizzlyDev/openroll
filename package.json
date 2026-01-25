@@ -6,6 +6,7 @@
   "scripts": {
     "ci-update": "npm ci && npm run update-submodules",
     "update": "npm install && npm run update-submodules",
+    "data:morkborg:update": "node scripts/morkborg-data-importer.js",
     "dev": "vite",
     "build": "tsc && vite build",
     "build-gh-pages": "tsc && vite build --base=/openroll/",
