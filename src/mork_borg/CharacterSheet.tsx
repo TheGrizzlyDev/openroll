@@ -5,6 +5,7 @@ import type { Sheet } from './sheet'
 import styles from './CharacterSheet.module.css'
 import { MorkBorgOmlButton } from './MorkBorgOmlButton'
 import classNames from './classes'
+import { miseries } from './data/traits'
 
 type StatKey = 'str' | 'agi' | 'pre' | 'tou'
 
@@ -27,6 +28,8 @@ export default function CharacterSheet() {
   const [editingStat, setEditingStat] = useState<StatKey | null>(null)
   const [tempStatValue, setTempStatValue] = useState<string>('')
   const [isClassOverlayOpen, setIsClassOverlayOpen] = useState(false)
+  const [selectedMisery, setSelectedMisery] = useState(miseries[0] ?? '')
+  const [customMisery, setCustomMisery] = useState('')
   const [omensDieInput, setOmensDieInput] = useState(sheet.omensDie || '1d2')
   const [isRollLogOpen, setIsRollLogOpen] = useState(false)
 
@@ -103,6 +106,28 @@ export default function CharacterSheet() {
       type: 'SET_INVENTORY',
       inventory: inventory.map(i => i.id === id ? { ...i, notes } : i)
     })
+  }
+
+  const currentMiseries = sheet.miseries ?? []
+
+  const addMisery = (description: string) => {
+    const trimmed = description.trim()
+    if (!trimmed) return
+    if (currentMiseries.includes(trimmed)) return
+    updateField('miseries', [...currentMiseries, trimmed])
+  }
+
+  const handleAddSelectedMisery = () => {
+    addMisery(selectedMisery)
+  }
+
+  const handleAddCustomMisery = () => {
+    addMisery(customMisery)
+    setCustomMisery('')
+  }
+
+  const handleRemoveMisery = (description: string) => {
+    updateField('miseries', currentMiseries.filter(item => item !== description))
   }
 
   const handleAddCounter = () => {
@@ -472,6 +497,80 @@ export default function CharacterSheet() {
             ADD TO INVENTORY
           </button>
         </div>
+      </div>
+
+      {/* Miseries */}
+      <div className={styles.miseriesSection}>
+        <div className={styles.miseriesHeader}>
+          <div className={styles.miseriesTitle}>Miseries</div>
+          <div className={styles.miseriesCount}>{currentMiseries.length}</div>
+        </div>
+        <div className={styles.miseriesControls}>
+          <label className={styles.miseriesLabel} htmlFor="misery-select">
+            Misery list
+          </label>
+          <div className={styles.miseriesRow}>
+            <select
+              id="misery-select"
+              className={styles.miseriesSelect}
+              value={selectedMisery}
+              onChange={(event) => setSelectedMisery(event.target.value)}
+            >
+              {miseries.map((misery) => (
+                <option key={misery} value={misery}>
+                  {misery}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              className={styles.miseriesAddButton}
+              onClick={handleAddSelectedMisery}
+            >
+              Add misery
+            </button>
+          </div>
+        </div>
+        <div className={styles.miseriesControls}>
+          <label className={styles.miseriesLabel} htmlFor="custom-misery">
+            Custom misery
+          </label>
+          <div className={styles.miseriesRow}>
+            <input
+              id="custom-misery"
+              className={styles.miseriesInput}
+              placeholder="Describe a new misery"
+              value={customMisery}
+              onChange={(event) => setCustomMisery(event.target.value)}
+            />
+            <button
+              type="button"
+              className={styles.miseriesAddButton}
+              onClick={handleAddCustomMisery}
+            >
+              Add custom misery
+            </button>
+          </div>
+        </div>
+        {currentMiseries.length ? (
+          <ul className={styles.miseriesList}>
+            {currentMiseries.map((misery) => (
+              <li key={misery} className={styles.miseriesItem}>
+                <span className={styles.miseriesDescription}>{misery}</span>
+                <button
+                  type="button"
+                  className={styles.miseriesRemoveButton}
+                  onClick={() => handleRemoveMisery(misery)}
+                  aria-label={`Remove misery: ${misery}`}
+                >
+                  x
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className={styles.miseriesEmpty}>No miseries tracked yet.</p>
+        )}
       </div>
 
       {/* Counters */}

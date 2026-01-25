@@ -380,6 +380,153 @@
     width: 100%;
 }
 
+/* Miseries Section */
+.miseriesSection {
+    background: #1a1a1a;
+    border: 5px solid #000;
+    color: #f7d02c;
+    margin: 1.5rem;
+    padding: 1.5rem;
+}
+
+.miseriesHeader {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.miseriesTitle {
+    font-size: 1.75rem;
+    font-weight: 950;
+    text-transform: uppercase;
+}
+
+.miseriesCount {
+    background: #f7d02c;
+    color: #000;
+    font-size: 1.1rem;
+    font-weight: 900;
+    padding: 0.3rem 0.8rem;
+}
+
+.miseriesControls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.miseriesLabel {
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.miseriesRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.miseriesSelect,
+.miseriesInput {
+    background: #000;
+    border: 3px solid #f7d02c;
+    color: #f7d02c;
+    flex: 1 1 240px;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0.75rem;
+}
+
+.miseriesAddButton {
+    background: #f7d02c;
+    border: 3px solid #000;
+    color: #000;
+    cursor: pointer;
+    flex: 0 0 auto;
+    font-size: 0.95rem;
+    font-weight: 900;
+    padding: 0.75rem 1.25rem;
+    text-transform: uppercase;
+}
+
+.miseriesList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.miseriesItem {
+    align-items: flex-start;
+    border: 3px solid #f7d02c;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+}
+
+.miseriesDescription {
+    color: #f7d02c;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.miseriesRemoveButton {
+    align-items: center;
+    background: transparent;
+    border: 2px solid #f7d02c;
+    color: #f7d02c;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 1rem;
+    font-weight: 900;
+    height: 2rem;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    text-transform: uppercase;
+    width: 2rem;
+}
+
+.miseriesEmpty {
+    color: #f7d02c;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+@media (width <= 600px) {
+    .miseriesRow {
+        flex-direction: column;
+    }
+
+    .miseriesSelect,
+    .miseriesInput {
+        flex-basis: 100%;
+        width: 100%;
+    }
+
+    .miseriesAddButton {
+        width: 100%;
+    }
+
+    .miseriesItem {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .miseriesRemoveButton {
+        align-self: flex-end;
+    }
+}
+
 /* Roll Log */
 .rollLogSection {
     margin: 1.5rem;
