@@ -1,49 +1,44 @@
 import { DiceRoller, type DiceRoll } from '@dice-roller/rpg-dice-roller'
+import { equipment } from './morkBorgData'
 
 export interface ArmorEntry {
   name: string
   armor: number
+  properties: string
+  cost: string
 }
 
 export interface WeaponEntry {
   name: string
-  notes: string
+  damage: string
+  notes?: string
 }
 
-export const armor: ArmorEntry[] = [
-  { name: 'No armor', armor: 0 },
-  { name: 'Light armor', armor: 1 },
-  { name: 'Medium armor', armor: 2 },
-  { name: 'Heavy armor', armor: 3 }
-]
+export interface GearEntry {
+  name: string
+  cost: string
+  notes?: string
+}
 
-export const weapons: WeaponEntry[] = [
-  { name: 'Staff', notes: '[dice "1d4" 1d4] damage' },
-  { name: 'Dagger', notes: '[dice "1d4" 1d4] damage' },
-  { name: 'Club', notes: '[dice "1d4" 1d4] damage' },
-  { name: 'Sword', notes: '[dice "1d6" 1d6] damage' },
-  { name: 'Axe', notes: '[dice "1d6" 1d6] damage' },
-  { name: 'Mace', notes: '[dice "1d6" 1d6] damage' },
-  { name: 'Flail', notes: '[dice "1d8" 1d8] damage' },
-  { name: 'Polearm', notes: '[dice "1d8" 1d8] damage' },
-  { name: 'Bow', notes: '[dice "1d6" 1d6] damage' },
-  { name: 'Crossbow', notes: '[dice "1d8" 1d8] damage' }
-]
+// Convert extracted data to the expected format
+export const armor: ArmorEntry[] = equipment.armor.map(item => ({
+  name: item.name,
+  armor: parseInt(item.roll) - 1, // Convert roll 1-4 to armor 0-3
+  properties: item.properties,
+  cost: item.properties.includes('s') ? item.properties.match(/(\d+s)/)?.[1] || 'Unknown' : 'Unknown'
+}))
 
-export const gear = [
-  'Backpack',
-  'Caltrops',
-  'Chain (10ft)',
-  'Crowbar',
-  'Grappling hook',
-  'Lantern & oil',
-  'Lockpicks',
-  'Mirror',
-  'Rations ([dice "1d4" 1d4] days)',
-  'Rope (30ft)',
-  'Shovel',
-  'Torch'
-]
+export const weapons: WeaponEntry[] = equipment.weapons.map(item => ({
+  name: item.name,
+  damage: item.damage,
+  notes: item.notes || `[dice "${item.damage}" ${item.damage}] damage`
+}))
+
+export const gear: GearEntry[] = equipment.gear.map(item => ({
+  name: item.name,
+  cost: item.cost,
+  notes: item.notes || ''
+}))
 
 export const silver = Array.from({ length: 11 }, (_, i) => (i + 2) * 10)
 
@@ -68,4 +63,7 @@ export const rollSilver = () => {
   const roll = (roller.roll('2d6') as DiceRoll).total as number
   return silver[roll - 2]
 }
+
+// Export the raw data for direct access
+export { equipment }
 

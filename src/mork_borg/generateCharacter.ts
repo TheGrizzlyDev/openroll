@@ -2,6 +2,7 @@ import { DiceRoller, type DiceRoll } from '@dice-roller/rpg-dice-roller'
 import { createSheet } from './sheet'
 import { rollArmor, rollWeapon, rollGear, rollSilver } from './data/gear'
 import { rollTrait, rollBackground } from './data/traits'
+import { getRandomName } from './data/names'
 import {
   rollUncleanScroll,
   rollSacredScroll,
@@ -77,6 +78,7 @@ export function generateCharacter(clsName?: string): GeneratedCharacter {
   const background = rollBackground()
   const sheet = createSheet()
   Object.assign(sheet, stats, {
+    name: getRandomName(),
     class: classData.name,
     hp,
     maxHp: hp,
@@ -92,8 +94,8 @@ export function generateCharacter(clsName?: string): GeneratedCharacter {
   const baseId = Date.now()
   const rationsQty = rollTotal('1d4')
   const inventory = [
-    { id: baseId, name: weaponResult.name, qty: 1, notes: weaponResult.notes },
-    { id: baseId + 1, name: gearResult, qty: 1, notes: '' },
+    { id: baseId, name: weaponResult.name, qty: 1, notes: weaponResult.notes || '' },
+    { id: baseId + 1, name: gearResult.name, qty: 1, notes: gearResult.notes || '' },
     { id: baseId + 2, name: 'Rations', qty: rationsQty, notes: '' },
     { id: baseId + 3, name: 'Waterskin', qty: 1, notes: '' }
   ]
