@@ -1,0 +1,230 @@
+{
+  "traps": [
+    {
+      "roll": "1",
+      "description": "Well dressed corpse, booby trapped"
+    },
+    {
+      "roll": "2",
+      "description": "Wall-holes shoot poisonous arrows"
+    },
+    {
+      "roll": "3",
+      "description": "Bells and marbles on the floor"
+    },
+    {
+      "roll": "4",
+      "description": "Scorpion-filled basket poised to fall"
+    },
+    {
+      "roll": "5",
+      "description": "Fish hooks hanging at eye level"
+    },
+    {
+      "roll": "6",
+      "description": "Chest marked with explosive runes"
+    },
+    {
+      "roll": "7",
+      "description": "Lock trapped with vial of poison gas"
+    },
+    {
+      "roll": "8",
+      "description": "Jewel removal leads to roof collapse"
+    },
+    {
+      "roll": "9",
+      "description": "Slanted floor, translucent oil, pit"
+    },
+    {
+      "roll": "10",
+      "description": "Snake-cages on collapsing ceiling tiles"
+    },
+    {
+      "roll": "11",
+      "description": "Evil urns release cold ghosts"
+    },
+    {
+      "roll": "12",
+      "description": "Coins coated in grime and poison"
+    }
+  ],
+  "weather": [
+    {
+      "roll": "1",
+      "description": "Lifeless grey"
+    },
+    {
+      "roll": "2",
+      "description": "Hammering rain"
+    },
+    {
+      "roll": "3",
+      "description": "Piercing wind"
+    },
+    {
+      "roll": "4",
+      "description": "Deafening storm"
+    },
+    {
+      "roll": "5",
+      "description": "Black as night"
+    },
+    {
+      "roll": "6",
+      "description": "Dead quiet"
+    },
+    {
+      "roll": "7",
+      "description": "Cloudburst"
+    },
+    {
+      "roll": "8",
+      "description": "Soup-thick mist"
+    },
+    {
+      "roll": "9",
+      "description": "Crackling frost"
+    },
+    {
+      "roll": "10",
+      "description": "Irritating drizzle"
+    },
+    {
+      "roll": "11",
+      "description": "Roaring thunder"
+    },
+    {
+      "roll": "12",
+      "description": "Gravelike cold"
+    }
+  ],
+  "corpsePlundering": [
+    {
+      "roll": "11-16",
+      "description": "The remains of something worthless crumbles in your hands."
+    },
+    {
+      "roll": "21",
+      "description": "Pot filled with extremely potent itching ointment."
+    },
+    {
+      "roll": "22",
+      "description": "Necklace of human teeth."
+    },
+    {
+      "roll": "23",
+      "description": "Bag of angry, venomous moths. Test Toughness dr6 or die."
+    },
+    {
+      "roll": "24",
+      "description": "Pocket full of broken glass, pc takes d2 damage."
+    },
+    {
+      "roll": "25",
+      "description": "Mad manifesto. If read, test Presence dr12 or lose 1 Presence permanently from confusion."
+    },
+    {
+      "roll": "26",
+      "description": "Key to nearby locked door. Stolen."
+    },
+    {
+      "roll": "31",
+      "description": "Map to a weak but wealthy family's house."
+    },
+    {
+      "roll": "32",
+      "description": "A hopeless amount of spiders."
+    },
+    {
+      "roll": "33",
+      "description": "Metal cylinder with gun powder and fuse. Roll a d6. 1–2 you lose a hand. 3–6 3d10 damage wherever it lands."
+    },
+    {
+      "roll": "34",
+      "description": "Known and liked/despised witch-hunter's face. Flayed."
+    },
+    {
+      "roll": "35",
+      "description": "Note with pc's names. One is crossed out."
+    },
+    {
+      "roll": "36",
+      "description": "Tortured pixie with torn-off wings and gouged out eyes."
+    },
+    {
+      "roll": "41",
+      "description": "Map to a place that cannot possibly exist."
+    },
+    {
+      "roll": "42",
+      "description": "Unmarked bottle with a liquid that shifts between red and green."
+    },
+    {
+      "roll": "43",
+      "description": "Bond. A local potentate owes the holder a sizable amount."
+    },
+    {
+      "roll": "44",
+      "description": "Death mask of one of the pcs."
+    },
+    {
+      "roll": "45",
+      "description": "The 'Water of Life.' Heals d8. Test Toughness dr10 or go blind. Highly alcoholic."
+    },
+    {
+      "roll": "46",
+      "description": "There was something very wrong with this one. Hands covered with something lukewarm, brown and acidic. Take d2+1 damage and smell terrible for d4 days."
+    },
+    {
+      "roll": "51",
+      "description": "Black Kergüs dagger. 2d4 damage."
+    },
+    {
+      "roll": "52",
+      "description": "Labelled poison bottle. Test Toughness dr12 or lower random ability by d4. The ability can be increased when your character is improved."
+    },
+    {
+      "roll": "53",
+      "description": "Scalp with long black hair."
+    },
+    {
+      "roll": "54",
+      "description": "Golden ball with an invisible seam, twists open."
+    },
+    {
+      "roll": "55",
+      "description": "Bloodstained knuckle-duster."
+    },
+    {
+      "roll": "56",
+      "description": "Two weighted dice."
+    },
+    {
+      "roll": "61-66",
+      "description": "The result in silver."
+    }
+  ],
+  "reactions": [
+    {
+      "roll": "2-3",
+      "description": "Kill!"
+    },
+    {
+      "roll": "4-6",
+      "description": "Angered"
+    },
+    {
+      "roll": "7-8",
+      "description": "Indifferent"
+    },
+    {
+      "roll": "9-10",
+      "description": "Almost friendly"
+    },
+    {
+      "roll": "11-12",
+      "description": "Helpful"
+    }
+  ]
+}

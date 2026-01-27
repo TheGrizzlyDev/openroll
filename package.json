@@ -6,7 +6,6 @@
   "scripts": {
     "ci-update": "npm ci && npm run update-submodules",
     "update": "npm install && npm run update-submodules",
-    "data:morkborg:update": "node scripts/morkborg-data-importer.js",
     "dev": "vite",
     "build": "tsc && vite build",
     "build-gh-pages": "tsc && vite build --base=/openroll/",
@@ -31,6 +30,7 @@
     "@radix-ui/themes": "^3.2.1",
     "@tanstack/react-table": "^8.21.3",
     "@uiw/react-codemirror": "^4.24.2",
+    "pdf2json": "^4.0.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7",

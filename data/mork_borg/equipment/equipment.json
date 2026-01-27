@@ -1,0 +1,286 @@
+{
+  "weapons": [
+    {
+      "roll": "1",
+      "name": "Femur",
+      "damage": "d4"
+    },
+    {
+      "roll": "2",
+      "name": "Staff",
+      "damage": "d4"
+    },
+    {
+      "roll": "3",
+      "name": "Shortsword",
+      "damage": "d4"
+    },
+    {
+      "roll": "4",
+      "name": "Knife",
+      "damage": "d4"
+    },
+    {
+      "roll": "5",
+      "name": "Warhammer",
+      "damage": "d6"
+    },
+    {
+      "roll": "6",
+      "name": "Sword",
+      "damage": "d6"
+    },
+    {
+      "roll": "7",
+      "name": "Bow",
+      "damage": "d6",
+      "notes": "with Presence +10 arrows"
+    },
+    {
+      "roll": "8",
+      "name": "Flail",
+      "damage": "d8"
+    },
+    {
+      "roll": "9",
+      "name": "Crossbow",
+      "damage": "d8",
+      "notes": "with Presence +10 bolts"
+    },
+    {
+      "roll": "10",
+      "name": "Zweihänder",
+      "damage": "d10"
+    }
+  ],
+  "armor": [
+    {
+      "roll": "1",
+      "name": "no armor",
+      "properties": "tier 0"
+    },
+    {
+      "roll": "2",
+      "name": "light",
+      "properties": "fur, padded cloth, leather etc, −d2 damage, tier 1, 20s"
+    },
+    {
+      "roll": "3",
+      "name": "medium armor",
+      "properties": "scale, mail etc, −d4 damage, tier 2, 100s, dR +2 on Agility tests including defence"
+    },
+    {
+      "roll": "4",
+      "name": "Heavy armor",
+      "properties": "splint, plate etc, −d6 damage, tier 3, 200s, dR +4 on Agility tests, defence is dR +2"
+    }
+  ],
+  "gear": [
+    {
+      "name": "Backpack",
+      "cost": "6s",
+      "notes": "Holds 7 normal-sized items"
+    },
+    {
+      "name": "Bear trap",
+      "cost": "20s",
+      "notes": "Presence dr14 to spot, d8 damage"
+    },
+    {
+      "name": "Blanket",
+      "cost": "4s"
+    },
+    {
+      "name": "Caltrops",
+      "cost": "7s",
+      "notes": "d4 damage + infection on 1 in 6"
+    },
+    {
+      "name": "Chalk",
+      "cost": "1s"
+    },
+    {
+      "name": "Chewing tobacco",
+      "cost": "1s"
+    },
+    {
+      "name": "Crowbar",
+      "cost": "8s"
+    },
+    {
+      "name": "Crucifix, silver",
+      "cost": "60s"
+    },
+    {
+      "name": "Crucifix, wood",
+      "cost": "8s"
+    },
+    {
+      "name": "Dried food",
+      "cost": "1s",
+      "notes": "1 day"
+    },
+    {
+      "name": "Exquisite perfume",
+      "cost": "25s"
+    },
+    {
+      "name": "Firesteel",
+      "cost": "4s"
+    },
+    {
+      "name": "Grappling hook",
+      "cost": "12s"
+    },
+    {
+      "name": "Hammer",
+      "cost": "8s"
+    },
+    {
+      "name": "Heavy chain",
+      "cost": "10s",
+      "notes": "15 feet"
+    },
+    {
+      "name": "Iron nails",
+      "cost": "10s",
+      "notes": "10 nails"
+    },
+    {
+      "name": "Ladder",
+      "cost": "7s"
+    },
+    {
+      "name": "Lantern oil",
+      "cost": "5s",
+      "notes": "Presence +6 hours"
+    },
+    {
+      "name": "Lard",
+      "cost": "5s",
+      "notes": "May function as 5 meals"
+    },
+    {
+      "name": "Large iron hook",
+      "cost": "9s"
+    },
+    {
+      "name": "Lockpicks",
+      "cost": "5s"
+    },
+    {
+      "name": "Magnesium strip",
+      "cost": "4s"
+    },
+    {
+      "name": "Manacles",
+      "cost": "10s"
+    },
+    {
+      "name": "Mattress",
+      "cost": "3s"
+    },
+    {
+      "name": "Meat cleaver",
+      "cost": "15s"
+    },
+    {
+      "name": "Medicine box",
+      "cost": "15s",
+      "notes": "Stops bleeding/infection and +d6 hp. Presence +4 uses"
+    },
+    {
+      "name": "Metal file",
+      "cost": "10s"
+    },
+    {
+      "name": "Mirror",
+      "cost": "15s"
+    },
+    {
+      "name": "Muzzle",
+      "cost": "6s"
+    },
+    {
+      "name": "Noose",
+      "cost": "5s"
+    },
+    {
+      "name": "Oil lamp",
+      "cost": "10s"
+    },
+    {
+      "name": "Poison (black)",
+      "cost": "20s",
+      "notes": "Toughness dr14 or d6 damage + blind for one hour. 3 doses"
+    },
+    {
+      "name": "Poison (red)",
+      "cost": "20s",
+      "notes": "Toughness dr12 or d10 damage. 3 doses"
+    },
+    {
+      "name": "Preserved corpse",
+      "cost": "66+d6s"
+    },
+    {
+      "name": "Rope",
+      "cost": "4s",
+      "notes": "30 feet"
+    },
+    {
+      "name": "Small wagon",
+      "cost": "25s"
+    },
+    {
+      "name": "Tent",
+      "cost": "12s"
+    },
+    {
+      "name": "Toolbox",
+      "cost": "20s",
+      "notes": "10 nails, hammer, small saw, tongs"
+    },
+    {
+      "name": "Torch",
+      "cost": "2s"
+    },
+    {
+      "name": "Sack",
+      "cost": "3s",
+      "notes": "Holds 10 normal sized items"
+    },
+    {
+      "name": "Salt",
+      "cost": "4s"
+    },
+    {
+      "name": "Scissors",
+      "cost": "9s"
+    },
+    {
+      "name": "Scroll",
+      "cost": "50s",
+      "notes": "worth roughly to the right buyer"
+    },
+    {
+      "name": "Sharp needle",
+      "cost": "3s"
+    },
+    {
+      "name": "Waterskin",
+      "cost": "4s",
+      "notes": "4 days of water"
+    }
+  ],
+  "services": {
+    "Night in hospice": "3s",
+    "Drink": "1s",
+    "Steady meal": "2s",
+    "Bribe, guard": "20–40s",
+    "Bribe, clerk": "30–60s",
+    "Bribe, rabble": "5–15s",
+    "Repair Armor Tier 1 to 2": "25s",
+    "Repair Armor Tier 2 to 3": "40s"
+  }
+}

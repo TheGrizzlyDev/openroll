@@ -1,0 +1,31 @@
+{
+  "combat": {
+    "initiative": "d6: 1–3 enemies go first, 4–6 pcs go first. Agility + d6 for individual initiative.",
+    "melee": "Test Strength dr12 to hit",
+    "ranged": "Test Presence dr12 to hit",
+    "defence": "Test Agility dr12 to defend",
+    "crit": "Natural 20: Double damage, armor/protection reduced one tier",
+    "fumble": "Natural 1: Weapon breaks or is lost (attack), double damage and armor reduced one tier (defence)"
+  },
+  "tests": {
+    "difficulty": {
+      "6": "so simple people laugh at you for failing",
+      "8": "routine but some chance of failure",
+      "10": "pretty simple but not simple enough to not roll",
+      "12": "normal",
+      "14": "difficult",
+      "16": "really hard",
+      "18": "should not be possible"
+    }
+  },
+  "healing": {
+    "rest": "Catch your breath, have a drink. Restore d4 hp.",
+    "fullSleep": "A full night's sleep restores d6 hp.",
+    "starvation": "Without food or drink no hp is restored when resting and after two days a starving pc loses d4 hp per day.",
+    "infection": "An infected character does not benefit from resting. Instead, d6 hp is lost daily."
+  },
+  "improvement": {
+    "hp": "Roll 6d10. If result ≥ current max hp, increase by d6.",
+    "abilities": "Roll d6 against every ability. Results ≥ ability increase by 1 (max +6). Results < ability decrease by 1. Abilities from −3 to +1 always increased by 1 unless result is 1."
+  }
+}

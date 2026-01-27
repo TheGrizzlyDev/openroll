@@ -1,0 +1,44 @@
+{
+  "occultTreasures": [
+    {
+      "roll": "1",
+      "description": "Ash-grey ring a finger-width wide. All that passes through is obliterated."
+    },
+    {
+      "roll": "2",
+      "description": "The keening music of this small, vile flute animates a fetus-sized meat golem in a nearby corpse. HP 5 Morale - No armor Bite d4 immune to Powers."
+    },
+    {
+      "roll": "3",
+      "description": "A note explains: one taste from this famine spoon means death from slow starvation."
+    },
+    {
+      "roll": "4",
+      "description": "The image of a being in this malevolently-accurate mirror shows only the shameful truth of their soul."
+    },
+    {
+      "roll": "5",
+      "description": "Vampiric phurba. Heals you as it harms your target (d3), but beware: after stealing a total of 6 hp, test Presence dr14 or become addicted—you must then test Presence dr12 daily. Fail and you must stab someone with the knife before next sunrise. Or wither to ash and die as the sun rises."
+    },
+    {
+      "roll": "6",
+      "description": "A black pearl. If dropped in darkness it rolls towards the nearest exit to day."
+    },
+    {
+      "roll": "7",
+      "description": "This torch burns for an immortal hour. Hold it and live. You can lose limbs and enter negative hp but won't die unless you drop the torch or it burns out."
+    },
+    {
+      "roll": "8",
+      "description": "Silver bird cage slays whatever is placed behind its bars, slowly, over one long night. That which is killed reanimates twice as strong, as a raging uncontrollable undead."
+    },
+    {
+      "roll": "9",
+      "description": "Black crown of the crippled king. Wearing this crooks your body as you become aware that you and every creature within 100 yards gain +10 to attack rolls but −10 to defence rolls. Rolls that go above 20 count as crits, and below 1 as fumbles. The worn crown can only be removed in the pale light of a full moon."
+    },
+    {
+      "roll": "10",
+      "description": "Anyone wearing this ancient blindfold becomes invisible to those who breathe though the undead attack them obsessively and nearby corpses awaken in moaning, unholy wrath."
+    }
+  ]
+}
